@@ -9,11 +9,7 @@ bot.on("ready", function () {
     console.log('daftbot vas tout détruire bip bip')
 })
 
-<<<<<<< HEAD
 bot.login(TOKEN)
-=======
-bot.login('')
->>>>>>> 87b97d0205eb54399d6741b4215f1b447196303b
 
 bot.on('guildMemberAdd', member => {
   member.createDM().then(channel => {
@@ -50,22 +46,8 @@ bot.on('message', message => {
 	//}
 })
 
-
-
 //Permissions du bot au sein du serveur
 
 //class discord.Permissions(permissions=515136) {
 //	discord.utils.oauth_url(757955750164430980,permissions=515136)
 //}
-
-
-
-
-
-
-
-
-
-
-
-
