@@ -30,8 +30,7 @@ client.on('message', async message => {
 	  
 	// help
 	if (command === 'help') {
-			message.delete().catch(O_o=>{})	// permet de supp le commentaire 
-			message.channel.send('`préfixe : frère pas besoin haha`')
+			message.delete().catch(O_o=>{})	// permet de supp le commentaire
 			message.channel.send('`help : faire ce que tu fais ducon`')
 			message.channel.send('`say : permet de me faire répéter n\'importe quelle connerie`')
 			message.channel.send('`ping : teste la latence`')
