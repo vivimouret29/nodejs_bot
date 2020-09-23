@@ -74,10 +74,6 @@ client.on('message', async message => {
 	}
 });
 
-client.on('messageDelete', message => {
-	console.log(`Un certain message de ${message.author.tag} a été supprimé, mais qui est-ce ?`);
-});
-
 client.on('message', async message => {
 
 	// anti-boucle
