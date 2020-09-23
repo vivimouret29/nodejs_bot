@@ -1,82 +1,125 @@
-require('dotenv').config()
-
 const Discord = require('discord.js');
 const client = new Discord.Client();
-const TOKEN = process.env.DISCORD_TOKEN;
+const config = require("./config.json");
 
-// variable personnelles
-const yesyes = new Discord.MessageEmbed()
-	.setTitle('YES YES YES YES YES')
-	.attachFiles(['./images/ElatedGlamorousAmericanindianhorse-size_restricted.gif'])
-const homonculus = new Discord.MessageEmbed()
-	.setTitle('je suis un petit être dans une fiole')
-	.attachFiles(['./images/received_3303082543102197.gif'])
 
 // message de connexion au serveur
 
-module.exports.run = async(client, message, args) => {
-	let User = args[0];
-	let Reason = args.slice(1).join(` `);
-}
-
 client.on("ready", function () {
-	console.log('bip boup.. ' + client.user.username + ' vas tout détruire !! bip bip..')
-	// console.log(client.users.cache.Collection[1])
-	// client.users.get('name', 'hbooex').id
-	// for (guild in client.guilds) {
-	// 	console.log('Nom du serveur : ' + guilds.name)
-	// 	for (member in guild.members) {
-	// 		console.log('Nom : ' + member.name)
-	// 		console.log('ID : ' + member.id)
-	// 	}
-	// }
+	console.log(`bip boup..  ${client.user.username} vas tout détruire !! bip boup bip..`)
+	client.user.setActivity(`upgrade sa version`)
 });
 
-// id des serveurs
-// '758064568911265834' => DevBot
-// '636204768842219531' => Games & Work
 // message de connexion d'un nouveau membre
 
 client.on('guildMemberAdd', member => {
   member.createDM().then(channel => {
 	console.log('new member')
-	return channel.send('Bienvenue à toi jeune padawan ' + member.displayName)
+	return channel.send(`Jeune padawan ${member.displayName}, bienvenue à toi.`)
   }).catch(console.error)
 });
 
-client.on('message', message => {
-	if (message.author === client.user) {
-		return
+client.on('message', async message => {
+
+	// anti-boucle
+	if (message.author.bot || !message.content.startsWith(config.prefix)) return
+
+	// séparation commande / arguments
+	const args = message.content.slice(config.prefix.length).trim().split(/ +/g)
+	const command = args.shift().toLowerCase()
+	  
+	// help
+	if (command === 'help') {
+			message.delete().catch(O_o=>{})	// permet de supp le commentaire 
+			message.channel.send('`préfixe : frère pas besoin haha`')
+			message.channel.send('`help : faire ce que tu fais ducon`')
+			message.channel.send('`say : permet de me faire répéter n\'importe quelle connerie`')
+			message.channel.send('`ping : teste la latence`')
+			console.log('reply help')
 	}
-	// switch (message)
-	if (message.content.includes('fuck')) {
-		message.channel.send('je sais mec....')
-		console.log('reply fuck')
+
+	// perroquet
+	if (command === 'say') {
+			const sayMessage = args.join(" ")
+			message.delete().catch(O_o=>{})
+			message.channel.send(sayMessage)
+			console.log('reply spoke')
 	}
-	if (message.content.includes('salope')) {
-		message.reply('tu devrais baisser d\'un ton')
-		console.log('reply salope')
+
+	// ping ?
+	if (command === 'ping') {
+			// message.delete().catch(O_o=>{})
+			const m = await message.channel.send("AAAAAAAATTTEEEEEEENNNNNNNNNNNNNDDDDDDDDDSSSSSSSSSSSSS!!!!")
+			m.edit(`.. la latence est d'${m.createdTimestamp - message.createdTimestamp}ms.. hhh.. et celle de l'api est d'${Math.round(client.ws.ping)}ms.. aaarggh....`)
+			message.reply('plus jamais putain...')
+			console.log('reply ping')
 	}
-	if (message.content.includes('pute')) {
-                message.channel.send('roooh pas les mamans')
-		console.log('reply pute')
-        }
-	if (message.content.includes('crash')) {
-                message.channel.send('je parie sur un ragequit')
-		console.log('reply crash')
-        }
-	if (message.content.includes('buy')) {
-                message.channel.send('Remerciement de la part de toutes les équipes de Steam et Instant-Gaming')
-		console.log('reply buy')
-        }
-	if (message.content.includes('yes')) {
-		message.channel.send(yesyes)
-		console.log('reply yes')
-	}
-	if (message.content.includes('daftbot')) {
-		message.channel.send(homonculus)
-		console.log('reply homonculus')
+
+	// petite prune 
+	if (command === 'prune') {
+			message.reply('t\'a supprimé des messages...')
+			const amount = parseInt(args[0])
+
+			if (isNaN(amount)) {
+				return message.reply('pas un nombre valide ça frère')
+			} else if (amount < 1 || amount > 100) {
+				return message.reply('donnes moi un nombre entre 1 et 100')
+			}
+
+			message.channel.bulkDelete(amount, true).catch(err => {
+				console.error(err);
+				message.channel.send('petit problème sur le channel, rien n\'est partie..');
+			});
+			console.log('reply prune')
 	}
 });
 
-client.login(TOKEN);
+client.on('message', async message => {
+
+	// anti-boucle
+	if (message.author.bot) return
+
+	// plusieurs tacles
+	if (message.content.includes('fuck')) {
+			message.channel.send('je sais mec....')
+			console.log('reply fuck')
+	}
+	if (message.content.includes('salope')) {
+			message.reply('tu devrais baisser d\'un ton')
+			console.log('reply salope')
+	}
+	if (message.content.includes('beep')) {
+			message.reply('boop')
+			console.log('reply etib')
+	}
+	if (message.content.includes('pute')) {
+			message.channel.send('roooh pas les mamans')
+			console.log('reply pute')
+    }
+	if (message.content.includes('crash')) {
+			message.channel.send('je parie sur un ragequit')
+			console.log('reply crash')
+    }
+	if (message.content.includes('buy')) {
+			message.channel.send('Remerciement de la part de toutes les équipes de Steam et Instant-Gaming')
+			console.log('reply buy')
+	}
+		
+	// gif
+	if (message.content.includes('yes')) {
+			const yesgif = new Discord.MessageEmbed()
+				.setTitle('YES YES YES YES YES')
+				.attachFiles(['./images/ElatedGlamorousAmericanindianhorse-size_restricted.gif'])
+			message.channel.send(yesgif)
+			console.log('reply yes')
+	}
+	if (message.content.includes(client.user.username)) {
+			const botgif = new Discord.MessageEmbed()
+				.setTitle('je suis un petit être dans une fiole')
+				.attachFiles(['./images/received_3303082543102197.gif'])
+			message.channel.send(botgif)
+			console.log('reply homonculus')
+	}
+});
+
+client.login(config.token);
