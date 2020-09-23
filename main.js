@@ -31,9 +31,10 @@ client.on('message', async message => {
 	// help
 	if (command === 'help') {
 			message.delete().catch(O_o=>{})	// permet de supp le commentaire
-			message.channel.send('`help : faire ce que tu fais ducon`')
-			message.channel.send('`say : permet de me faire répéter n\'importe quelle connerie`')
-			message.channel.send('`ping : teste la latence`')
+			message.channel.send('```help : faire ce que tu fais ducon\
+								say : permet de me faire répéter n\'importe quelle connerie\
+								ping : teste la latence```\
+								')
 			console.log('reply help')
 	}
 
@@ -71,6 +72,10 @@ client.on('message', async message => {
 			});
 			console.log('reply prune')
 	}
+});
+
+client.on('messageDelete', message => {
+	console.log(`Un certain message de ${message.author.tag} a été supprimé, mais qui est-ce ?`);
 });
 
 client.on('message', async message => {
