@@ -1,4 +1,2 @@
-
-.env
+config.json
 node_modules
-pybot
