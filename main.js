@@ -27,35 +27,47 @@ client.on('message', async message => {
 	const msg = message.content.toLowerCase()
 	const autmsg = message.author.username
 
+	// time
+	var utcdate = Date(Date.UTC(1, 1, 2, 3, 0, 0))
+	let totalSeconds = (client.uptime / 1000);
+	let days = Math.floor(totalSeconds / 86400);
+	totalSeconds %= 86400;
+	let hours = Math.floor(totalSeconds / 3600);
+	totalSeconds %= 3600;
+	let minutes = Math.floor(totalSeconds / 60);
+	let seconds = Math.floor(totalSeconds % 60);
+	let uptime = `en ligne depuis ${days} jours, ${hours} heures, ${minutes} minutes et ${seconds} secondes`;
+
 	// anti-boucle
 	if (message.author.bot) return
 	
 	if (!message.content.startsWith(config.prefix)) {
 
 		// plusieurs tacles
-		if (msg.includes('fuck')) {
-				message.channel.send('je sais mec...')
-				console.log(`reply fuck from ${autmsg}`)
-		}
 		if (msg.includes('tqt')) {
 				message.reply('oui je m\'inquiète pour toi...')
-				console.log(`reply salope from ${autmsg}`)
+				console.log(`reply tqt from ${autmsg}, (${utcdate})`)
+				return
 		}
-		if (msg.includes('haha')) {
+		if (msg.includes('hahaha')) {
 				message.channel.send('ta gueule')
-				console.log(`reply hatg from ${autmsg}`)
+				console.log(`reply hatg from ${autmsg}, (${utcdate})`)
+				return
 		}
 		if (msg.includes('pute')) {
 				message.channel.send('roooh pas les mamans :(')
-				console.log(`reply pute from ${autmsg}`)
+				console.log(`reply pute from ${autmsg}, (${utcdate})`)
+				return
 		}
 		if (msg.includes('crash')) {
 				message.channel.send('je parie sur un ragequit :D')
-				console.log(`reply crash from ${autmsg}`)
+				console.log(`reply crash from ${autmsg}, (${utcdate})`)
+				return
 		}
-		if (msg.includes('buy')) {
-				message.channel.send('Remerciement de la part de toutes les équipes de Steam et Instant-Gaming')
-				console.log(`reply buy from ${autmsg}`)
+		if (msg.includes('brawl')) {
+				message.channel.send('tu parles de ton skill éclaté ?')
+				console.log(`reply brawl from ${autmsg}, (${utcdate})`)
+				return
 		}
 			
 		// gif
@@ -64,14 +76,16 @@ client.on('message', async message => {
 					.setTitle('YES YES YES YES YES')
 					.attachFiles(['./images/YESYESYESYESYES.gif'])
 				message.channel.send(yesgif)
-				console.log(`reply yes from ${autmsg}`)
+				console.log(`reply yes from ${autmsg}, (${utcdate})`)
+				return
 		}
 		if (msg.includes(client.user.username)) {
 				const botgif = new Discord.MessageEmbed()
 					.setTitle('je suis un petit être dans une fiole')
 					.attachFiles(['./images/homonculus.gif'])
 				message.channel.send(botgif)
-				console.log(`reply homonculus from ${autmsg}`)
+				console.log(`reply homonculus from ${autmsg}, (${utcdate})`)
+				return
 		}
 
 	} else {
@@ -79,20 +93,28 @@ client.on('message', async message => {
 			// help
 			if (command === 'help') {
 					message.delete().catch(O_o=>{})	// permet de supprimer le commentaire
-					message.channel.send('```\
-						help : faire ce que tu fais ducon\
-						say : me fait répéter n\'importe quelle connerie\
-						ping : teste la latence\
-						version : bah...\
+					message.channel.send('```Liste help :\n\
+					help : faire ce que tu fais ducon\n\
+					ping : teste la latence\n\
+					say : me fait répéter n\'importe quelle connerie\n\
+					uptime : depuis quand le bot est actif\n\
+					version : bah...\n\
 					```')
-					console.log(`reply help from ${autmsg}`)
+					console.log(`reply help from ${autmsg}, (${utcdate})`)
+			}
+			// uptime
+			if (command === 'uptime') {
+					message.delete().catch(O_o=>{})
+					message.channel.send(utcdate)
+					message.channel.send(uptime)
+					console.log(`reply uptime from ${autmsg}, (${utcdate})`)
 			}
 
 			// version
 			if (command === 'version') {
 					message.delete().catch(O_o=>{})
-					message.channel.send('daftbot v.1.1.3')
-					console.log(`reply v from ${autmsg}`)
+					message.channel.send('daftbot v1.1.5')
+					console.log(`reply v from ${autmsg}, (${utcdate})`)
 			}
 
 			// perroquet
@@ -100,16 +122,16 @@ client.on('message', async message => {
 					const sayMessage = args.join(" ")
 					message.delete().catch(O_o=>{})
 					message.channel.send(sayMessage)
-					console.log(`reply spoke from ${autmsg}`)
+					console.log(`reply spoke from ${autmsg}, (${utcdate})`)
 			}
 
 			// ping ?
 			if (command === 'ping') {
-					// message.delete().catch(O_o=>{})
+					message.delete().catch(O_o=>{})
 					const m = await message.channel.send("AAAAAAAATTTEEEEEEENNNNNNNNNNNNNDDDDDDDDDSSSSSSSSSSSSS!!!!")
-					m.edit(`.. la latence est d'${m.createdTimestamp - message.createdTimestamp}ms.. hhh.. et celle de l'api est d'${Math.round(client.ws.ping)}ms.. aaarggh....`)
-					message.reply('plus jamais putain...')
-					console.log(`reply ping from ${autmsg}`)
+					m.edit(`eeeh.. la latence est d'${m.createdTimestamp - message.createdTimestamp}ms.. hhh.. et celle de l'api est d'${Math.round(client.ws.ping)}ms.. aaarggh....`)
+					message.reply('stp.. plus jamais putain...')
+					console.log(`reply ping from ${autmsg}, (${utcdate})`)
 			}
 
 			// petite prune 
@@ -127,7 +149,7 @@ client.on('message', async message => {
 						console.error(err);
 						message.channel.send('petit problème sur le channel, rien n\'est partie..');
 					});
-					console.log(`reply prune from ${autmsg} with ${message.content} erased lines`)
+					console.log(`reply prune from ${autmsg} with ${message.content} erased lines, (${utcdate})`)
 			}
 		}
 });
