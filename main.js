@@ -72,7 +72,7 @@ client.on('message', async message => {
 				message.channel.send(botgif)
 				console.log('reply homonculus')
 		}
-		
+
 	} else {
 	
 			// help
@@ -90,7 +90,7 @@ client.on('message', async message => {
 			// version
 			if (command === 'version') {
 					message.delete().catch(O_o=>{})
-					message.channel.send('daftbot v.1.1.0')
+					message.channel.send('daftbot v.1.1.2')
 			}
 
 			// perroquet
