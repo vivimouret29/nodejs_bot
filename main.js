@@ -72,60 +72,62 @@ client.on('message', async message => {
 				message.channel.send(botgif)
 				console.log('reply homonculus')
 		}
-	}
-	  
-	// help
-	if (command === 'help') {
-			message.delete().catch(O_o=>{})	// permet de supprimer le commentaire
-			message.channel.send('\
-			```help : faire ce que tu fais ducon\
-				say : permet de me faire répéter n\'importe quelle connerie\
-				ping : teste la latence\
-				version : bah...```\
-			')
-			console.log('reply help')
-	}
-
-	// version
-	if (command === 'version') {
-			message.delete().catch(O_o=>{})
-			message.channel.send('daftbot v.1.1.0')
-	}
-
-	// perroquet
-	if (command === 'say') {
-			const sayMessage = args.join(" ")
-			message.delete().catch(O_o=>{})
-			message.channel.send(sayMessage)
-			console.log('reply spoke')
-	}
-
-	// ping ?
-	if (command === 'ping') {
-			// message.delete().catch(O_o=>{})
-			const m = await message.channel.send("AAAAAAAATTTEEEEEEENNNNNNNNNNNNNDDDDDDDDDSSSSSSSSSSSSS!!!!")
-			m.edit(`.. la latence est d'${m.createdTimestamp - message.createdTimestamp}ms.. hhh.. et celle de l'api est d'${Math.round(client.ws.ping)}ms.. aaarggh....`)
-			message.reply('plus jamais putain...')
-			console.log('reply ping')
-	}
-
-	// petite prune 
-	if (command === 'prune') {
-			message.reply('t\'a supprimé des messages...')
-			const amount = parseInt(args[0])
-
-			if (isNaN(amount)) {
-				return message.reply('pas un nombre valide ça frère')
-			} else if (amount < 1 || amount > 100) {
-				return message.reply('donnes moi un nombre entre 1 et 100')
+		
+	} else {
+	
+			// help
+			if (command === 'help') {
+					message.delete().catch(O_o=>{})	// permet de supprimer le commentaire
+					message.channel.send('\
+					```help : faire ce que tu fais ducon\
+						say : permet de me faire répéter n\'importe quelle connerie\
+						ping : teste la latence\
+						version : bah...```\
+					')
+					console.log('reply help')
 			}
 
-			message.channel.bulkDelete(amount, true).catch(err => {
-				console.error(err);
-				message.channel.send('petit problème sur le channel, rien n\'est partie..');
-			});
-			console.log('reply prune')
-	}
+			// version
+			if (command === 'version') {
+					message.delete().catch(O_o=>{})
+					message.channel.send('daftbot v.1.1.0')
+			}
+
+			// perroquet
+			if (command === 'say') {
+					const sayMessage = args.join(" ")
+					message.delete().catch(O_o=>{})
+					message.channel.send(sayMessage)
+					console.log('reply spoke')
+			}
+
+			// ping ?
+			if (command === 'ping') {
+					// message.delete().catch(O_o=>{})
+					const m = await message.channel.send("AAAAAAAATTTEEEEEEENNNNNNNNNNNNNDDDDDDDDDSSSSSSSSSSSSS!!!!")
+					m.edit(`.. la latence est d'${m.createdTimestamp - message.createdTimestamp}ms.. hhh.. et celle de l'api est d'${Math.round(client.ws.ping)}ms.. aaarggh....`)
+					message.reply('plus jamais putain...')
+					console.log('reply ping')
+			}
+
+			// petite prune 
+			if (command === 'prune') {
+					message.reply('t\'a supprimé des messages...')
+					const amount = parseInt(args[0])
+
+					if (isNaN(amount)) {
+						return message.reply('pas un nombre valide ça frère')
+					} else if (amount < 1 || amount > 100) {
+						return message.reply('donnes moi un nombre entre 1 et 100')
+					}
+
+					message.channel.bulkDelete(amount, true).catch(err => {
+						console.error(err);
+						message.channel.send('petit problème sur le channel, rien n\'est partie..');
+					});
+					console.log('reply prune')
+			}
+		}
 });
 
 client.login(config.token);
