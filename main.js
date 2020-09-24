@@ -38,7 +38,7 @@ client.on('message', async message => {
 				console.log(`reply fuck from ${autmsg}`)
 		}
 		if (msg.includes('tqt')) {
-				message.reply('oui je m\'inquiète avec toi...')
+				message.reply('oui je m\'inquiète pour toi...')
 				console.log(`reply salope from ${autmsg}`)
 		}
 		if (msg.includes('haha')) {
