@@ -25,6 +25,7 @@ client.on('message', async message => {
 	const args = message.content.slice(config.prefix.length).trim().split(/ +/g)
 	const command = args.shift().toLowerCase()
 	const msg = message.content.toLowerCase()
+	const autmsg = message.author.username
 
 	// anti-boucle
 	if (message.author.bot) return
@@ -33,28 +34,28 @@ client.on('message', async message => {
 
 		// plusieurs tacles
 		if (msg.includes('fuck')) {
-				message.channel.send('je sais mec....')
-				console.log(`reply fuck from ${member.displayName}`)
+				message.channel.send('je sais mec...')
+				console.log(`reply fuck from ${autmsg}`)
 		}
-		if (msg.includes('salope')) {
-				message.reply('tu devrais baisser d\'un ton')
-				console.log('reply salope')
+		if (msg.includes('tqt')) {
+				message.reply('oui je m\'inquiète avec toi...')
+				console.log(`reply salope from ${autmsg}`)
 		}
-		if (msg.includes('beep')) {
-				message.reply('boop')
-				console.log('reply etib')
+		if (msg.includes('haha')) {
+				message.channel.send('ta gueule')
+				console.log(`reply hatg from ${autmsg}`)
 		}
 		if (msg.includes('pute')) {
-				message.channel.send('roooh pas les mamans')
-				console.log('reply pute')
+				message.channel.send('roooh pas les mamans :(')
+				console.log(`reply pute from ${autmsg}`)
 		}
 		if (msg.includes('crash')) {
-				message.channel.send('je parie sur un ragequit')
-				console.log('reply crash')
+				message.channel.send('je parie sur un ragequit :D')
+				console.log(`reply crash from ${autmsg}`)
 		}
 		if (msg.includes('buy')) {
 				message.channel.send('Remerciement de la part de toutes les équipes de Steam et Instant-Gaming')
-				console.log('reply buy')
+				console.log(`reply buy from ${autmsg}`)
 		}
 			
 		// gif
@@ -63,14 +64,14 @@ client.on('message', async message => {
 					.setTitle('YES YES YES YES YES')
 					.attachFiles(['./images/YESYESYESYESYES.gif'])
 				message.channel.send(yesgif)
-				console.log('reply yes')
+				console.log(`reply yes from ${autmsg}`)
 		}
 		if (msg.includes(client.user.username)) {
 				const botgif = new Discord.MessageEmbed()
 					.setTitle('je suis un petit être dans une fiole')
 					.attachFiles(['./images/homonculus.gif'])
 				message.channel.send(botgif)
-				console.log('reply homonculus')
+				console.log(`reply homonculus from ${autmsg}`)
 		}
 
 	} else {
@@ -78,19 +79,20 @@ client.on('message', async message => {
 			// help
 			if (command === 'help') {
 					message.delete().catch(O_o=>{})	// permet de supprimer le commentaire
-					message.channel.send('\
-					```help : faire ce que tu fais ducon\
-						say : permet de me faire répéter n\'importe quelle connerie\
+					message.channel.send('```\
+						help : faire ce que tu fais ducon\
+						say : me fait répéter n\'importe quelle connerie\
 						ping : teste la latence\
-						version : bah...```\
-					')
-					console.log('reply help')
+						version : bah...\
+					```')
+					console.log(`reply help from ${autmsg}`)
 			}
 
 			// version
 			if (command === 'version') {
 					message.delete().catch(O_o=>{})
-					message.channel.send('daftbot v.1.1.2')
+					message.channel.send('daftbot v.1.1.3')
+					console.log(`reply v from ${autmsg}`)
 			}
 
 			// perroquet
@@ -98,7 +100,7 @@ client.on('message', async message => {
 					const sayMessage = args.join(" ")
 					message.delete().catch(O_o=>{})
 					message.channel.send(sayMessage)
-					console.log('reply spoke')
+					console.log(`reply spoke from ${autmsg}`)
 			}
 
 			// ping ?
@@ -107,12 +109,12 @@ client.on('message', async message => {
 					const m = await message.channel.send("AAAAAAAATTTEEEEEEENNNNNNNNNNNNNDDDDDDDDDSSSSSSSSSSSSS!!!!")
 					m.edit(`.. la latence est d'${m.createdTimestamp - message.createdTimestamp}ms.. hhh.. et celle de l'api est d'${Math.round(client.ws.ping)}ms.. aaarggh....`)
 					message.reply('plus jamais putain...')
-					console.log('reply ping')
+					console.log(`reply ping from ${autmsg}`)
 			}
 
 			// petite prune 
 			if (command === 'prune') {
-					message.reply('t\'a supprimé des messages...')
+					message.reply('t\'as supprimé des messages...')
 					const amount = parseInt(args[0])
 
 					if (isNaN(amount)) {
@@ -125,7 +127,7 @@ client.on('message', async message => {
 						console.error(err);
 						message.channel.send('petit problème sur le channel, rien n\'est partie..');
 					});
-					console.log('reply prune')
+					console.log(`reply prune from ${autmsg} with ${message.content} erased lines`)
 			}
 		}
 });
