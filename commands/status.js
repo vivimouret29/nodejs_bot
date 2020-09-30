@@ -29,6 +29,6 @@ module.exports = {
                 .on('debug', console.log);
             message.delete().catch(O_o => { })
             message.channel.send('changement d\'activité !')
-        }
+        } else return message.channel.send('t\'as pas le droit d\'y toucher')
     }
 };
