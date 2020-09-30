@@ -28,18 +28,17 @@ client
 	.on('ready', () => {
 		client.user.setPresence({
 			activity: {
-				name: 'avec dépression',
-				type: 'WATCHING',
-				url: "https://www.youtube.com/watch?v=5qap5aO4i9A"
+				name: `avec mélancolie...`,
+				type: 'LISTENING',
 			},
-			status: 'idle'
+			status: 'dnd'
 		})
-			.then(console.log)
+			// .then(console.log)
 			.catch(console.error);
 	})
 	.on('guildMemberAdd', member => {
 		member.createDM().then(channel => {
-			console.log('new member')
+			console.log(`[${replydate}] REPLY NEW MEMBER ${message.author.username}`)
 			return channel.send(`Jeune padawan ${member.displayName}, bienvenue à toi.`)
 		})
 			.then(console.log)
@@ -71,12 +70,12 @@ client
 
 			try {
 				if (command === 'prune') {
-					console.log(`[${replydate}] REPLY ${command} FROM ${autmsg} WITH ${args} ERASED LINES`)
 					collection.get(command).execute(message, args);
+					console.log(`[${replydate}] REPLY ${command} FROM ${autmsg} WITH ${args} ERASED LINES`)
+					console.log(args)
 				} else if (command === 'status') {
-					message.delete().catch(O_o => { })
-					console.log(`[${replydate}] ATTEMPT ${command} FROM ${autmsg}`)
-					message.reply('commande inutilisable pour le momment')
+					collection.get(command).execute(message, args);
+					console.log(`[${replydate}] REPLY ${command} GO TO ${args[0]}, ${args[1]}, ${args[2]}, ${args[3]}, FROM ${autmsg}`)
 				} else {
 					collection.get(command).execute(message, args);
 					console.log(`[${replydate}] REPLY ${command} FROM ${autmsg}`)
