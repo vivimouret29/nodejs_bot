@@ -12,6 +12,7 @@ const {
 	prefix,
 	token
 } = require("./config.json");
+const { url } = require('inspector');
 
 for (const file of commandFiles) {
 	const command = require(`./commands/${file}`);
@@ -27,18 +28,22 @@ client
 	.on('ready', () => {
 		client.user.setPresence({
 			game: {
-				name: 'des chansons binaires',
-				type: 'LISTENING'
+				name: 'avec dépression',
+				type: "WATCHING",
+				url: "https://www.youtube.com/watch?v=5qap5aO4i9A"
 			},
-			status: 'dnd'
+			status: 'idle'
 		})
-			.catch(console.error)
+			.then(console.log)
+			.catch(console.error);
 	})
 	.on('guildMemberAdd', member => {
 		member.createDM().then(channel => {
 			console.log('new member')
 			return channel.send(`Jeune padawan ${member.displayName}, bienvenue à toi.`)
-		}).catch(console.error);
+		})
+			.then(console.log)
+			.catch(console.error);
 	})
 	.on('message', async message => {
 
@@ -85,3 +90,4 @@ client
 
 client.login(token)
 	.then(() => console.log(`${client.user.username} logged`))
+	.catch(console.error);
