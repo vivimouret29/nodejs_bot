@@ -1,157 +1,87 @@
+'use.strict'
+
 const Discord = require('discord.js');
+const ytdl = require('ytdl-core');
+const fs = require('fs');
 const client = new Discord.Client();
-const config = require("./config.json");
+const collection = new Discord.Collection();
+const date = new Date();
+const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
+const replyFiles = fs.readdirSync('./reply').filter(file => file.endsWith('.js'));
+const {
+	prefix,
+	token
+} = require("./config.json");
 
+for (const file of commandFiles) {
+	const command = require(`./commands/${file}`);
+	collection.set(command.name, command);
+}
 
-// message de connexion au serveur
+for (const file of replyFiles) {
+	const reply = require(`./reply/${file}`);
+	collection.set(reply.name, reply);
+}
 
-client.on("ready", function () {
-	console.log(`bip boup..  ${client.user.username} vas tout détruire !! bip boup bip..`)
-	client.user.setActivity(`upgrade sa version`)
-});
+client
+	.on('ready', () => {
+		client.user.setPresence({
+			game: {
+				name: 'des chansons binaires',
+				type: 'LISTENING'
+			},
+			status: 'dnd'
+		})
+			.catch(console.error)
+	})
+	.on('guildMemberAdd', member => {
+		member.createDM().then(channel => {
+			console.log('new member')
+			return channel.send(`Jeune padawan ${member.displayName}, bienvenue à toi.`)
+		}).catch(console.error);
+	})
+	.on('message', async message => {
 
-// message de connexion d'un nouveau membre
+		if (message.author.bot) return
 
-client.on('guildMemberAdd', member => {
-  member.createDM().then(channel => {
-	console.log('new member')
-	return channel.send(`Jeune padawan ${member.displayName}, bienvenue à toi.`)
-  }).catch(console.error)
-});
+		const args = message.content.slice(prefix.length).trim().split(/ +/)
+		const command = args.shift().toLowerCase()
+		const msg = message.content.toLowerCase()
+		const autmsg = message.author.username
+		let replydate = `${date.getHours()}:${date.getMinutes()} - ${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`
 
-client.on('message', async message => {
+		if (!message.content.startsWith(prefix)) {
 
-	// séparation commande / arguments
-	const args = message.content.slice(config.prefix.length).trim().split(/ +/g)
-	const command = args.shift().toLowerCase()
-	const msg = message.content.toLowerCase()
-	const autmsg = message.author.username
+			if (!collection.has(msg)) return;
 
-	// time
-	var utcdate = Date(Date.UTC(1, 1, 2, 3, 0, 0))
-	let totalSeconds = (client.uptime / 1000);
-	let days = Math.floor(totalSeconds / 86400);
-	totalSeconds %= 86400;
-	let hours = Math.floor(totalSeconds / 3600);
-	totalSeconds %= 3600;
-	let minutes = Math.floor(totalSeconds / 60);
-	let seconds = Math.floor(totalSeconds % 60);
-	let uptime = `en ligne depuis ${days} jours, ${hours} heures, ${minutes} minutes et ${seconds} secondes`;
-
-	// anti-boucle
-	if (message.author.bot) return
-	
-	if (!message.content.startsWith(config.prefix)) {
-
-		// plusieurs tacles
-		if (msg.includes('tqt')) {
-				message.reply('oui je m\'inquiète pour toi...')
-				console.log(`reply tqt from ${autmsg}, (${utcdate})`)
-				return
-		}
-		if (msg.includes('hahaha')) {
-				message.channel.send('ta gueule')
-				console.log(`reply hatg from ${autmsg}, (${utcdate})`)
-				return
-		}
-		if (msg.includes('pute')) {
-				message.channel.send('roooh pas les mamans :(')
-				console.log(`reply pute from ${autmsg}, (${utcdate})`)
-				return
-		}
-		if (msg.includes('crash')) {
-				message.channel.send('je parie sur un ragequit :D')
-				console.log(`reply crash from ${autmsg}, (${utcdate})`)
-				return
-		}
-		if (msg.includes('brawl')) {
-				message.channel.send('tu parles de ton skill éclaté ?')
-				console.log(`reply brawl from ${autmsg}, (${utcdate})`)
-				return
-		}
-			
-		// gif
-		if (msg.includes('yes')) {
-				const yesgif = new Discord.MessageEmbed()
-					.setTitle('YES YES YES YES YES')
-					.attachFiles(['./images/YESYESYESYESYES.gif'])
-				message.channel.send(yesgif)
-				console.log(`reply yes from ${autmsg}, (${utcdate})`)
-				return
-		}
-		if (msg.includes(client.user.username)) {
-				const botgif = new Discord.MessageEmbed()
-					.setTitle('je suis un petit être dans une fiole')
-					.attachFiles(['./images/homonculus.gif'])
-				message.channel.send(botgif)
-				console.log(`reply homonculus from ${autmsg}, (${utcdate})`)
-				return
-		}
-
-	} else {
-	
-			// help
-			if (command === 'help') {
-					message.delete().catch(O_o=>{})	// permet de supprimer le commentaire
-					message.channel.send('```Liste help :\n\
-					help : faire ce que tu fais ducon\n\
-					ping : teste la latence\n\
-					say : me fait répéter n\'importe quelle connerie\n\
-					uptime : depuis quand le bot est actif\n\
-					version : bah...\n\
-					```')
-					console.log(`reply help from ${autmsg}, (${utcdate})`)
+			try {
+				collection.get(msg).execute(message);
+				console.log(`[${replydate}] REPLY ${msg} FROM ${autmsg}`)
+			} catch (error) {
+				console.error(error);
 			}
-			// uptime
-			if (command === 'uptime') {
-					message.delete().catch(O_o=>{})
-					message.channel.send(utcdate)
-					message.channel.send(uptime)
-					console.log(`reply uptime from ${autmsg}, (${utcdate})`)
-			}
+		} else {
 
-			// version
-			if (command === 'version') {
-					message.delete().catch(O_o=>{})
-					message.channel.send('daftbot v1.1.5')
-					console.log(`reply v from ${autmsg}, (${utcdate})`)
-			}
+			if (!collection.has(command)) return;
 
-			// perroquet
-			if (command === 'say') {
-					const sayMessage = args.join(" ")
-					message.delete().catch(O_o=>{})
-					message.channel.send(sayMessage)
-					console.log(`reply spoke from ${autmsg}, (${utcdate})`)
-			}
-
-			// ping ?
-			if (command === 'ping') {
-					message.delete().catch(O_o=>{})
-					const m = await message.channel.send("AAAAAAAATTTEEEEEEENNNNNNNNNNNNNDDDDDDDDDSSSSSSSSSSSSS!!!!")
-					m.edit(`eeeh.. la latence est d'${m.createdTimestamp - message.createdTimestamp}ms.. hhh.. et celle de l'api est d'${Math.round(client.ws.ping)}ms.. aaarggh....`)
-					message.reply('stp.. plus jamais putain...')
-					console.log(`reply ping from ${autmsg}, (${utcdate})`)
-			}
-
-			// petite prune 
-			if (command === 'prune') {
-					message.reply('t\'as supprimé des messages...')
-					const amount = parseInt(args[0])
-
-					if (isNaN(amount)) {
-						return message.reply('pas un nombre valide ça frère')
-					} else if (amount < 1 || amount > 100) {
-						return message.reply('donnes moi un nombre entre 1 et 100')
-					}
-
-					message.channel.bulkDelete(amount, true).catch(err => {
-						console.error(err);
-						message.channel.send('petit problème sur le channel, rien n\'est partie..');
-					});
-					console.log(`reply prune from ${autmsg} with ${message.content} erased lines, (${utcdate})`)
+			try {
+				if (command === 'prune') {
+					console.log(`[${replydate}] REPLY ${command} FROM ${autmsg} WITH ${args} ERASED LINES`)
+					collection.get(command).execute(message, args);
+				} else if (command === 'status') {
+					message.delete().catch(O_o => { })
+					console.log(`[${replydate}] ATTEMPT ${command} FROM ${autmsg}`)
+					message.reply('commande inutilisable pour le momment')
+				} else {
+					collection.get(command).execute(message, args);
+					console.log(`[${replydate}] REPLY ${command} FROM ${autmsg}`)
+				}
+			} catch (error) {
+				console.error(error);
 			}
 		}
-});
+	})
+	.on('error', console.log);
 
-client.login(config.token);
+client.login(token)
+	.then(() => console.log(`${client.user.username} logged`))
