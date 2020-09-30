@@ -12,7 +12,6 @@ const {
 	prefix,
 	token
 } = require("./config.json");
-const { url } = require('inspector');
 
 for (const file of commandFiles) {
 	const command = require(`./commands/${file}`);
