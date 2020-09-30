@@ -1,4 +1,4 @@
-# bot_discord
+# DaftBot
 
 ## Pré-requis
 
@@ -7,7 +7,7 @@
 
 ## Utilisation
 
-Après avoir cloné le repo, rendez vous simplement à la racine du projet puis copiez le fichier `.env.example` en `.env` et mettez y votre token secret de bot discord.  
+Après avoir cloné le repo, rendez vous simplement à la racine du projet puis copiez le fichier `config.json.example` en `config.json` et mettez y votre token secret de bot discord ainsi que le préfixe que vous utiliserez. 
   
 Vous pouvez ensuite exécuter les commandes suivantes :
   
