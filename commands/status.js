@@ -5,20 +5,30 @@ module.exports = {
         const Discord = require('discord.js');
         const client = new Discord.Client();
 
-        message.delete().catch(O_o => { })
-        client.user.setPresence({
-            game: {
-                name: 'some youtube videos',
-                type: 'WATCHING',
-                url: ''
-            },
-            status: ''
-                .then(presence => console.log(`[${replydate}] REPLY ${client.user.username} go to ${presence.activities[0].name} (${args}), FROM ${autmsg}`))
-                .catch(
-                    console.error,
-                    message.channel.send('')
-                )
-        })
-        message.channel.send('')
+        const stOnOff = args[0]
+        const typeThings = args[1]
+        const nameText = args[2]
+        const urlLike = args[3]
+
+        if (message.author.id === '431915542610313217') {
+            client
+                .on('ready', () => {
+                    client.user.setPresence({
+                        activity: {
+                            name: `${nameText}`,
+                            type: `${typeThings}`,
+                            url: `${urlLike}`
+                        },
+                        status: `${stOnOff}`
+                            .catch(
+                                console.error,
+                                message.channel.send(`problème avec ton status`)
+                            )
+                    });
+                })
+                .on('debug', console.log);
+            message.delete().catch(O_o => { })
+            message.channel.send('changement d\'activité !')
+        }
     }
 };
