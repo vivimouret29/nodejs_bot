@@ -12,6 +12,7 @@ const {
 	prefix,
 	token
 } = require("./config.json");
+const { url } = require('inspector');
 
 for (const file of commandFiles) {
 	const command = require(`./commands/${file}`);
@@ -26,19 +27,22 @@ for (const file of replyFiles) {
 client
 	.on('ready', () => {
 		client.user.setPresence({
-			game: {
-				name: 'des chansons binaires',
-				type: 'LISTENING'
+			activity: {
+				name: `avec mélancolie...`,
+				type: 'LISTENING',
 			},
 			status: 'dnd'
 		})
-			.catch(console.error)
+			// .then(console.log)
+			.catch(console.error);
 	})
 	.on('guildMemberAdd', member => {
 		member.createDM().then(channel => {
-			console.log('new member')
+			console.log(`[${replydate}] REPLY NEW MEMBER ${message.author.username}`)
 			return channel.send(`Jeune padawan ${member.displayName}, bienvenue à toi.`)
-		}).catch(console.error);
+		})
+			.then(console.log)
+			.catch(console.error);
 	})
 	.on('message', async message => {
 
@@ -66,12 +70,12 @@ client
 
 			try {
 				if (command === 'prune') {
-					console.log(`[${replydate}] REPLY ${command} FROM ${autmsg} WITH ${args} ERASED LINES`)
 					collection.get(command).execute(message, args);
+					console.log(`[${replydate}] REPLY ${command} FROM ${autmsg} WITH ${args} ERASED LINES`)
+					console.log(args)
 				} else if (command === 'status') {
-					message.delete().catch(O_o => { })
-					console.log(`[${replydate}] ATTEMPT ${command} FROM ${autmsg}`)
-					message.reply('commande inutilisable pour le momment')
+					collection.get(command).execute(message, args);
+					console.log(`[${replydate}] REPLY ${command} GO TO ${args[0]}, ${args[1]}, ${args[2]}, ${args[3]}, FROM ${autmsg}`)
 				} else {
 					collection.get(command).execute(message, args);
 					console.log(`[${replydate}] REPLY ${command} FROM ${autmsg}`)
@@ -85,3 +89,4 @@ client
 
 client.login(token)
 	.then(() => console.log(`${client.user.username} logged`))
+	.catch(console.error);
