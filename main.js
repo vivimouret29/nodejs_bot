@@ -27,9 +27,9 @@ for (const file of replyFiles) {
 client
 	.on('ready', () => {
 		client.user.setPresence({
-			game: {
+			activity: {
 				name: 'avec dépression',
-				type: "WATCHING",
+				type: 'WATCHING',
 				url: "https://www.youtube.com/watch?v=5qap5aO4i9A"
 			},
 			status: 'idle'
