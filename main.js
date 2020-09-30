@@ -28,8 +28,8 @@ client
 	.on('ready', () => {
 		client.user.setPresence({
 			activity: {
-				name: `avec mélancolie...`,
-				type: 'LISTENING',
+				name: `à comment §kick`,
+				type: 'WATCHING',
 			},
 			status: 'dnd'
 		})
