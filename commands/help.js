@@ -5,6 +5,7 @@ module.exports = {
         message.delete().catch(O_o => { })
         message.channel.send('```Liste help :\n\
                 help : faire ce que tu fais ducon\n\
+                kick : à tes risques et périls\n\
                 ping : teste la latence\n\
                 prune : supprime des lignes (commande admin)\n\
                 say : me fait répéter n\'importe quelle connerie\n\
@@ -17,5 +18,5 @@ module.exports = {
                 uptime : depuis quand le bot est actif\n\
                 version : bah...\n\
                 ```')
-    }
+    },
 };
