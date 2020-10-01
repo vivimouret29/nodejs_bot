@@ -2,19 +2,19 @@ module.exports = {
     name: 'uptime',
     description: 'a dynamic uptime',
     execute(message) {
-        const Discord = require('discord.js');
-        const client = new Discord.Client();
+        client.on('ready', () => {
+            let days = Math.floor(client.uptime / 86400000);
+            let hours = Math.floor(client.uptime / 3600000) % 24;
+            let minutes = Math.floor(client.uptime / 60000) % 60;
+            let seconds = Math.floor(client.uptime / 1000) % 60;
 
-        let totalSeconds = (client.uptime / 1000)
-		let days = Math.floor(totalSeconds / 86400)
-		totalSeconds %= 86400
-		let hours = Math.floor(totalSeconds / 3600)
-		totalSeconds %= 3600
-		let minutes = Math.floor(totalSeconds / 60)
-		let seconds = Math.floor(totalSeconds % 60)
-        let uptime = `en ligne depuis ${days}j, ${hours}h, ${minutes}m et ${seconds}s frère`
-        
-        message.delete().catch(O_o => { })
-        message.channel.send(uptime)
+            console.log(client)
+            console.log(hours)
+            console.log(minutes)
+            console.log(seconds)
+
+            message.delete().catch(O_o => { })
+            message.channel.send(`\`__UPTIME|SATELLITE__:__${days}D:${hours}H:${minutes}M:${seconds}S__\``);
+        })
     }
 };
