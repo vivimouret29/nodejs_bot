@@ -27,10 +27,10 @@ client
 	.on('ready', () => {
 		client.user.setPresence({
 			activity: {
-				name: `à comment §kick`,
-				type: 'WATCHING',
+				name: `réparer les pots cassés`,
+				type: 'PLAYING',
 			},
-			status: 'dnd'
+			status: 'idle'
 		})
 			// .then(console.log)
 			.catch(console.error);
@@ -69,14 +69,13 @@ client
 
 			try {
 				if (command === 'prune') {
-					collection.get(command).execute(message, args);
+					collection.get(command).execute(message, args, client);
 					console.log(`[${replydate}] REPLY ${command} FROM ${autmsg} WITH ${args} ERASED LINES`)
-					console.log(args)
 				} else if (command === 'status') {
-					collection.get(command).execute(message, args);
-					console.log(`[${replydate}] REPLY ${command} GO TO ${args[0]}, ${args[1]}, ${args[2]}, ${args[3]}, FROM ${autmsg}`)
+					collection.get(command).execute(message, args, client);
+					console.log(`[${replydate}] REPLY ${command} ${args[0]} ${args[1]} ${args[2]} (${args[3]}), FROM ${autmsg}`)
 				} else {
-					collection.get(command).execute(message, args);
+					collection.get(command).execute(message, args, client);
 					console.log(`[${replydate}] REPLY ${command} FROM ${autmsg}`)
 				}
 			} catch (error) {
