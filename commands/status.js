@@ -4,7 +4,7 @@ module.exports = {      // (╯°□°）╯︵ ┻━┻
     execute(message, args, client) {
         const stOnOff = args[0]
         const typeThings = args[1]
-        const nameText = args[2]
+        const nameText = args[2].join(" ")
         const urlLike = args[3]
 
         if (message.author.id === '431915542610313217') {
