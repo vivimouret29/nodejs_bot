@@ -1,5 +1,11 @@
 # DaftBot
 
+
+![db](https://img.shields.io/badge/daftbot-v1.2.2-red)
+![npm](https://img.shields.io/npm/v/npm/latest)
+![discord.js](https://img.shields.io/badge/discord.js-v12.3.1-green)
+![GitHub repo size](https://img.shields.io/github/repo-size/vivimouret29/bot_discord?color=yellow)
+
 ## Pré-requis
 
 - Token de votre bot Discord
