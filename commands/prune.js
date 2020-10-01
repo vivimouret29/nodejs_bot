@@ -17,5 +17,5 @@ module.exports = {
         } else {
             return message.channel.send(`out of sight ${message.author.toString()}`);
         }
-    }
+    },
 };

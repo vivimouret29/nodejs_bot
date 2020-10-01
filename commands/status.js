@@ -45,5 +45,5 @@ module.exports = {      // (╯°□°）╯︵ ┻━┻
                 message.channel.send('changement d\'activité !')
             }
         } else return message.channel.send('t\'as pas le droit d\'y toucher')
-    }
+    },
 };

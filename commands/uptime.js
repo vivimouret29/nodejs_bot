@@ -16,5 +16,5 @@ module.exports = {
             message.delete().catch(O_o => { })
             message.channel.send(`\`__UPTIME|SATELLITE__:__${days}D:${hours}H:${minutes}M:${seconds}S__\``);
         })
-    }
+    },
 };

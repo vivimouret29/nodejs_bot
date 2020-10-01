@@ -5,5 +5,5 @@ module.exports = {
     execute(message) {
         message.delete().catch(O_o => { })
         message.channel.send(`daftbot ${packageVersion.version}`)
-    }
+    },
 };
