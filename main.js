@@ -78,9 +78,23 @@ client
 			const typeThings = args[1]
 			const nameText = args[2]
 			const urlLike = args[3]
+			console.log(urlLike)
 
 			if (message.author.id === '431915542610313217') {
-				if (!urlLike === undefined) {
+				if (urlLike === undefined) {
+					client.user.setPresence({
+						activity: {
+							name: `${nameText}`,
+							type: `${typeThings}`
+						},
+						status: `${stOnOff}`
+					})
+						.catch(
+							console.error,
+						)
+					message.delete().catch(O_o => { })
+					message.channel.send('changement d\'activité !')
+				} else {
 					client.user.setPresence({
 						activity: {
 							name: `${nameText}`,
@@ -88,25 +102,10 @@ client
 							url: `${urlLike}`
 						},
 						status: `${stOnOff}`
-							.catch(
-								console.error,
-								message.channel.send(`problème avec ton status`)
-							)
-					});
-					message.delete().catch(O_o => { })
-					message.channel.send('changement d\'activité !')
-				} else {
-					client.user.setPresence({
-						activity: {
-							name: `${nameText}`,
-							type: `${typeThings}`
-						},
-						status: `${stOnOff}`
-							.catch(
-								console.error,
-								message.channel.send(`problème avec ton status`)
-							)
-					});
+					})
+						.catch(
+							console.error,
+						)
 					message.delete().catch(O_o => { })
 					message.channel.send('changement d\'activité !')
 				}
