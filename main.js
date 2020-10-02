@@ -50,6 +50,61 @@ client
 	})
 	.on('message', async message => {
 
+		function uptimeFunction() {
+			let totalSeconds = (client.uptime / 1000);
+			let days = Math.floor(totalSeconds / 86400);
+			totalSeconds %= 86400;
+			let hours = Math.floor(totalSeconds / 3600);
+			totalSeconds %= 3600;
+			let minutes = Math.floor(totalSeconds / 60);
+			let seconds = Math.floor(totalSeconds % 60);
+
+			message.delete().catch(O_o => { })
+			message.channel.send(`\`UPTIME|SATELLITE : ${days}D:${hours}H:${minutes}M:${seconds}S\``)
+			console.log(`[${replydate}] REPLY ${command} FROM ${autmsg}`);
+		}
+
+		function statusFunction() {
+			const stOnOff = args[0]
+			const typeThings = args[1]
+			const nameText = args[2]
+			const urlLike = args[3]
+
+			if (message.author.id === '431915542610313217') {
+				if (!urlLike === undefined) {
+					client.user.setPresence({
+						activity: {
+							name: `${nameText}`,
+							type: `${typeThings}`,
+							url: `${urlLike}`
+						},
+						status: `${stOnOff}`
+							.catch(
+								console.error,
+								message.channel.send(`problème avec ton status`)
+							)
+					});
+					message.delete().catch(O_o => { })
+					message.channel.send('changement d\'activité !')
+				} else {
+					client.user.setPresence({
+						activity: {
+							name: `${nameText}`,
+							type: `${typeThings}`
+						},
+						status: `${stOnOff}`
+							.catch(
+								console.error,
+								message.channel.send(`problème avec ton status`)
+							)
+					});
+					message.delete().catch(O_o => { })
+					message.channel.send('changement d\'activité !')
+				}
+			} else return message.channel.send('t\'as pas le droit d\'y toucher')
+			console.log(`[${replydate}] REPLY ${command} ${args}, FROM ${autmsg}`);
+		}
+
 		if (message.author.bot) return;
 
 		const args = message.content.slice(prefix.length).trim().split(/ +/);
@@ -71,15 +126,20 @@ client
 			}
 		} else {
 
+			if (command === 'uptime') {
+				uptimeFunction();
+			}
+
+			if (command === 'status') {
+				statusFunction();
+			}
+
 			if (!collection.has(command)) return;
 
 			try {
 				if (command === 'prune') {
 					collection.get(command).execute(message, args, client);
 					console.log(`[${replydate}] REPLY ${command} FROM ${autmsg} WITH ${args} ERASED LINES`)
-				} else if (command === 'status') {
-					collection.get(command).execute(message, args, client);
-					console.log(`[${replydate}] REPLY ${command} ${args.join(" ")}, FROM ${autmsg}`)
 				} else if (command === 'kick') {
 					collection.get(command).execute(message, args, client);
 					console.log(`[${replydate}] REPLY ${command} FROM ${autmsg} TO ${taggedUser.username} lol`)
