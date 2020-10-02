@@ -50,6 +50,15 @@ client
 	})
 	.on('message', async message => {
 
+		if (message.author.bot) return;
+
+		const args = message.content.slice(prefix.length).trim().split(/ +/);
+		const command = args.shift().toLowerCase();
+		const msg = message.content.toLowerCase();
+		const autmsg = message.author.username;
+		const taggedUser = message.mentions.users.first();
+		let replydate = `${date.getHours()}:${date.getMinutes()} - ${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`;
+
 		function uptimeFunction() {
 			let totalSeconds = (client.uptime / 1000);
 			let days = Math.floor(totalSeconds / 86400);
@@ -104,15 +113,6 @@ client
 			} else return message.channel.send('t\'as pas le droit d\'y toucher')
 			console.log(`[${replydate}] REPLY ${command} ${args}, FROM ${autmsg}`);
 		}
-
-		if (message.author.bot) return;
-
-		const args = message.content.slice(prefix.length).trim().split(/ +/);
-		const command = args.shift().toLowerCase();
-		const msg = message.content.toLowerCase();
-		const autmsg = message.author.username;
-		const taggedUser = message.mentions.users.first();
-		let replydate = `${date.getHours()}:${date.getMinutes()} - ${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`;
 
 		if (!message.content.startsWith(prefix)) {
 
