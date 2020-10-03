@@ -1,6 +1,7 @@
 module.exports = {
     name: 'prune',
     description: 'a dynamic prune',
+    args: true,
     execute(message, args) {
         if (message.author.id === '431915542610313217') {
             const amount = parseInt(args[0])
