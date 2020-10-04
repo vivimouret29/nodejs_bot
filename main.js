@@ -167,20 +167,8 @@ client
 			if (!collection.has(command)) return;
 
 			try {
-				if (command === 'prune') {
-					collection.get(command).execute(message, args, client);
-<<<<<<< Updated upstream
-					console.log(`[${getCurrentDatetime()}]# ${authorMessage} :  ${msg}`)
-					// } else if (command === 'kick') {
-					// 	collection.get(command).execute(message, args, client);
-					// 	console.log(`[${getCurrentDatetime()}]# ${authorMessage} :  ${msg} \n[${getCurrentDatetime()}]# ${client.user.username} : lol`)
-=======
-					console.log(`[${replydate}]# ${authorMessage} :  ${msg}`)
->>>>>>> Stashed changes
-				} else {
-					collection.get(command).execute(message, args, client);
-					console.log(`[${getCurrentDatetime()}]# ${authorMessage} :  ${msg}`)
-				}
+				collection.get(command).execute(message, args, client);
+				console.log(`[${getCurrentDatetime()}]# ${authorMessage} :  ${msg}`)
 			} catch (error) {
 				console.error(error);
 			}
