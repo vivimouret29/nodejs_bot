@@ -6,7 +6,6 @@ const {
 } = require("./config.json");
 
 const Discord = require('discord.js');
-const ytdl = require('ytdl-core');
 const fs = require('fs');
 
 const wait = require('util').promisify(setTimeout);
@@ -125,7 +124,7 @@ client
 			if (message.author.id === '431915542610313217') {
 				const tkick = new Discord.MessageEmbed()
 					.setTitle('bye bye')
-					.attachFiles(['./images/bob.gif'])
+					.attachFiles('https://data.photofunky.net/output/image/3/4/2/6/34263b/photofunky.gif')
 
 				if (!message.mentions.users.size) {
 					return message.reply('tag une personne aléatoirement ehe');
