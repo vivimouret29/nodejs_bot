@@ -54,7 +54,7 @@ client
 			},
 			status: 'dnd'
 		})
-			// .catch(console.error);
+			.catch(console.error);
 	})
 	.on('guildMemberAdd', member => {
 		// const userRoles = member.roles.cache
@@ -64,6 +64,8 @@ client
 		member.createDM().then(channel => {
 			console.log(`[${getCurrentDatetime()}]# Games-&-Work/Homepage/general-chat/newMember/${member.user.username}`)
 			return channel.send(`Jeune padawan ${member.displayName}, bienvenue à toi.`);
+		}).catch(error => {
+			console.error(error)
 		})
 		// }
 	})
@@ -108,9 +110,9 @@ client
 						},
 						status: `${stOnOff}`
 					})
-						// .catch(
-						// 	console.error,
-						// )
+						.catch(
+							console.error,
+						)
 					message.delete().catch(O_o => { })
 					message.channel.send('changement d\'activité !')
 
@@ -124,9 +126,9 @@ client
 						},
 						status: `${stOnOff}`
 					})
-						// .catch(
-						// 	console.error,
-						// )
+						.catch(
+							console.error,
+						)
 					message.delete().catch(O_o => { })
 					message.channel.send('changement d\'activité !')
 				}
@@ -136,33 +138,46 @@ client
 		}
 
 		async function kickCounter() {
-			const filter = (reaction, user) => {
-				return ['👍', '👎'].includes(reaction.emoji.name) && user.id === message.author.id;
-			};
 
-			if (!message.mentions.users.size) return message.reply('t\'as oublié le tag sérieux');
+			try {
+				const alive = client.emojis.cache.find(emoji => emoji.name === "alive");
+				const dead = client.emojis.cache.find(emoji => emoji.name === "dead");
 
-			message.react('👍').then(() => message.react('👎'));
+				if (!message.mentions.users.size) return message.reply('t\'as oublié le tag sérieux');
 
-			message.awaitReactions(filter, { max: 1, time: 60000, errors: ['time'] })
-				.then(collected => {
-					const reaction = collected.first();
-					const countgif = new Discord.MessageEmbed()
-						.setTitle('#EXEC KICKCOUNTER.EXE')
-						.attachFiles('https://i.pinimg.com/originals/fc/1b/71/fc1b714dd4e30ba4c1be2d7d432d51b0.gif');
+				const emojiReact = (reaction, user) => {
+					return ["dead", "alive"].includes(reaction.emoji.name) && user.id === message.author.id;
+				};
 
-					if (reaction.emoji.name === '👍') {
-						message.channel.send(countgif)
-						return message.author.send('au final c\'est toi qui est exclue hahaha\n' + invit)
-							.then(() => {
-								member.kick()
-								console.log(`[${getCurrentDatetime()}]# ${authorMessage} :  ${msg}\n[${getCurrentDatetime()}]# ${client.user.username} : executé`)
-							})
-					} else {
-						message.channel.send('une sentence annulée...')
-						console.log(`[${getCurrentDatetime()}]# ${authorMessage} :  ${msg}\n[${getCurrentDatetime()}]# ${client.user.username} : suspendu`)
-					}
-				});
+				// await message.delete().catch(O_o => { })
+				await message.channel
+					.send(`<@!${message.author.id}> veut expulser ${args}.\nIl vit : ${alive}\nIl meurt : ${dead}`)
+					.then(() => {
+						console.log(`[${getCurrentDatetime()}]# ${authorMessage} veut expulser ${args}`)
+					});
+				await message.react(dead).then(() => message.react(alive));
+				message.awaitReactions(emojiReact, { max: 1 })
+					.then(collected => {
+						const reaction = collected.first();
+						const countgif = new Discord.MessageEmbed()
+							.setTitle('#EXEC KICKCOUNTER.EXE')
+							.attachFiles('https://i.pinimg.com/originals/fc/1b/71/fc1b714dd4e30ba4c1be2d7d432d51b0.gif');
+
+						if (reaction.emoji.name === "dead") {
+							message.channel.send(`${countgif}`);
+							message.author.send('au final c\'est toi qui est exclue hahaha\n' + invit)
+								.then(() => {
+									member.kick();
+									console.log(`[${getCurrentDatetime()}]# ${client.user.username} : executé`);
+								})
+						} else {
+							message.channel.send('une sentence annulée...');
+							console.log(`[${getCurrentDatetime()}]# ${client.user.username} : suspendu`);
+						}
+					});
+			} catch (err) {
+				console.log(`[${getCurrentDatetime()}]# Sortie kickCounter() :`, err);
+			}
 		}
 
 		function randomCollection() {
@@ -220,4 +235,4 @@ client
 
 client.login(token)
 	.then(() => console.log(`${client.user.username} logged`))
-	// .catch(console.error);
+	.catch(console.error);
