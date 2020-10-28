@@ -192,14 +192,15 @@ client
 			else return collectionBot.get('talk').execute(message);
 		}
 
-		function killBot() {
+		async function killBot() {
 			if (message.author.id === godMaster) {
 				message.delete().catch(O_o => { })
-				message.channel.send('destroyiiiiniginezoesqocpnqfkn')
+				await message.channel.send('destroyiiiiniginezoesqocpnqfkn')
 					.then(() => client.destroy());
 				console.log(`[${getCurrentDatetime()}]# ${authorMessage} :  ${msg}`)
 			} else {
 				console.log(`[${getCurrentDatetime()}]# ${authorMessage} :  ${msg}`)
+				message.channel.send('nos développeurs travaillent actuellement sur cette commande')
 			}
 		}
 
@@ -213,6 +214,7 @@ client
 
 			} else {
 				console.log(`[${getCurrentDatetime()}]# ${authorMessage} :  ${msg}`)
+				message.channel.send('nos développeurs travaillent actuellement sur cette commande')
 			}
 		}
 
