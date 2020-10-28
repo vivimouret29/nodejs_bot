@@ -3,7 +3,8 @@
 const {
 	prefix,
 	token,
-	invit
+	invit,
+	godMaster
 } = require("./config.json");
 
 const Discord = require('discord.js');
@@ -72,7 +73,7 @@ client
 	.on('message', async message => {
 
 		// console.log(message.guild)
-
+		
 		const args = message.content.slice(prefix.length).trim().split(/ +/);
 		const command = args.shift().toLowerCase();
 		const msg = message.content.toLowerCase();
@@ -192,19 +193,27 @@ client
 		}
 
 		function killBot() {
-			message.delete().catch(O_o => { })
-			message.channel.send('destroyiiiiniginezoesqocpnqfkn')
-				.then(() => client.destroy());
-			// .then(() => client.login(token));
-			console.log(`[${getCurrentDatetime()}]# ${authorMessage} :  ${msg}`)
+			if (message.author.id === godMaster) {
+				message.delete().catch(O_o => { })
+				message.channel.send('destroyiiiiniginezoesqocpnqfkn')
+					.then(() => client.destroy());
+				console.log(`[${getCurrentDatetime()}]# ${authorMessage} :  ${msg}`)
+			} else {
+				console.log(`[${getCurrentDatetime()}]# ${authorMessage} :  ${msg}`)
+			}
 		}
 
 		async function resetBot() {
-			message.delete().catch(O_o => { })
-			await message.channel.send('petite douche je reviens')
-				.then(() => client.destroy())
-				.then(() => client.login(token));
-			console.log(`[${getCurrentDatetime()}]# ${authorMessage} :  ${msg}`);
+			if (message.author.id === godMaster) {
+				message.delete().catch(O_o => { })
+				await message.channel.send('petite douche je reviens')
+					.then(() => client.destroy())
+					.then(() => client.login(token));
+				console.log(`[${getCurrentDatetime()}]# ${authorMessage} :  ${msg}`);
+
+			} else {
+				console.log(`[${getCurrentDatetime()}]# ${authorMessage} :  ${msg}`)
+			}
 		}
 
 		if (badBot.includes(message.author.id) && !(badChannels.includes(message.channel.name))) {
