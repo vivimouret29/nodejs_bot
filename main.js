@@ -46,38 +46,41 @@ function getCurrentDatetime() {
 client
 	.on('ready', async () => {
 		await wait(1000);
-
 		client.user.setPresence({
 			activity: {
-				name: `s'embellir`,
-				type: 'PLAYING',
+				name: `tous les logs`,
+				type: 'LISTENING',
 			},
-			status: 'dnd'
+			status: 'online'
 		})
 			.catch(console.error);
 	})
 	.on('guildMemberAdd', member => {
-		// const userRoles = member.roles.cache
-		// if (this.member.id === memberber.id) {
-		// 	this.member.get(userRoles)
-		// } else {
-		member.createDM().then(channel => {
-			console.log(`[${getCurrentDatetime()}]# Games-&-Work/Homepage/general-chat/newMember/${member.user.username}`)
-			return channel.send(`Jeune padawan ${member.displayName}, bienvenue à toi.`);
-		}).catch(error => {
-			console.error(error)
-		})
+		try {
+			// const userRoles = member.roles.cache
+			// if (this.member.id === memberber.id) {
+			// 	this.member.get(userRoles)
+			// } else {
+			member.guild.channels.cache
+				.find(ch => ch.name === 'général')
+				.send(`Jeune padawan ${member.displayName}, bienvenue à toi.`);
+		} catch (err) {
+			console.log(`[${getCurrentDatetime()}]# Erreur d'ajout de membre(s)/rôle : `, err);
+		}
 		// }
 	})
 	.on('message', async message => {
+
+		// console.log(message.guild)
 
 		const args = message.content.slice(prefix.length).trim().split(/ +/);
 		const command = args.shift().toLowerCase();
 		const msg = message.content.toLowerCase();
 		const authorMessage = message.author.username;
-		const member = message.guild.member(message.author);
-
-		// console.log(member.roles.cache)
+		const badChannels = ['news-anime', 'leekwars'];
+		const badBot = ['757970907992948826', '758319298325905428'];
+		let checkCollection
+		collectionCommands.has(command) ? checkCollection = collectionCommands.get(command).name : checkCollection = false;
 
 		function uptimeFunction() {
 			let totalSeconds = (client.uptime / 1000);
@@ -140,6 +143,8 @@ client
 		async function kickCounter() {
 
 			try {
+				const member = message.guild.member(message.author);
+				const taggedUser = message.mentions.users.first();
 				const alive = client.emojis.cache.find(emoji => emoji.name === "alive");
 				const dead = client.emojis.cache.find(emoji => emoji.name === "dead");
 
@@ -149,14 +154,13 @@ client
 					return ["dead", "alive"].includes(reaction.emoji.name) && user.id === message.author.id;
 				};
 
-				// await message.delete().catch(O_o => { })
 				await message.channel
 					.send(`<@!${message.author.id}> veut expulser ${args}.\nIl vit : ${alive}\nIl meurt : ${dead}`)
 					.then(() => {
-						console.log(`[${getCurrentDatetime()}]# ${authorMessage} veut expulser ${args}`)
+						console.log(`[${getCurrentDatetime()}]# ${authorMessage} veut expulser ${taggedUser.username}`)
 					});
 				await message.react(dead).then(() => message.react(alive));
-				message.awaitReactions(emojiReact, { max: 1 })
+				await message.awaitReactions(emojiReact, { max: 1 })
 					.then(collected => {
 						const reaction = collected.first();
 						const countgif = new Discord.MessageEmbed()
@@ -164,8 +168,9 @@ client
 							.attachFiles('https://i.pinimg.com/originals/fc/1b/71/fc1b714dd4e30ba4c1be2d7d432d51b0.gif');
 
 						if (reaction.emoji.name === "dead") {
-							message.channel.send(`${countgif}`);
-							message.author.send('au final c\'est toi qui est exclue hahaha\n' + invit)
+							message.channel.send(countgif);
+							message.author
+								.send('au final c\'est toi qui est exclue hahaha\n' + invit)
 								.then(() => {
 									member.kick();
 									console.log(`[${getCurrentDatetime()}]# ${client.user.username} : executé`);
@@ -176,6 +181,7 @@ client
 						}
 					});
 			} catch (err) {
+				message.channel.send('maintenance de la commande en cours...')
 				console.log(`[${getCurrentDatetime()}]# Sortie kickCounter() :`, err);
 			}
 		}
@@ -185,12 +191,29 @@ client
 			else return collectionBot.get('talk').execute(message);
 		}
 
-		if (message.author.id === '757970907992948826') {
+		function killBot() {
+			message.delete().catch(O_o => { })
+			message.channel.send('destroyiiiiniginezoesqocpnqfkn')
+				.then(() => client.destroy());
+			// .then(() => client.login(token));
+			console.log(`[${getCurrentDatetime()}]# ${authorMessage} :  ${msg}`)
+		}
 
-			if (Math.random() <= .3) {
+		async function resetBot() {
+			message.delete().catch(O_o => { })
+			await message.channel.send('petite douche je reviens')
+				.then(() => client.destroy())
+				.then(() => client.login(token));
+			console.log(`[${getCurrentDatetime()}]# ${authorMessage} :  ${msg}`);
+		}
+
+		if (badBot.includes(message.author.id) && !(badChannels.includes(message.channel.name))) {
+
+			if (Math.random() <= .2) {
+
 				try {
 					randomCollection()
-					console.log(`[${getCurrentDatetime()}]# ${authorMessage} :  ${msg}\n[${getCurrentDatetime()}]# ${client.user.username} : petit trashtalk`)
+					console.log(`[${getCurrentDatetime()}]# ${authorMessage} : ${msg}\n[${getCurrentDatetime()}]# ${client.user.username} : petit trashtalk`)
 				} catch (error) {
 					console.error(error);
 				}
@@ -207,32 +230,44 @@ client
 				collectionReply
 					.get(msg)
 					.execute(message);
-				console.log(`[${getCurrentDatetime()}]# ${authorMessage} :  ${msg}`)
-			} catch (error) {
-				console.error(error);
+				console.log(`[${getCurrentDatetime()}]# ${authorMessage} : ${msg}`)
+			} catch (err) {
+				console.log(`[${getCurrentDatetime()}]# Sortie : `, err);
 			}
 
 		} else {
 
-			if (command === 'uptime') return uptimeFunction();
-
-			if (command === 'status') return statusFunction();
-
-			if (command === 'votekick') return kickCounter(member);
-
-			if (!collectionCommands.has(command)) return;
-
-			try {
-				collectionCommands
-					.get(command)
-					.execute(message, args, client);
-				console.log(`[${getCurrentDatetime()}]# ${authorMessage} :  ${msg}`)
-			} catch (error) {
-				console.error(error);
+			switch (command) {
+				case 'uptime', 'up':
+					uptimeFunction();
+					break;
+				case 'status', 'st':
+					statusFunction();
+					break
+				case 'votekick':
+					kickCounter();
+					break
+				case 'kill':
+					killBot();
+					break
+				case 'reset':
+					resetBot();
+					break
+				case checkCollection:
+					collectionCommands
+						.get(command)
+						.execute(message, args, client);
+					console.log(`[${getCurrentDatetime()}]# ${authorMessage} : ${msg}`)
+					break
+				default:
+					console.log(`[${getCurrentDatetime()}]# ${authorMessage} : ${msg}`)
+					message.channel.send('nos développeurs travaillent actuellement sur cette commande')
 			}
 		}
 	})
 
 client.login(token)
-	.then(() => console.log(`${client.user.username} logged`))
+	.then(() => {
+		console.log(`[${getCurrentDatetime()}]# ${client.user.username} logged`)
+	})
 	.catch(console.error);
