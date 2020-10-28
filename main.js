@@ -104,7 +104,7 @@ client
 			const nameText = args[2]
 			const urlLike = args[3]
 
-			if (message.author.id === '431915542610313217') {
+			if (message.author.id === godMaster) {
 
 				if (urlLike === undefined) {
 					client.user.setPresence({
@@ -252,7 +252,7 @@ client
 				case 'uptime', 'up':
 					uptimeFunction();
 					break;
-				case 'status', 'st':
+				case 'status':
 					statusFunction();
 					break
 				case 'votekick':
