@@ -73,7 +73,7 @@ client
 	.on('message', async message => {
 
 		// console.log(message.guild)
-		
+
 		const args = message.content.slice(prefix.length).trim().split(/ +/);
 		const command = args.shift().toLowerCase();
 		const msg = message.content.toLowerCase();
@@ -91,8 +91,8 @@ client
 			totalSeconds %= 3600;
 			let minutes = Math.floor(totalSeconds / 60);
 			let seconds = Math.floor(totalSeconds % 60);
-
 			let update = initdate
+			
 			message.delete().catch(O_o => { })
 			message.channel.send(`\`UPDATE|SATELLITE : ${update}\`\n\`UPTIME|SATELLITE : ${days}D:${hours}H:${minutes}M:${seconds}S\``)
 			console.log(`[${getCurrentDatetime()}]# ${authorMessage} :  ${msg}`);
@@ -173,6 +173,7 @@ client
 							message.author
 								.send('au final c\'est toi qui est exclue hahaha\n' + invit)
 								.then(() => {
+									message.delete().catch(O_o => { })
 									member.kick();
 									console.log(`[${getCurrentDatetime()}]# ${client.user.username} : executé`);
 								})
@@ -196,7 +197,10 @@ client
 			if (message.author.id === godMaster) {
 				message.delete().catch(O_o => { })
 				await message.channel.send('destroyiiiiniginezoesqocpnqfkn')
-					.then(() => client.destroy());
+					.then(() => {
+						wait(1000)
+						client.destroy()
+					});
 				console.log(`[${getCurrentDatetime()}]# ${authorMessage} :  ${msg}`)
 			} else {
 				console.log(`[${getCurrentDatetime()}]# ${authorMessage} :  ${msg}`)
@@ -208,8 +212,14 @@ client
 			if (message.author.id === godMaster) {
 				message.delete().catch(O_o => { })
 				await message.channel.send('petite douche je reviens')
-					.then(() => client.destroy())
-					.then(() => client.login(token));
+					.then(() => {
+						wait(1000)
+						client.destroy()
+					})
+					.then(() => {
+						wait(1000)
+						client.login(token)
+					});
 				console.log(`[${getCurrentDatetime()}]# ${authorMessage} :  ${msg}`);
 
 			} else {
@@ -249,7 +259,7 @@ client
 		} else {
 
 			switch (command) {
-				case 'uptime', 'up':
+				case 'uptime':
 					uptimeFunction();
 					break;
 				case 'status':
@@ -278,7 +288,5 @@ client
 	})
 
 client.login(token)
-	.then(() => {
-		console.log(`[${getCurrentDatetime()}]# ${client.user.username} logged`)
-	})
+	.then(() => console.log(`[${getCurrentDatetime()}]# ${client.user.username} logged`))
 	.catch(console.error);
