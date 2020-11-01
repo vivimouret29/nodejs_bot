@@ -15,7 +15,7 @@ module.exports = {
                                 - LISTENING, WATCHING, STREAMING, PLAYING\n\
                                 - ce que tu veux écrire, munie de " " pour\n\
                                 plusieurs mots\n\
-                                - STREAM TWITCH JUSTE : lien à coller\n\
+                                - STREAM TWITCH/YOUTUBE : lien à coller\n\
                 uptime : depuis quand le bot est actif\n\
                 version : bah...\n\
                 ```')
