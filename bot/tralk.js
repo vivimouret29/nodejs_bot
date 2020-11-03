@@ -1,7 +1,7 @@
 module.exports = {
-    name: 'talk',
+    name: 'tralk',
     description: 'a dynamic trashtalk',
     execute(message) {
-        message.reply('commence par calmer ton python éclaté')
+        message.reply('tu sais pas fermer ta gueule toi...')
     }
 }
