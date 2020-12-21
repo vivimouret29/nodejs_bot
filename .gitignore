@@ -2,3 +2,5 @@ config.json
 node_modules
 next_release.md
 .vscode
+package.json
+package-lock.json
