@@ -18,6 +18,9 @@ const collectionReply = new Discord.Collection();
 const collectionBot = new Discord.Collection();
 const date = new Date();
 
+// const Parser = require('rss-parser');
+// const parser = new Parser();
+
 const initdate = `${date.getHours()}:${date.getMinutes()} - ${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`;
 
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
@@ -44,6 +47,18 @@ function getCurrentDatetime() {
 	return `${newDate.getHours()}:${newDate.getMinutes()} - ${newDate.getDate()}/${newDate.getMonth()}/${newDate.getFullYear()}`
 }
 
+// (async () => {
+// 	try {
+// 		const feed = await parser.parseURL('https://www.zt-za.com/animes/');
+// 		console.log(feed.title);
+// 		feed.items.forEach(item => {
+// 			console.log(item.title + ':' + item.link)
+// 		});
+// 	} catch (err) {
+// 		console.log(`[${getCurrentDatetime()}]# Erreur sortie asyncParser : `, err);
+// 	}
+// })();
+
 client
 	.on('ready', async () => {
 		await wait(1000);
@@ -63,16 +78,16 @@ client
 			// 	this.member.get(userRoles)
 			// } else {
 			member.guild.channels.cache
-				.find(ch => ch.name === 'général')
+				.find(ch => ch.name === 'general-chat')
 				.send(`Jeune padawan ${member.displayName}, bienvenue à toi.`);
 		} catch (err) {
-			console.log(`[${getCurrentDatetime()}]# Erreur d'ajout de membre(s)/rôle : `, err);
+			console.log(`[${getCurrentDatetime()}]# Error message new member : `, err);
 		}
 		// }
 	})
 	.on('message', async message => {
 
-		// console.log(message.guild)
+		console.log(guild)
 
 		const args = message.content.slice(prefix.length).trim().split(/ +/);
 		const command = args.shift().toLowerCase();
@@ -80,8 +95,37 @@ client
 		const authorMessage = message.author.username;
 		const badChannels = ['news-anime', 'leekwars'];
 		const badBot = ['757970907992948826', '758319298325905428'];
+		const badBoy = ['346551215036956672'];
 		let checkCollection
 		collectionCommands.has(command) ? checkCollection = collectionCommands.get(command).name : checkCollection = false;
+
+		if (!(prefix.includes(message.content))) {
+
+			if (message.author.id === godMaster) {
+
+				if (Math.random() < .05) return;
+
+				try {
+					const dio = client.emojis.cache.find(emoji => emoji.name === "dio");
+					message.react(dio)
+					console.log(`[${getCurrentDatetime()}]# ZA WARUDO!!!`)
+				} catch (err) {
+					console.log(`[${getCurrentDatetime()}]# Can't find emoji her`)
+				}
+			}
+
+			if (badBoy.includes(message.author.id)) {
+
+				if (Math.random() > .05) return;
+
+				try {
+					message.delete().catch(O_o => { })
+					console.log(`[${getCurrentDatetime()}]# message deleted`)
+				} catch (err) {
+					console.log(`[${getCurrentDatetime()}]# Can't delete badBoy's message`)
+				}
+			}
+		}
 
 		function uptimeFunction() {
 			let totalSeconds = (client.uptime / 1000);
@@ -92,7 +136,7 @@ client
 			let minutes = Math.floor(totalSeconds / 60);
 			let seconds = Math.floor(totalSeconds % 60);
 			let update = initdate
-			
+
 			message.delete().catch(O_o => { })
 			message.channel.send(`\`UPDATE|SATELLITE : ${update}\`\n\`UPTIME|SATELLITE : ${days}D:${hours}H:${minutes}M:${seconds}S\``)
 			console.log(`[${getCurrentDatetime()}]# ${authorMessage} :  ${msg}`);
@@ -188,11 +232,6 @@ client
 			}
 		}
 
-		function randomCollection() {
-			if (Math.random() < .5) return collectionBot.get('trash').execute(message);
-			else return collectionBot.get('talk').execute(message);
-		}
-
 		async function killBot() {
 			if (message.author.id === godMaster) {
 				message.delete().catch(O_o => { })
@@ -230,13 +269,12 @@ client
 
 		if (badBot.includes(message.author.id) && !(badChannels.includes(message.channel.name))) {
 
-			if (Math.random() <= .2) {
-
+			if (Math.random() <= 1) {
 				try {
-					randomCollection()
-					console.log(`[${getCurrentDatetime()}]# ${authorMessage} : ${msg}\n[${getCurrentDatetime()}]# ${client.user.username} : petit trashtalk`)
-				} catch (error) {
-					console.error(error);
+					collectionBot.get('trashtalk').execute(message);
+					console.log(`[${getCurrentDatetime()}]# ${authorMessage} : ${msg}\n[${getCurrentDatetime()}]# ${client.user.username} use (or not) a trashtalk`)
+				} catch (err) {
+					console.log(`[${getCurrentDatetime()}]# Erreur sortie randomCollection : `, err);
 				}
 			}
 		}
@@ -253,7 +291,7 @@ client
 					.execute(message);
 				console.log(`[${getCurrentDatetime()}]# ${authorMessage} : ${msg}`)
 			} catch (err) {
-				console.log(`[${getCurrentDatetime()}]# Sortie : `, err);
+				console.log(`[${getCurrentDatetime()}]# Erreur sortie Reply : `, err);
 			}
 
 		} else {
@@ -281,7 +319,7 @@ client
 					console.log(`[${getCurrentDatetime()}]# ${authorMessage} : ${msg}`)
 					break
 				default:
-					console.log(`[${getCurrentDatetime()}]# ${authorMessage} : ${msg}`)
+					console.log(`[${getCurrentDatetime()}]# tentative de command ${msg} par ${authorMessage}`)
 					message.channel.send('nos développeurs travaillent actuellement sur cette commande')
 			}
 		}
