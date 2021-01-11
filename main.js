@@ -76,18 +76,17 @@ client
 			// const userRoles = member.roles.cache
 			// if (this.member.id === memberber.id) {
 			// 	this.member.get(userRoles)
-			// } else {
+			// } else { }
 			member.guild.channels.cache
 				.find(ch => ch.name === 'general-chat')
 				.send(`Jeune padawan ${member.displayName}, bienvenue à toi.`);
 		} catch (err) {
 			console.log(`[${getCurrentDatetime()}]# Error message new member : `, err);
 		}
-		// }
 	})
 	.on('message', async message => {
 
-		console.log(guild)
+		// console.log(guild)
 
 		const args = message.content.slice(prefix.length).trim().split(/ +/);
 		const command = args.shift().toLowerCase();
@@ -98,34 +97,6 @@ client
 		const badBoy = ['346551215036956672'];
 		let checkCollection
 		collectionCommands.has(command) ? checkCollection = collectionCommands.get(command).name : checkCollection = false;
-
-		if (!(prefix.includes(message.content))) {
-
-			if (message.author.id === godMaster) {
-
-				if (Math.random() < .05) return;
-
-				try {
-					const dio = client.emojis.cache.find(emoji => emoji.name === "dio");
-					message.react(dio)
-					console.log(`[${getCurrentDatetime()}]# ZA WARUDO!!!`)
-				} catch (err) {
-					console.log(`[${getCurrentDatetime()}]# Can't find emoji her`)
-				}
-			}
-
-			if (badBoy.includes(message.author.id)) {
-
-				if (Math.random() > .05) return;
-
-				try {
-					message.delete().catch(O_o => { })
-					console.log(`[${getCurrentDatetime()}]# message deleted`)
-				} catch (err) {
-					console.log(`[${getCurrentDatetime()}]# Can't delete badBoy's message`)
-				}
-			}
-		}
 
 		function uptimeFunction() {
 			let totalSeconds = (client.uptime / 1000);
@@ -267,6 +238,19 @@ client
 			}
 		}
 
+		if (message.author.id === godMaster) {
+
+			// if (Math.random() > .05) return;
+
+			try {
+				const dio = client.emojis.cache.find(emoji => emoji.name === "dio");
+				message.react(dio)
+				console.log(`[${getCurrentDatetime()}]# ZA WARUDO!!!`)
+			} catch (err) {
+				console.log(`[${getCurrentDatetime()}]# Can't find emoji her`)
+			}
+		}
+
 		if (badBot.includes(message.author.id) && !(badChannels.includes(message.channel.name))) {
 
 			if (Math.random() <= 1) {
@@ -293,7 +277,17 @@ client
 			} catch (err) {
 				console.log(`[${getCurrentDatetime()}]# Erreur sortie Reply : `, err);
 			}
+			if (badBoy.includes(message.author.id)) {
 
+				if (Math.random() > .05) return;
+
+				try {
+					message.delete().catch(O_o => { })
+					console.log(`[${getCurrentDatetime()}]# message deleted`)
+				} catch (err) {
+					console.log(`[${getCurrentDatetime()}]# Can't delete badBoy's message`)
+				}
+			}
 		} else {
 
 			switch (command) {
