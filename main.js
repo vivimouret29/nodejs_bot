@@ -240,14 +240,15 @@ client
 
 		if (message.author.id === godMaster) {
 
-			// if (Math.random() > .05) return;
+			if (Math.random() < .05) {
 
-			try {
-				const dio = client.emojis.cache.find(emoji => emoji.name === "dio");
-				message.react(dio)
-				console.log(`[${getCurrentDatetime()}]# ZA WARUDO!!!`)
-			} catch (err) {
-				console.log(`[${getCurrentDatetime()}]# Can't find emoji her`)
+				try {
+					const dio = client.emojis.cache.find(emoji => emoji.name === "dio");
+					message.react(dio)
+					console.log(`[${getCurrentDatetime()}]# ZA WARUDO!!!`)
+				} catch (err) {
+					console.log(`[${getCurrentDatetime()}]# Can't find emoji her`)
+				}
 			}
 		}
 
