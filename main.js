@@ -110,7 +110,7 @@ client
 
 			message.delete().catch(O_o => { })
 			message.channel.send(`\`UPDATE|SATELLITE : ${update}\`\n\`UPTIME|SATELLITE : ${days}D:${hours}H:${minutes}M:${seconds}S\``)
-			console.log(`[${getCurrentDatetime()}] ||| ${message.guild.name} / ${message.channel.name} # ${authorMessage} :  ${msg}`);
+			console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # ${authorMessage} :  ${msg}`);
 		}
 
 		function statusFunction() {
@@ -153,7 +153,7 @@ client
 				}
 
 			} else return message.channel.send('t\'as pas le droit d\'y toucher');
-			console.log(`[${getCurrentDatetime()}] ||| ${message.guild.name} / ${message.channel.name} # ${authorMessage} :  ${msg}`);
+			console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # ${authorMessage} :  ${msg}`);
 		}
 
 		function invit() {
