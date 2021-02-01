@@ -86,7 +86,7 @@ client
 	})
 	.on('message', async message => {
 
-		// console.log(guild)
+		// console.log()
 
 		const args = message.content.slice(prefix.length).trim().split(/ +/);
 		const command = args.shift().toLowerCase();
@@ -110,7 +110,7 @@ client
 
 			message.delete().catch(O_o => { })
 			message.channel.send(`\`UPDATE|SATELLITE : ${update}\`\n\`UPTIME|SATELLITE : ${days}D:${hours}H:${minutes}M:${seconds}S\``)
-			console.log(`[${getCurrentDatetime()}]# ${authorMessage} :  ${msg}`);
+			console.log(`[${getCurrentDatetime()}] ||| ${message.guild.name} / ${message.channel.name} # ${authorMessage} :  ${msg}`);
 		}
 
 		function statusFunction() {
@@ -152,11 +152,59 @@ client
 					message.channel.send('changement d\'activité !')
 				}
 
-			} else return message.channel.send('t\'as pas le droit d\'y toucher')
-			console.log(`[${getCurrentDatetime()}]# ${authorMessage} :  ${msg}`);
+			} else return message.channel.send('t\'as pas le droit d\'y toucher');
+			console.log(`[${getCurrentDatetime()}] ||| ${message.guild.name} / ${message.channel.name} # ${authorMessage} :  ${msg}`);
 		}
 
+		function invit() {
+			try {
+				message.guild.fetchInvites()
+					.then(invites => {
+						
+						const newObject = invites.array().filter(element => {
+
+							if (element.maxAge === 0) {
+								object = `${element.code}`;
+								console.log(object);
+							} else {
+								message.channel.send('no eternal invit');
+							}
+
+						})
+
+						return newObject;
+					});
+			} catch (err) {
+				console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # Sortie invit() :`, err);
+			}
+		}
+		
+		const invitDiscord = '';
+		// invit(invitDiscord);
+		// console.log(invitDiscord);
+		// message.channel.send('aller j\'suis gentil : ' + invitDiscord);
+
 		async function kickCounter() {
+
+			function invit() {
+				try {
+					message.guild.fetchInvites()
+						.then(invites => {
+							invites.forEach(element => {
+
+								if (element.maxAge === 0) {
+									console.log(element.code)
+									return 'https://discord.gg/' + element.code
+								} else {
+									return 'no eternal invit'
+								}
+
+							})
+						});
+				} catch (err) {
+					console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # Sortie invit() :`, err);
+				}
+			}
 
 			try {
 				const member = message.guild.member(message.author);
@@ -173,7 +221,7 @@ client
 				await message.channel
 					.send(`<@!${message.author.id}> veut expulser ${args}.\nIl vit : ${alive}\nIl meurt : ${dead}`)
 					.then(() => {
-						console.log(`[${getCurrentDatetime()}]# ${authorMessage} veut expulser ${taggedUser.username}`)
+						console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # ${authorMessage} veut expulser ${taggedUser.username}`)
 					});
 				await message.react(dead).then(() => message.react(alive));
 				await message.awaitReactions(emojiReact, { max: 1 })
@@ -186,20 +234,20 @@ client
 						if (reaction.emoji.name === "dead") {
 							message.channel.send(countgif);
 							message.author
-								.send('au final c\'est toi qui est exclue hahaha\n' + invit)
+								.send('au final c\'est toi qui est exclue hahaha\n' + invit())
 								.then(() => {
-									message.delete().catch(O_o => { })
+									// message.delete().catch(O_o => { })
 									member.kick();
-									console.log(`[${getCurrentDatetime()}]# ${client.user.username} : executé`);
+									console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # ${client.user.username} : executé`);
 								})
 						} else {
 							message.channel.send('une sentence annulée...');
-							console.log(`[${getCurrentDatetime()}]# ${client.user.username} : suspendu`);
+							console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # ${client.user.username} : suspendu`);
 						}
 					});
 			} catch (err) {
 				message.channel.send('maintenance de la commande en cours...')
-				console.log(`[${getCurrentDatetime()}]# Sortie kickCounter() :`, err);
+				console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # Sortie kickCounter() :`, err);
 			}
 		}
 
@@ -211,9 +259,9 @@ client
 						wait(1000)
 						client.destroy()
 					});
-				console.log(`[${getCurrentDatetime()}]# ${authorMessage} :  ${msg}`)
+				console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # ${authorMessage} :  ${msg}`)
 			} else {
-				console.log(`[${getCurrentDatetime()}]# ${authorMessage} :  ${msg}`)
+				console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # ${authorMessage} :  ${msg}`)
 				message.channel.send('nos développeurs travaillent actuellement sur cette commande')
 			}
 		}
@@ -230,10 +278,10 @@ client
 						wait(1000)
 						client.login(token)
 					});
-				console.log(`[${getCurrentDatetime()}]# ${authorMessage} :  ${msg}`);
+				console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # ${authorMessage} :  ${msg}`);
 
 			} else {
-				console.log(`[${getCurrentDatetime()}]# ${authorMessage} :  ${msg}`)
+				console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # ${authorMessage} :  ${msg}`)
 				message.channel.send('nos développeurs travaillent actuellement sur cette commande')
 			}
 		}
@@ -245,9 +293,9 @@ client
 				try {
 					const dio = client.emojis.cache.find(emoji => emoji.name === "dio");
 					message.react(dio)
-					console.log(`[${getCurrentDatetime()}]# ZA WARUDO!!!`)
+					console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # ZA WARUDO!!!`)
 				} catch (err) {
-					console.log(`[${getCurrentDatetime()}]# Can't find emoji her`)
+					console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # Can't find emoji her`)
 				}
 			}
 		}
@@ -257,9 +305,9 @@ client
 			if (Math.random() <= 1) {
 				try {
 					collectionBot.get('trashtalk').execute(message);
-					console.log(`[${getCurrentDatetime()}]# ${authorMessage} : ${msg}\n[${getCurrentDatetime()}]# ${client.user.username} use (or not) a trashtalk`)
+					console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # ${authorMessage} : ${msg}\n[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # ${client.user.username} use (or not) a trashtalk`)
 				} catch (err) {
-					console.log(`[${getCurrentDatetime()}]# Erreur sortie randomCollection : `, err);
+					console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # Erreur sortie randomCollection : `, err);
 				}
 			}
 		}
@@ -274,9 +322,9 @@ client
 				collectionReply
 					.get(msg)
 					.execute(message);
-				console.log(`[${getCurrentDatetime()}]# ${authorMessage} : ${msg}`)
+				console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # ${authorMessage} : ${msg}`)
 			} catch (err) {
-				console.log(`[${getCurrentDatetime()}]# Erreur sortie Reply : `, err);
+				console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # Erreur sortie Reply : `, err);
 			}
 			if (badBoy.includes(message.author.id)) {
 
@@ -284,9 +332,9 @@ client
 
 				try {
 					message.delete().catch(O_o => { })
-					console.log(`[${getCurrentDatetime()}]# message deleted`)
+					console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # message deleted`)
 				} catch (err) {
-					console.log(`[${getCurrentDatetime()}]# Can't delete badBoy's message`)
+					console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # Can't delete badBoy's message`)
 				}
 			}
 		} else {
@@ -311,10 +359,10 @@ client
 					collectionCommands
 						.get(command)
 						.execute(message, args, client);
-					console.log(`[${getCurrentDatetime()}]# ${authorMessage} : ${msg}`)
+					console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # ${authorMessage} : ${msg}`)
 					break
 				default:
-					console.log(`[${getCurrentDatetime()}]# tentative de command ${msg} par ${authorMessage}`)
+					console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # tentative de command ${msg} par ${authorMessage}`)
 					message.channel.send('nos développeurs travaillent actuellement sur cette commande')
 			}
 		}
