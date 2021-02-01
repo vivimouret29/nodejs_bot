@@ -1,6 +1,5 @@
 { 
     "prefix" : "!",
-    "token"  : "YOUR-TOKEN-HERE"
-    "invit" : "your_discord_invite",
+    "token"  : "YOUR-TOKEN-HERE",
     "godMaster" : "your_discord_id"
 }
