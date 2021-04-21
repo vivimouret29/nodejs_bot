@@ -5,6 +5,7 @@ module.exports = {
         message.delete().catch(O_o => { })
         message.channel.send('```Liste help :\n\
                 help : faire ce que tu fais ducon\n\
+                ping moi avec @ pour me parler (un peu..)s\n\
                 votekick : kick + @ à tes risques et périls\n\
                 ping : teste la latence\n\
                 prune : supprime des lignes (commande admin)\n\
