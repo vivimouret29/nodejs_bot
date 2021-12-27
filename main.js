@@ -8,7 +8,7 @@ const {
 } = require("./config.json");
 
 const Discord = require('discord.js');
-const fs = require('fs');
+// const fs = require('fs');
 
 const wait = require('util').promisify(setTimeout);
 
@@ -23,19 +23,31 @@ var date = new Date();
 
 var initdate = `${date.getHours()}:${date.getMinutes()} - ${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
 
-// var commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
-// var replyFiles = fs.readdirSync('./reply').filter(file => file.endsWith('.js'));
-// var botFiles = fs.readdirSync('./bot').filter(file => file.endsWith('.js'));
 var commandFile = require('./response/command.js')
 var replyFile = require('./response/reply.js')
 var botFile = require('./response/bot.js')
 
-for (let command in commandFile) {
-	collectionCommands.set(command.name, command);
-};
-collectionCommands.set(commandFile.name, commandFile);
-collectionReply.set(replyFile.name, replyFile);
-collectionBot.set(botFile.name, botFile);
+var ismuted = false;
+
+collectionCommands.set(commandFile.version.name, commandFile.version);
+collectionCommands.set(commandFile.say.name, commandFile.say);
+collectionCommands.set(commandFile.prune.name, commandFile.prune);
+collectionCommands.set(commandFile.ping.name, commandFile.ping);
+
+collectionReply.set(replyFile.daftbot.name, replyFile.daftbot);
+collectionReply.set(replyFile.laugh.name, replyFile.laugh);
+collectionReply.set(replyFile.yes.name, replyFile.yes);
+collectionReply.set(replyFile.no.name, replyFile.no);
+collectionReply.set(replyFile.tqt.name, replyFile.tqt);
+
+collectionBot.set(botFile.trashtalk.name, botFile.trashtalk);
+
+// for (let command in botFile) {
+// 	collectionBot.set(command.name, command);
+// };
+// collectionCommands.set(commandFile.name, commandFile);
+// collectionReply.set(replyFile.name, replyFile);
+// collectionBot.set(botFile.name, botFile);
 
 function getCurrentDatetime() {		// TODO : faire une sous classe mère
 	let newDate = new Date();
@@ -89,7 +101,6 @@ client
 		var badChannels = [];
 		var badBot = ['431915542610313217'];
 		var badBoy = ['431915542610313217']; // TODO debug
-		var ismuted = false;
 		var checkCollection;
 		collectionCommands.has(command) ? checkCollection = collectionCommands.get(command).name : checkCollection = false;
 
@@ -240,15 +251,12 @@ client
 					console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
 					message.channel.send('Incapable de répliquer');
 					ismuted = true;
-					return true, ismuted;
+					return ismuted;
 				} else if (action === 'false') {
 					console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
 					message.channel.send('Capable de répliquer');
 					ismuted = false;
-					return false, ismuted;
-				} else {
-					console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
-					message.channel.send('Erreur d\'assigniation');
+					return ismuted;
 				}
 			} else {
 				console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
@@ -293,9 +301,9 @@ client
 		if (message.author.bot) return;
 
 		if (message.author.id === owner) {
-			if (Math.random() < .05) {
+			if (Math.random() < .15) {
 				try {
-					let dio = client.emojis.cache.find(emoji => emoji.name === "dio");
+					let dio = client.emojis.cache.find(emoji => emoji.name === "dio_sama");
 					message.react(dio)
 					console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # ZA WARUDO!!!`)
 				} catch (err) {
@@ -304,77 +312,79 @@ client
 			};
 		};
 
-		// if (badBot.includes(message.author.id) && !(badChannels.includes(message.channel.name))) {
-
-		// 	if (ismuted) return;
-
-		// 	if (Math.random() <= .2) {
-		// 		try {
-		// 			collectionBot.get('trashtalk').execute(message);
-		// 			console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}\n[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # ${client.user.username} use (or not) a trashtalk`)
-		// 		} catch (err) {
-		// 			console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # Erreur sortie randomCollection : `, err);
-		// 		};
-		// 	};
-		// };
-
-		// if (!message.content.startsWith(prefix)) {
-
-		// 	if (ismuted) return;
-		// 	if (!collectionReply.has(msg)) return;
-
-		// 	try {
-		// 		collectionReply
-		// 			.get(msg)
-		// 			.execute(message);
-		// 		console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
-		// 	} catch (err) {
-		// 		console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # Erreur sortie Reply : `, err);
-		// 	};
-
-		// 	if (badBoy.includes(message.author.id)) {
-
-		// 		if (Math.random() > .05) return;
-
-		// 		try {
-		// 			message.delete().catch(O_o => { })
-		// 			console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # message deleted`);
-		// 		} catch (err) {
-		// 			console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # Can't delete badBoy's message`);
-		// 		};
-		// 	};
-		// } else {
 		if (message.content.startsWith(prefix)) {
 			switch (command) {
 				case 'uptime':
 					uptimeFunction();
-					break;
+					return;
 				case 'status':
 					statusFunction();
-					break;
-				// case 'votekick':
-				// 	kickCounter();
-				// 	break;
+					return;
+				case 'votekick':
+					kickCounter();
+					return;
 				case 'kill':
 					killBot();
-					break;
+					return;
 				case 'reset':
 					resetBot();
-					break;
+					return;
 				case 'mute':
 					mute();
-					break;
+					return;
 				case checkCollection:
 					collectionCommands
 						.get(command)
 						.execute(message, args, client);
 					console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`)
-					break;
+					return;
 				default:
 					console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # Tentative de command ${msg} par ${author}`);
 					message.channel.send('Nos développeurs travaillent actuellement sur cette commande');
 			};
 		};
+
+		if (ismuted) return;
+
+		if (badBot.includes(message.author.id) && !(badChannels.includes(message.channel.name))) {
+
+			if (Math.random() <= .005) {
+				try {
+					collectionBot.get('trashtalk').execute(message);
+					console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}\n[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # ${client.user.username} use (or not) a trashtalk`)
+				} catch (err) {
+					console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # Erreur sortie randomCollection : `, err);
+				};
+			};
+		};
+
+		if (!message.content.startsWith(prefix)) {
+
+			if (!collectionReply.has(msg)) return;
+
+			try {
+				collectionReply
+					.get(msg)
+					.execute(message);
+				console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
+			} catch (err) {
+				console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # Erreur sortie Reply : `, err);
+			};
+
+			if (badBoy.includes(message.author.id)) {
+
+				if (Math.random() > .005) return;
+
+				try {
+					message.delete().catch(O_o => { })
+					console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # message deleted`);
+				} catch (err) {
+					console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # Can't delete badBoy's message`);
+				};
+			};
+		}
+
+		return
 	});
 
 client.login(token)
