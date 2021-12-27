@@ -7,7 +7,6 @@ module.exports = {
         name: 'version',
         description: 'a dynamic view version',
         execute(message) {
-            message.delete().catch(O_o => { });
             message.channel.send(`daftbot ${packageVersion.version}`);
         }
     },
@@ -17,7 +16,6 @@ module.exports = {
         args: true,
         execute(message, args) {
             var sayMessage = args.join(" ");
-            message.delete().catch(O_o => { });
             message.channel.send(sayMessage);
         }
     },
@@ -46,7 +44,6 @@ module.exports = {
         name: 'ping',
         description: 'a dynamic ping',
         async execute(message) {
-            message.delete().catch(O_o => { })
             const wait = await message.channel.send("AAAAAAAATTTEEEEEEENNNNNNNNNNNNNDDDDDDDDDSSSSSSSSSSSSS!!!!");
             wait.edit(`Bip. Latence de ${wait.createdTimestamp - message.createdTimestamp}ms.. Bip Boup..`);
         }

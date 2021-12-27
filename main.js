@@ -8,7 +8,6 @@ const {
 } = require("./config.json");
 
 const Discord = require('discord.js');
-// const fs = require('fs');
 
 const wait = require('util').promisify(setTimeout);
 
@@ -17,9 +16,6 @@ var collectionCommands = new Discord.Collection();
 var collectionReply = new Discord.Collection();
 var collectionBot = new Discord.Collection();
 var date = new Date();
-
-// const Parser = require('rss-parser');
-// const parser = new Parser();
 
 var initdate = `${date.getHours()}:${date.getMinutes()} - ${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
 
@@ -41,13 +37,6 @@ collectionReply.set(replyFile.no.name, replyFile.no);
 collectionReply.set(replyFile.tqt.name, replyFile.tqt);
 
 collectionBot.set(botFile.trashtalk.name, botFile.trashtalk);
-
-// for (let command in botFile) {
-// 	collectionBot.set(command.name, command);
-// };
-// collectionCommands.set(commandFile.name, commandFile);
-// collectionReply.set(replyFile.name, replyFile);
-// collectionBot.set(botFile.name, botFile);
 
 function getCurrentDatetime() {		// TODO : faire une sous classe mère
 	let newDate = new Date();
@@ -97,10 +86,9 @@ client
 		var command = args.shift().toLowerCase();
 		var msg = message.content.toLowerCase();
 		var author = message.author.username;
-		// var badBot = ['757970907992948826', '758319298325905428'];
+		var badBot = ['757970907992948826', '758319298325905428'];
 		var badChannels = [];
-		var badBot = ['431915542610313217'];
-		var badBoy = ['431915542610313217']; // TODO debug
+		var badBoy = [];
 		var checkCollection;
 		collectionCommands.has(command) ? checkCollection = collectionCommands.get(command).name : checkCollection = false;
 
@@ -114,7 +102,6 @@ client
 			let seconds = Math.floor(totalSeconds % 60);
 			let start = initdate
 
-			// message.delete().catch(O_o => { });
 			message.channel.send(`Jour initial : ${start}\nTemps : ${days}D:${hours}H:${minutes}M:${seconds}S`);
 			console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
 		};
@@ -136,7 +123,6 @@ client
 					}).catch(
 						console.error
 					);
-					// message.delete().catch(O_o => { });
 					message.channel.send('Changement d\'activité !');
 				} else {
 					client.user.setPresence({
@@ -149,7 +135,6 @@ client
 					}).catch(
 						console.error
 					);
-					// message.delete().catch(O_o => { });
 					message.channel.send('Changement d\'activité !');
 				};
 			} else return message.channel.send('T\'as pas le droit d\'y toucher');
@@ -228,7 +213,7 @@ client
 							message.author
 								.send('Au final c\'est toi qui est exclue hahaha\n' + invitCounter())
 								.then(() => {
-									// message.delete().catch(O_o => { })
+									message.delete().catch(O_o => { })
 									member.kick();
 									console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # ${client.user.username} : executé`);
 								});
@@ -246,7 +231,6 @@ client
 		async function mute() {
 			let action = args[0];
 			if (message.author.id === owner) {
-				// message.delete().catch(O_o => { });
 				if (action === 'true') {
 					console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
 					message.channel.send('Incapable de répliquer');
@@ -266,7 +250,6 @@ client
 
 		async function killBot() {
 			if (message.author.id === owner) {
-				// message.delete().catch(O_o => { });
 				await message.channel.send('Destroyiiiiniginezoesqocpnqfkn')
 					.then(() => {
 						wait(1000)
@@ -281,7 +264,6 @@ client
 
 		async function resetBot() {
 			if (message.author.id === owner) {
-				message.delete().catch(O_o => { })
 				await message.channel.send('Petite douche je reviens')
 					.then(() => {
 						wait(1000)
@@ -376,15 +358,13 @@ client
 				if (Math.random() > .005) return;
 
 				try {
-					message.delete().catch(O_o => { })
+					message.delete().catch(O_o => { })	// NEVER DELETE
 					console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # message deleted`);
 				} catch (err) {
 					console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # Can't delete badBoy's message`);
 				};
 			};
-		}
-
-		return
+		};
 	});
 
 client.login(token)
