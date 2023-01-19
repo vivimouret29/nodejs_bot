@@ -3,8 +3,8 @@
 const {
 	prefix,
 	token,
-	invit,
-	owner
+	owner,
+	invit
 } = require("./config.json");
 
 const Discord = require('discord.js');
@@ -38,7 +38,7 @@ collectionReply.set(replyFile.tqt.name, replyFile.tqt);
 
 collectionBot.set(botFile.trashtalk.name, botFile.trashtalk);
 
-function getCurrentDatetime() {		// TODO : faire une sous classe mère
+function getCurrentDatetime() {		// TODO : extraire de main
 	let newDate = new Date();
 	return `${newDate.getHours()}:${newDate.getMinutes()} - ${newDate.getDate()}/${newDate.getMonth()}/${newDate.getFullYear()}`;
 };
@@ -60,9 +60,9 @@ client
 		await wait(1000);
 		client.user.setPresence({
 			activity: {
-				name: `LofiGirl`,
+				name: 'le bon daftmob',
 				type: 'STREAMING',
-				url: 'https://www.youtube.com/watch?v=5qap5aO4i9A'
+				url: 'https://www.twitch.tv/daftmob'
 			},
 			status: 'dnd'
 		})
@@ -92,55 +92,6 @@ client
 		var checkCollection;
 		collectionCommands.has(command) ? checkCollection = collectionCommands.get(command).name : checkCollection = false;
 
-		function uptimeFunction() {
-			let totalSeconds = (client.uptime / 1000);
-			let days = Math.floor(totalSeconds / 86400);
-			totalSeconds %= 86400;
-			let hours = Math.floor(totalSeconds / 3600);
-			totalSeconds %= 3600;
-			let minutes = Math.floor(totalSeconds / 60);
-			let seconds = Math.floor(totalSeconds % 60);
-			let start = initdate
-
-			message.channel.send(`Jour initial : ${start}\nTemps : ${days}D:${hours}H:${minutes}M:${seconds}S`);
-			console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
-		};
-
-		function statusFunction() {
-			let stOnOff = args[0];
-			let typeThings = args[1];
-			let nameText = args[2];
-			let urlLike = args[3];
-
-			if (message.author.id === owner) {
-				if (urlLike === undefined) {
-					client.user.setPresence({
-						activity: {
-							name: `${nameText}`,
-							type: `${typeThings}`
-						},
-						status: `${stOnOff}`
-					}).catch(
-						console.error
-					);
-					message.channel.send('Changement d\'activité !');
-				} else {
-					client.user.setPresence({
-						activity: {
-							name: `${nameText}`,
-							type: `${typeThings}`,
-							url: `${urlLike}`
-						},
-						status: `${stOnOff}`
-					}).catch(
-						console.error
-					);
-					message.channel.send('Changement d\'activité !');
-				};
-			} else return message.channel.send('T\'as pas le droit d\'y toucher');
-			console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
-		};
-
 		function invitation() {
 			try {
 				message.guild.fetchInvites()
@@ -164,122 +115,6 @@ client
 		// console.log(invitDiscord);
 		// message.channel.send('Aller j\'suis gentil : ' + invitDiscord);
 
-		async function kickCounter() {
-			function invitCounter() {
-				try {
-					message.guild.fetchInvites()
-						.then(invites => {
-							invites.forEach(element => {
-								if (element.maxAge === 0) {
-									console.log(element.code);
-									return 'https://discord.gg/' + element.code;
-								} else {
-									return 'Aucun invitation éternel';
-								};
-							});
-						});
-				} catch (err) {
-					console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # Sortie invit() :`, err);
-				};
-			};
-
-			try {
-				let member = message.guild.member(message.author);
-				let taggedUser = message.mentions.users.first();
-				let alive = client.emojis.cache.find(emoji => emoji.name === "alive");
-				let dead = client.emojis.cache.find(emoji => emoji.name === "dead");
-
-				if (!message.mentions.users.size) return message.reply('T\'as oublié le tag sérieux');
-
-				let emojiReact = (reaction, user) => {
-					return ["dead", "alive"].includes(reaction.emoji.name) && user.id === message.author.id;
-				};
-
-				await message.channel
-					.send(`<@!${message.author.id}> veut expulser ${args}.\nIl vit : ${alive}\nIl meurt : ${dead}`)
-					.then(() => {
-						console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # ${author} veut expulser ${taggedUser.username}`)
-					});
-				await message.react(dead).then(() => message.react(alive));
-				await message.awaitReactions(emojiReact, { max: 1 })
-					.then(collected => {
-						let reaction = collected.first();
-						let countgif = new Discord.MessageEmbed()
-							.setTitle('#EXEC KICKCOUNTER.EXE')
-							.attachFiles('https://i.pinimg.com/originals/fc/1b/71/fc1b714dd4e30ba4c1be2d7d432d51b0.gif');
-
-						if (reaction.emoji.name === "dead") {
-							message.channel.send(countgif);
-							message.author
-								.send('Au final c\'est toi qui est exclue hahaha\n' + invitCounter())
-								.then(() => {
-									message.delete().catch(O_o => { })
-									member.kick();
-									console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # ${client.user.username} : executé`);
-								});
-						} else {
-							message.channel.send('Une sentence annulée...');
-							console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # ${client.user.username} : suspendu`);
-						};
-					});
-			} catch (err) {
-				message.channel.send('Maintenance de la commande en cours...');
-				console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # Sortie kickCounter() :`, err);
-			};
-		};
-
-		async function mute() {
-			let action = args[0];
-			if (message.author.id === owner) {
-				if (action === 'true') {
-					console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
-					message.channel.send('Incapable de répliquer');
-					ismuted = true;
-					return ismuted;
-				} else if (action === 'false') {
-					console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
-					message.channel.send('Capable de répliquer');
-					ismuted = false;
-					return ismuted;
-				}
-			} else {
-				console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
-				message.channel.send('Restriction de la commande');
-			};
-		};
-
-		async function killBot() {
-			if (message.author.id === owner) {
-				await message.channel.send('Destroyiiiiniginezoesqocpnqfkn')
-					.then(() => {
-						wait(1000)
-						client.destroy()
-					});
-				console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
-			} else {
-				console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
-				message.channel.send('Restriction de la commande');
-			};
-		};
-
-		async function resetBot() {
-			if (message.author.id === owner) {
-				await message.channel.send('Petite douche je reviens')
-					.then(() => {
-						wait(1000)
-						client.destroy()
-					})
-					.then(() => {
-						wait(1000)
-						client.login(token)
-					});
-				console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
-			} else {
-				console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
-				message.channel.send('Restriction de la commande');
-			};
-		};
-
 		if (message.author.bot) return;
 
 		if (message.author.id === owner) {
@@ -297,23 +132,23 @@ client
 		if (message.content.startsWith(prefix)) {
 			switch (command) {
 				case 'uptime':
-					uptimeFunction();
+					uptimeFunction(message, client, author, msg);
 					return;
 				case 'status':
-					statusFunction();
-					return;
-				case 'votekick':
-					kickCounter();
+					statusFunction(message, client, author, msg, args);
 					return;
 				case 'kill':
-					killBot();
-					return;
-				case 'reset':
-					resetBot();
+					killBot(message, client, author, msg);
 					return;
 				case 'mute':
-					mute();
+					mute(message, client, author, msg, args);
 					return;
+				case 'reset':
+					resetBot(message, client, author, msg);
+					return;
+				// case 'votekick':
+				// 	kickCounter(message, client, author, msg);
+				// 	return;
 				case checkCollection:
 					collectionCommands
 						.get(command)
@@ -321,8 +156,8 @@ client
 					console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`)
 					return;
 				default:
-					console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # Tentative de command ${msg} par ${author}`);
-					message.channel.send('Nos développeurs travaillent actuellement sur cette commande');
+					console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # Tentative de commande (${msg}) par (${author})`);
+					message.channel.send('Nos développeurs travaillent actuellement sur cette commande.');
 			};
 		};
 
@@ -367,6 +202,171 @@ client
 		};
 	});
 
+function uptimeFunction(message, client, author, msg) {
+	let totalSeconds = (client.uptime / 1000);
+	let days = Math.floor(totalSeconds / 86400);
+	totalSeconds %= 86400;
+	let hours = Math.floor(totalSeconds / 3600);
+	totalSeconds %= 3600;
+	let minutes = Math.floor(totalSeconds / 60);
+	let seconds = Math.floor(totalSeconds % 60);
+	let start = initdate
+
+	message.channel.send(`Jour initial : ${start}\nTemps : ${days}D:${hours}H:${minutes}M:${seconds}S`);
+	console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
+};
+
+function statusFunction(message, client, author, msg, args) {
+	let stOnOff = args[0];
+	let typeThings = args[1];
+	let nameText = args[2];
+	let urlLike = args[3];
+
+	if (message.author.id === owner) {
+		if (urlLike === undefined) {
+			client.user.setPresence({
+				activity: {
+					name: `${nameText}`,
+					type: `${typeThings}`
+				},
+				status: `${stOnOff}`
+			}).catch(
+				console.error
+			);
+			message.channel.send('Changement d\'activité !');
+		} else {
+			client.user.setPresence({
+				activity: {
+					name: `${nameText}`,
+					type: `${typeThings}`,
+					url: `${urlLike}`
+				},
+				status: `${stOnOff}`
+			}).catch(
+				console.error
+			);
+			message.channel.send('Changement d\'activité !');
+		};
+	} else return message.channel.send('T\'as pas le droit d\'y toucher');
+	console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
+};
+
+// async function kickCounter(message, client, author, msg) {
+// 	function invitCounter() {
+// 		try {
+// 			message.guild.fetchInvites()
+// 				.then(invites => {
+// 					invites.forEach(element => {
+// 						if (element.maxAge === 0) {
+// 							console.log(element.code);
+// 							return 'https://discord.gg/' + element.code;
+// 						} else {
+// 							return 'Aucun invitation éternel';
+// 						};
+// 					});
+// 				});
+// 		} catch (err) {
+// 			console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # Sortie invit() :`, err);
+// 		};
+// 	};
+
+// 	try {
+// 		let member = message.guild.member(message.author);
+// 		let taggedUser = message.mentions.users.first();
+// 		let alive = client.emojis.cache.find(emoji => emoji.name === "alive");
+// 		let dead = client.emojis.cache.find(emoji => emoji.name === "dead");
+
+// 		if (!message.mentions.users.size) return message.reply('T\'as oublié le tag sérieux');
+
+// 		let emojiReact = (reaction, user) => {
+// 			return ["dead", "alive"].includes(reaction.emoji.name) && user.id === message.author.id;
+// 		};
+
+// 		await message.channel
+// 			.send(`<@!${message.author.id}> veut expulser ${args}.\nIl vit : ${alive}\nIl meurt : ${dead}`)
+// 			.then(() => {
+// 				console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # ${author} veut expulser ${taggedUser.username}`)
+// 			});
+// 		await message.react(dead).then(() => message.react(alive));
+// 		await message.awaitReactions(emojiReact, { max: 1 })
+// 			.then(collected => {
+// 				let reaction = collected.first();
+// 				let countgif = new Discord.MessageEmbed()
+// 					.setTitle('#EXEC KICKCOUNTER.EXE')
+// 					.attachFiles('https://i.pinimg.com/originals/fc/1b/71/fc1b714dd4e30ba4c1be2d7d432d51b0.gif');
+
+// 				if (reaction.emoji.name === "dead") {
+// 					message.channel.send(countgif);
+// 					message.author
+// 						.send('Au final c\'est toi qui est exclue hahaha\n' + invitCounter())
+// 						.then(() => {
+// 							message.delete().catch(O_o => { })
+// 							member.kick();
+// 							console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # ${client.user.username} : executé`);
+// 						});
+// 				} else {
+// 					message.channel.send('Une sentence annulée...');
+// 					console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # ${client.user.username} : suspendu`);
+// 				};
+// 			});
+// 	} catch (err) {
+// 		message.channel.send('Maintenance de la commande en cours...');
+// 		console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # Sortie kickCounter() :`, err);
+// 	};
+// };
+
+async function killBot(message, client, author, msg) {
+	if (message.author.id === owner) {
+		await message.channel.send('Destroyiiiiniginezoesqocpnqfkn')
+			.then(() => {
+				wait(1000)
+				client.destroy()
+			});
+		console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
+	} else {
+		console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
+		message.channel.send('Restriction de la commande');
+	};
+};
+
+async function mute(message, client, author, msg, args) {
+	let action = args[0];
+	if (message.author.id === owner) {
+		if (action === 'true') {
+			console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
+			message.channel.send('Incapable de répliquer');
+			ismuted = true;
+			return ismuted;
+		} else if (action === 'false') {
+			console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
+			message.channel.send('Capable de répliquer');
+			ismuted = false;
+			return ismuted;
+		}
+	} else {
+		console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
+		message.channel.send('Restriction de la commande');
+	};
+};
+
+async function resetBot(message, client, author, msg) {
+	if (message.author.id === owner) {
+		await message.channel.send('Petite douche je reviens')
+			.then(() => {
+				wait(1000)
+				client.destroy()
+			})
+			.then(() => {
+				wait(1000)
+				client.login(token)
+			});
+		console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
+	} else {
+		console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
+		message.channel.send('Restriction de la commande');
+	};
+};
+
 client.login(token)
-	.then(() => console.log(`[${getCurrentDatetime()}]# ${client.user.username} logged`))
+	.then(() => console.log(`[${getCurrentDatetime()}]# ${client.user.username}\'s logged`))
 	.catch(console.error);
