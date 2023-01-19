@@ -12,9 +12,6 @@ const Discord = require('discord.js');
 const wait = require('util').promisify(setTimeout);
 
 var client = new Discord.Client();		// TODO : faire une classe mère
-var collectionCommands = new Discord.Collection();
-var collectionReply = new Discord.Collection();
-var collectionBot = new Discord.Collection();
 var date = new Date();
 
 var initdate = `${date.getHours()}:${date.getMinutes()} - ${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
@@ -25,17 +22,24 @@ var botFile = require('./response/bot.js')
 
 var ismuted = false;
 
+var collectionCommands = new Discord.Collection();
+var collectionReply = new Discord.Collection();
+var collectionBot = new Discord.Collection();
+
+// Command Collection
 collectionCommands.set(commandFile.version.name, commandFile.version);
 collectionCommands.set(commandFile.say.name, commandFile.say);
 collectionCommands.set(commandFile.prune.name, commandFile.prune);
 collectionCommands.set(commandFile.ping.name, commandFile.ping);
 
+// Reply Collection
 collectionReply.set(replyFile.daftbot.name, replyFile.daftbot);
 collectionReply.set(replyFile.laugh.name, replyFile.laugh);
 collectionReply.set(replyFile.yes.name, replyFile.yes);
 collectionReply.set(replyFile.no.name, replyFile.no);
 collectionReply.set(replyFile.tqt.name, replyFile.tqt);
 
+// Bot Collection
 collectionBot.set(botFile.trashtalk.name, botFile.trashtalk);
 
 function getCurrentDatetime() {		// TODO : extraire de main
@@ -141,7 +145,7 @@ client
 					killBot(message, client, author, msg);
 					return;
 				case 'mute':
-					mute(message, client, author, msg, args);
+					mute(message, author, msg, args);
 					return;
 				case 'reset':
 					resetBot(message, client, author, msg);
@@ -251,70 +255,6 @@ function statusFunction(message, client, author, msg, args) {
 	console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
 };
 
-// async function kickCounter(message, client, author, msg) {
-// 	function invitCounter() {
-// 		try {
-// 			message.guild.fetchInvites()
-// 				.then(invites => {
-// 					invites.forEach(element => {
-// 						if (element.maxAge === 0) {
-// 							console.log(element.code);
-// 							return 'https://discord.gg/' + element.code;
-// 						} else {
-// 							return 'Aucun invitation éternel';
-// 						};
-// 					});
-// 				});
-// 		} catch (err) {
-// 			console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # Sortie invit() :`, err);
-// 		};
-// 	};
-
-// 	try {
-// 		let member = message.guild.member(message.author);
-// 		let taggedUser = message.mentions.users.first();
-// 		let alive = client.emojis.cache.find(emoji => emoji.name === "alive");
-// 		let dead = client.emojis.cache.find(emoji => emoji.name === "dead");
-
-// 		if (!message.mentions.users.size) return message.reply('T\'as oublié le tag sérieux');
-
-// 		let emojiReact = (reaction, user) => {
-// 			return ["dead", "alive"].includes(reaction.emoji.name) && user.id === message.author.id;
-// 		};
-
-// 		await message.channel
-// 			.send(`<@!${message.author.id}> veut expulser ${args}.\nIl vit : ${alive}\nIl meurt : ${dead}`)
-// 			.then(() => {
-// 				console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # ${author} veut expulser ${taggedUser.username}`)
-// 			});
-// 		await message.react(dead).then(() => message.react(alive));
-// 		await message.awaitReactions(emojiReact, { max: 1 })
-// 			.then(collected => {
-// 				let reaction = collected.first();
-// 				let countgif = new Discord.MessageEmbed()
-// 					.setTitle('#EXEC KICKCOUNTER.EXE')
-// 					.attachFiles('https://i.pinimg.com/originals/fc/1b/71/fc1b714dd4e30ba4c1be2d7d432d51b0.gif');
-
-// 				if (reaction.emoji.name === "dead") {
-// 					message.channel.send(countgif);
-// 					message.author
-// 						.send('Au final c\'est toi qui est exclue hahaha\n' + invitCounter())
-// 						.then(() => {
-// 							message.delete().catch(O_o => { })
-// 							member.kick();
-// 							console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # ${client.user.username} : executé`);
-// 						});
-// 				} else {
-// 					message.channel.send('Une sentence annulée...');
-// 					console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # ${client.user.username} : suspendu`);
-// 				};
-// 			});
-// 	} catch (err) {
-// 		message.channel.send('Maintenance de la commande en cours...');
-// 		console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # Sortie kickCounter() :`, err);
-// 	};
-// };
-
 async function killBot(message, client, author, msg) {
 	if (message.author.id === owner) {
 		await message.channel.send('Destroyiiiiniginezoesqocpnqfkn')
@@ -329,17 +269,29 @@ async function killBot(message, client, author, msg) {
 	};
 };
 
-async function mute(message, client, author, msg, args) {
+async function mute(message, author, msg, args) {
 	let action = args[0];
 	if (message.author.id === owner) {
-		if (action === 'true') {
+		if (action != undefined) {
+			if ((action.toLowerCase()) === 'true') {
+				console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
+				message.channel.send('Incapable de répliquer');
+				ismuted = true;
+				return ismuted;
+			} else if ((action.toLowerCase()) === 'false') {
+				console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
+				message.channel.send('Capable de répliquer');
+				ismuted = false;
+				return ismuted;
+			} else {
+				console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
+				message.channel.send(`Renseignez True ou False\n\r*e.g. : ${prefix}mute true*`);
+				ismuted = false;
+				return ismuted;
+			}
+		} else {
 			console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
-			message.channel.send('Incapable de répliquer');
-			ismuted = true;
-			return ismuted;
-		} else if (action === 'false') {
-			console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
-			message.channel.send('Capable de répliquer');
+			message.channel.send(`Renseignez True ou False\n\r*e.g. : ${prefix}mute true*`);
 			ismuted = false;
 			return ismuted;
 		}
@@ -351,7 +303,7 @@ async function mute(message, client, author, msg, args) {
 
 async function resetBot(message, client, author, msg) {
 	if (message.author.id === owner) {
-		await message.channel.send('Petite douche je reviens')
+		await message.channel.send('Petite douche je reviens...')
 			.then(() => {
 				wait(1000)
 				client.destroy()
