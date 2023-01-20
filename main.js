@@ -1,15 +1,22 @@
 'use.strict'
 
+const tmi = require('tmi.js');
+const { parse } = require('json2csv');
+const fs = require('fs');
+const Discord = require('discord.js');
+const wait = require('util').promisify(setTimeout);
+
+const {
+	clientId,
+	identity,
+	channels
+} = require("./twitch_mobbot/config_mobbot.json");
 const {
 	prefix,
 	token,
 	owner,
 	invit
-} = require("./config.json");
-const Discord = require('discord.js');
-const wait = require('util').promisify(setTimeout);
-
-var client = new Discord.Client();		// TODO : faire une classe mère
+} = require("./config_daftbot.json");
 
 var commandFile = require('./response/command.js')
 var replyFile = require('./response/reply.js')
@@ -35,14 +42,33 @@ collectionReply.set(replyFile.tqt.name, replyFile.tqt);
 // Bot Collection
 collectionBot.set(botFile.trashtalk.name, botFile.trashtalk);
 
-var ismuted = false;
+const oauth = {
+	options: {
+		debug: true,
+		clientId: clientId
+	},
+	identity: identity,
+	channels: channels,
+	connection: { reconnect: true }
+};
+
+const daftbot_client = new Discord.Client();		// TODO : faire une classe mère
+const mobbot_client = new tmi.Client(oauth);
 
 var date = new Date();
-var initdate = `${date.getHours()}:${date.getMinutes()} - ${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+var initDateTime = `${date.getHours()}:${date.getMinutes()} - ${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+var isMuted = false;
+var dataToExport = [];
 
-function getCurrentDatetime() {
-	let newDate = new Date();
-	return `${newDate.getHours()}:${newDate.getMinutes()} - ${newDate.getDate()}/${newDate.getMonth()}/${newDate.getFullYear()}`;
+function getCurrentDatetime(choice) {
+	switch (choice) {
+		case 'csv':
+			return `${date.getDate()}${date.getMonth()}${date.getFullYear()}`;
+		case 'date':
+			return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}`;
+		case 'comm':
+			return `${date.getHours()}:${date.getMinutes()} - ${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`;
+	}
 };
 
 // (async () => {
@@ -53,20 +79,20 @@ function getCurrentDatetime() {
 // 			console.log(item.title + ':' + item.link)
 // 		});
 // 	} catch (err) {
-// 		console.log(`[${getCurrentDatetime()}]# Erreur sortie asyncParser : `, err);
+// 		console.log(`[${getCurrentDatetime('comm')}]# Erreur sortie asyncParser : `, err);
 // 	}
 // })();
 
-client
+daftbot_client
 	.on('ready', async () => {
-		await wait(1000);
-		client.user.setPresence({
+		await wait(5000);
+		daftbot_client.user.setPresence({
 			activity: {
-				name: 'le bon daftmob',
-				type: 'STREAMING',
-				url: 'https://www.twitch.tv/daftmob'
+				name: 'la chaîne du daftmob',
+				type: 'WATCHING',
+				url: 'https://youtu.be/_XJNXeyDW0A'
 			},
-			status: 'dnd'
+			status: 'idle'
 		})
 			.catch(console.error);
 	})
@@ -80,7 +106,7 @@ client
 				.find(ch => ch.name === 'general-chat')
 				.send(`Jeune padawan ${member.displayName}, bienvenue à toi.`);
 		} catch (err) {
-			console.log(`[${getCurrentDatetime()}]# Error message new member : `, err);
+			console.log(`[${getCurrentDatetime('comm')}]# Error message new member : `, err);
 		}
 	})
 	.on('message', async message => {		// TODO : en faire une classe d'action
@@ -109,7 +135,7 @@ client
 						return newObject;
 					});
 			} catch (err) {
-				console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # Sortie invit() :`, err);
+				console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # Sortie invit() :`, err);
 			};
 		};
 
@@ -122,54 +148,57 @@ client
 		if (message.author.id === owner) {
 			if (Math.random() < .15) {
 				try {
-					let dio = client.emojis.cache.find(emoji => emoji.name === "dio_sama");
+					let dio = daftbot_client.emojis.cache.find(emoji => emoji.name === "dio_sama");
 					message.react(dio)
-					console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # ZA WARUDO!!!`)
+					console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ZA WARUDO!!!`)
 				} catch (err) {
-					console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # Can't find emoji her`)
+					console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # Can't find emoji her`)
 				};
 			};
 		};
 
 		if (message.content.startsWith(prefix)) {
 			switch (command) {
+				case 'mobbot':
+					setTwitchMobBot(message, author, msg, args);
+					return;
 				case 'uptime':
-					uptimeFunction(message, client, author, msg);
+					getUptime(message, daftbot_client, author, msg);
 					return;
 				case 'status':
-					statusFunction(message, client, author, msg, args);
+					setStatus(message, daftbot_client, author, msg, args);
 					return;
 				case 'kill':
-					killBot(message, client, author, msg);
+					killBot(message, daftbot_client, author, msg);
 					return;
 				case 'mute':
-					mute(message, author, msg, args);
+					setMute(message, author, msg, args);
 					return;
 				case 'reset':
-					resetBot(message, client, author, msg);
+					resetBot(message, daftbot_client, author, msg);
 					return;
 				case checkCollection:
 					collectionCommands
 						.get(command)
-						.execute(message, args, client);
-					console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`)
+						.execute(message, args, daftbot_client);
+					console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`)
 					return;
 				default:
-					console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # Tentative de commande (${msg}) par (${author})`);
+					console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # Tentative de commande (${msg}) par (${author})`);
 					message.channel.send('Nos développeurs travaillent actuellement sur cette commande.');
 			};
 		};
 
-		if (ismuted) return;
+		if (isMuted) return;
 
 		if (badBot.includes(message.author.id) && !(badChannels.includes(message.channel.name))) {
 
 			if (Math.random() <= .005) {
 				try {
 					collectionBot.get('trashtalk').execute(message);
-					console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}\n[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # ${client.user.username} use (or not) a trashtalk`)
+					console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}\n[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${daftbot_client.user.username} use (or not) a trashtalk`)
 				} catch (err) {
-					console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # Erreur sortie randomCollection : `, err);
+					console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # Erreur sortie randomCollection : `, err);
 				};
 			};
 		};
@@ -182,9 +211,9 @@ client
 				collectionReply
 					.get(msg)
 					.execute(message);
-				console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
+				console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
 			} catch (err) {
-				console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # Erreur sortie Reply : `, err);
+				console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # Erreur sortie Reply : `, err);
 			};
 
 			if (badBoy.includes(message.author.id)) {
@@ -193,15 +222,115 @@ client
 
 				try {
 					message.delete().catch(O_o => { })	// NEVER DELETE
-					console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # message deleted`);
+					console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # message deleted`);
 				} catch (err) {
-					console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # Can't delete badBoy's message`);
+					console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # Can't delete badBoy's message`);
 				};
 			};
 		};
 	});
 
-function uptimeFunction(message, client, author, msg) {
+function setTwitchMobBot(message, author, msg, args) {
+	let action = args[0];
+	if (message.author.id === owner) {
+		if (action != undefined) {
+			if ((action.toLowerCase()) === 'on') {
+				message.channel.send(`Démarrage de MobBot...`);
+				console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
+				processMobBot(message, true);
+			} else if ((action.toLowerCase()) === 'off') {
+				message.channel.send(`Arrêt de MobBot...`);
+				console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
+				processMobBot(message, false);
+			} else {
+				console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
+				message.channel.send(`Renseignez On ou Off\n\r*e.g. : ${prefix}mobbot on*`);
+			}
+		} else {
+			console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
+			message.channel.send(`Renseignez On ou Off\n\r*e.g. : ${prefix}mobbot on*`);
+		}
+	} else {
+		console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
+		message.channel.send('Restriction de la commande');
+	};
+};
+
+function processMobBot(message, state) {
+	switch (state) {
+		case true:
+			mobbot_client.on('connected', onConnectedHandler)
+			mobbot_client.connect()
+			message.channel.send(`* MobBot connecté sur irc-ws.chat.twitch.tv:443 *`);
+
+			daftbot_client.user.setPresence({
+				activity: {
+					name: 'daftmob',
+					type: 'STREAMING',
+					url: 'https://www.twitch.tv/daftmob'
+				},
+				status: 'dnd'
+			})
+				.catch(console.error);
+
+			mobbot_client
+				.on('message', (channel, tags, message, self) => {
+					if (self || tags['username'] === 'moobot') return;
+
+					let data =
+					{
+						"id": Number(tags['user-id']),
+						"date": getCurrentDatetime('date'),
+						"badges": tags['badges'],
+						"color": String(tags['color']),
+						"username": String(tags['username']),
+						"message": String(message),
+						"emotes": tags['emotes-raw'] == null ? null : String(tags['emotes-raw']),
+						"turbo": Boolean(tags['turbo'])
+					};
+
+					return dataToExport.push(data);
+				});
+			break;
+		case false:
+			if (mobbot_client.readyState() === `OPEN`) {
+				mobbot_client.disconnect();
+				exportingDataSet(message);
+
+				daftbot_client.user.setPresence({
+					activity: {
+						name: 'la chaîne du daftmob',
+						type: 'WATCHING',
+						url: 'https://youtu.be/_XJNXeyDW0A'
+					},
+					status: 'idle'
+				})
+					.catch(console.error);
+			} else { message.channel.send(`Mais... Il est même pas lancé débilus...`); }
+			break;
+	};
+};
+
+function onConnectedHandler(addr, port) {
+	console.log(`* Connected to ${addr}:${port} *`);
+};
+
+function exportingDataSet(message) {
+	if (dataToExport.length === 0) {
+		message.channel.send(`Aucune données à sauvegarder`);
+		return;
+	}
+
+	fs.writeFile(`./twitch_mobbot/mobbot_analytics_${getCurrentDatetime('csv')}.csv`, parse(dataToExport), function (err) {
+		if (err) {
+			message.channel.send(`Erreur lors de la sauvegarde du .CSV`);
+			throw err;
+		}
+		else { message.channel.send(`Sauvegarde du .CSV réussite !`) }
+	});
+};
+
+function getUptime(message, client, author, msg) {
 	let totalSeconds = (client.uptime / 1000);
 	let days = Math.floor(totalSeconds / 86400);
 	totalSeconds %= 86400;
@@ -209,16 +338,16 @@ function uptimeFunction(message, client, author, msg) {
 	totalSeconds %= 3600;
 	let minutes = Math.floor(totalSeconds / 60);
 	let seconds = Math.floor(totalSeconds % 60);
-	let start = initdate
+	let start = initDateTime;
 
 	message.channel.send(`Jour initial : ${start}\nTemps : ${days}D:${hours}H:${minutes}M:${seconds}S`);
-	console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
+	console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
 };
 
-function statusFunction(message, client, author, msg, args) {
-	let stOnOff = args[0];
-	let typeThings = args[1];
-	let nameText = args[2];
+function setStatus(message, client, author, msg, args) {
+	let stOnOff = args[1];
+	let typeThings = args[2];
+	let nameText = args[0];
 	let urlLike = args[3];
 
 	if (message.author.id === owner) {
@@ -229,10 +358,8 @@ function statusFunction(message, client, author, msg, args) {
 					type: `${typeThings}`
 				},
 				status: `${stOnOff}`
-			}).catch(
-				console.error
-			);
-			message.channel.send('Changement d\'activité !');
+			})
+				.catch(console.error);
 		} else {
 			client.user.setPresence({
 				activity: {
@@ -241,57 +368,56 @@ function statusFunction(message, client, author, msg, args) {
 					url: `${urlLike}`
 				},
 				status: `${stOnOff}`
-			}).catch(
-				console.error
-			);
-			message.channel.send('Changement d\'activité !');
+			})
+				.catch(console.error);
 		};
+		message.channel.send('Changement d\'activité !');
 	} else return message.channel.send('T\'as pas le droit d\'y toucher');
-	console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
+	console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
 };
 
 async function killBot(message, client, author, msg) {
 	if (message.author.id === owner) {
-		await message.channel.send('Destroyiiiiniginezoesqocpnqfkn')
+		await message.channel.send('Destroyiiiiniginezoesqocpnqfkn.....')
 			.then(() => {
 				wait(1000)
 				client.destroy()
 			});
-		console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
+		console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
 	} else {
-		console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
+		console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
 		message.channel.send('Restriction de la commande');
 	};
 };
 
-async function mute(message, author, msg, args) {
+async function setMute(message, author, msg, args) {
 	let action = args[0];
 	if (message.author.id === owner) {
 		if (action != undefined) {
-			if ((action.toLowerCase()) === 'true') {
-				console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
+			if ((action.toLowerCase()) === 'off') {
+				console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
 				message.channel.send('Incapable de répliquer');
-				ismuted = true;
-				return ismuted;
-			} else if ((action.toLowerCase()) === 'false') {
-				console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
+				isMuted = true;
+				return isMuted;
+			} else if ((action.toLowerCase()) === 'on') {
+				console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
 				message.channel.send('Capable de répliquer');
-				ismuted = false;
-				return ismuted;
+				isMuted = false;
+				return isMuted;
 			} else {
-				console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
-				message.channel.send(`Renseignez True ou False\n\r*e.g. : ${prefix}mute true*`);
-				ismuted = false;
-				return ismuted;
+				console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
+				message.channel.send(`Renseignez **On** ou **Off**\n\r*e.g. : ${prefix}mute on*`);
+				isMuted = false;
+				return isMuted;
 			}
 		} else {
-			console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
-			message.channel.send(`Renseignez True ou False\n\r*e.g. : ${prefix}mute true*`);
-			ismuted = false;
-			return ismuted;
+			console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
+			message.channel.send(`Renseignez **On** ou **Off**\n\r*e.g. : ${prefix}mute on*`);
+			isMuted = false;
+			return isMuted;
 		}
 	} else {
-		console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
+		console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
 		message.channel.send('Restriction de la commande');
 	};
 };
@@ -307,13 +433,13 @@ async function resetBot(message, client, author, msg) {
 				wait(1000)
 				client.login(token)
 			});
-		console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
+		console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
 	} else {
-		console.log(`[${getCurrentDatetime()}] || ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
+		console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
 		message.channel.send('Restriction de la commande');
 	};
 };
 
-client.login(token)
-	.then(() => console.log(`[${getCurrentDatetime()}]# ${client.user.username}\'s logged`))
+daftbot_client.login(token)
+	.then(() => console.log(`[${getCurrentDatetime('comm')}]# ${daftbot_client.user.username}\'s logged`))
 	.catch(console.error);
