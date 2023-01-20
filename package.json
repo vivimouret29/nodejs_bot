@@ -17,6 +17,10 @@
   },
   "homepage": "https://gitlab.com/vivimouret29/bot_discord#readme",
   "dependencies": {
-    "discord.js": "^12.5.3"
+    "discord.js": "^12.5.3",
+    "fs": "^0.0.1-security",
+    "install": "^0.13.0",
+    "json2csv": "^5.0.7",
+    "tmi.js": "^1.8.5"
   }
 }
