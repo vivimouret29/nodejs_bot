@@ -6,21 +6,14 @@ const {
 	owner,
 	invit
 } = require("./config.json");
-
 const Discord = require('discord.js');
-
 const wait = require('util').promisify(setTimeout);
 
 var client = new Discord.Client();		// TODO : faire une classe mère
-var date = new Date();
-
-var initdate = `${date.getHours()}:${date.getMinutes()} - ${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
 
 var commandFile = require('./response/command.js')
 var replyFile = require('./response/reply.js')
 var botFile = require('./response/bot.js')
-
-var ismuted = false;
 
 var collectionCommands = new Discord.Collection();
 var collectionReply = new Discord.Collection();
@@ -42,7 +35,12 @@ collectionReply.set(replyFile.tqt.name, replyFile.tqt);
 // Bot Collection
 collectionBot.set(botFile.trashtalk.name, botFile.trashtalk);
 
-function getCurrentDatetime() {		// TODO : extraire de main
+var ismuted = false;
+
+var date = new Date();
+var initdate = `${date.getHours()}:${date.getMinutes()} - ${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+
+function getCurrentDatetime() {
 	let newDate = new Date();
 	return `${newDate.getHours()}:${newDate.getMinutes()} - ${newDate.getDate()}/${newDate.getMonth()}/${newDate.getFullYear()}`;
 };
@@ -150,9 +148,6 @@ client
 				case 'reset':
 					resetBot(message, client, author, msg);
 					return;
-				// case 'votekick':
-				// 	kickCounter(message, client, author, msg);
-				// 	return;
 				case checkCollection:
 					collectionCommands
 						.get(command)
