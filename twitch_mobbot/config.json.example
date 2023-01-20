@@ -1,0 +1,10 @@
+{
+    "clientId": "<your_client_id>",
+    "identity": {
+        "username": "<your_bot_name>",
+        "password": "<your_token_oauth>"
+    },
+    "channels": [
+        "<your_channel_name>"
+    ]
+}

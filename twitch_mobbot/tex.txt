@@ -1,0 +1,16 @@
+https://id.twitch.tv/oauth2/authorize?response_type=code
+&client_id=7m72leay5qdf92krnsqq7kejq5h6pu
+&redirect_uri=http://localhost:3300
+&scope=channel%3Amanage%3Apolls+channel%3Aread%3Apolls
+&state=c3ab8aa609ea11e793ae92361f002671
+
+https://id.twitch.tv/oauth2/authorize?response_type=code
+&client_id=7m72leay5qdf92krnsqq7kejq5h6pu
+&redirect_uri=http://localhost:3300
+&scope=chat%3Aread+chat%3Aedit
+&state=c3ab8aa609ea11e793ae92361f002671
+
+https://id.twitch.tv/oauth2/authorize?response_type=token
+&client_id=7m72leay5qdf92krnsqq7kejq5h6pu
+&redirect_uri=http://localhost:3300
+&scope=chat:read+chat:edit
