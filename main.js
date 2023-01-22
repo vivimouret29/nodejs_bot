@@ -3,7 +3,7 @@
 const tmi = require('tmi.js');
 const { parse } = require('json2csv');
 const fs = require('fs');
-const Discord = require('discord.js');
+const discord = require('discord.js');
 const wait = require('util').promisify(setTimeout);
 
 const {
@@ -22,9 +22,9 @@ var commandFile = require('./response/command.js')
 var replyFile = require('./response/reply.js')
 var botFile = require('./response/bot.js')
 
-var collectionCommands = new Discord.Collection();
-var collectionReply = new Discord.Collection();
-var collectionBot = new Discord.Collection();
+var collectionCommands = new discord.Collection();
+var collectionReply = new discord.Collection();
+var collectionBot = new discord.Collection();
 
 // Command Collection
 collectionCommands.set(commandFile.version.name, commandFile.version);
@@ -42,6 +42,18 @@ collectionReply.set(replyFile.tqt.name, replyFile.tqt);
 // Bot Collection
 collectionBot.set(botFile.trashtalk.name, botFile.trashtalk);
 
+// const discordIntents = new discord.IntentsBitField();
+// discordIntents.add(
+// 	discord.IntentsBitField.Flags.GuildMembers,
+// 	discord.IntentsBitField.Flags.GuildInvites,
+// 	discord.IntentsBitField.Flags.GuildMessages,
+// 	discord.IntentsBitField.Flags.GuildPresences,
+// 	discord.IntentsBitField.Flags.GuildMessageReactions,
+// 	discord.IntentsBitField.Flags.GuildMessageTyping,
+// 	discord.IntentsBitField.Flags.MessageContent,
+// 	discord.IntentsBitField.Flags.GuildEmojisAndStickers,
+// 	discord.IntentsBitField.Flags.DirectMessages
+// );
 const oauth = {
 	options: {
 		debug: true,
@@ -52,7 +64,8 @@ const oauth = {
 	connection: { reconnect: true }
 };
 
-const daftbot_client = new Discord.Client();		// TODO : faire une classe mère
+// const daftbot_client = new discord.Client({ intents: discordIntents });
+const daftbot_client = new discord.Client();
 const mobbot_client = new tmi.Client(oauth);
 
 var date = new Date();
@@ -83,19 +96,21 @@ function getCurrentDatetime(choice) {
 // 	}
 // })();
 
-daftbot_client
+daftbot_client//.rest
 	.on('ready', async () => {
 		await wait(5000);
 		daftbot_client.user.setPresence({
+			// 	activities: [{
 			activity: {
 				name: 'la chaîne du daftmob',
 				type: 'WATCHING',
 				url: 'https://youtu.be/_XJNXeyDW0A'
 			},
 			status: 'idle'
-		})
-			.catch(console.error);
-	})
+		});
+	});
+
+daftbot_client//.rest
 	.on('guildMemberAdd', member => {
 		try {
 			// const userRoles = member.roles.cache
@@ -108,7 +123,9 @@ daftbot_client
 		} catch (err) {
 			console.log(`[${getCurrentDatetime('comm')}]# Error message new member : `, err);
 		}
-	})
+	});
+
+daftbot_client//.rest.
 	.on('message', async message => {		// TODO : en faire une classe d'action
 		var args = message.content.slice(prefix.length).trim().split(/ +/);
 		var command = args.shift().toLowerCase();
@@ -263,15 +280,22 @@ function processMobBot(message, state) {
 			mobbot_client.connect()
 			message.channel.send(`* MobBot connecté sur irc-ws.chat.twitch.tv:443 *`);
 
+			// daftbot_client.user.setPresence({
+			// 		name: 'daftmob',
+			// 		type: 'STREAMING',
+			// 		url: 'https://www.twitch.tv/daftmob'
+			// 	}],
+			// 	status: 'dnd'
+			// });
 			daftbot_client.user.setPresence({
+				// activities: [{
 				activity: {
 					name: 'daftmob',
 					type: 'STREAMING',
 					url: 'https://www.twitch.tv/daftmob'
 				},
 				status: 'dnd'
-			})
-				.catch(console.error);
+			});
 
 			mobbot_client
 				.on('message', (channel, tags, message, self) => {
@@ -298,14 +322,15 @@ function processMobBot(message, state) {
 				exportingDataSet(message);
 
 				daftbot_client.user.setPresence({
+					// activities: [{
 					activity: {
 						name: 'la chaîne du daftmob',
 						type: 'WATCHING',
 						url: 'https://youtu.be/_XJNXeyDW0A'
 					},
 					status: 'idle'
-				})
-					.catch(console.error);
+				});
+
 			} else { message.channel.send(`Mais... Il est même pas lancé débilus...`); }
 			break;
 	};
@@ -353,23 +378,23 @@ function setStatus(message, client, author, msg, args) {
 	if (message.author.id === owner) {
 		if (urlLike === undefined) {
 			client.user.setPresence({
+				// activities: [{
 				activity: {
 					name: `${nameText}`,
 					type: `${typeThings}`
 				},
 				status: `${stOnOff}`
-			})
-				.catch(console.error);
+			});
 		} else {
 			client.user.setPresence({
+				// activities: [{
 				activity: {
 					name: `${nameText}`,
 					type: `${typeThings}`,
 					url: `${urlLike}`
 				},
 				status: `${stOnOff}`
-			})
-				.catch(console.error);
+			});
 		};
 		message.channel.send('Changement d\'activité !');
 	} else return message.channel.send('T\'as pas le droit d\'y toucher');
