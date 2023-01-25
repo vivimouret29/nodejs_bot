@@ -3,7 +3,7 @@
 const tmi = require('tmi.js');
 const { parse } = require('json2csv');
 const fs = require('fs');
-const discord = require('discord.js');
+const { Discord, Client, Collection, Intents, Message } = require('discord.js');
 const wait = require('util').promisify(setTimeout);
 
 const {
@@ -22,9 +22,9 @@ var commandFile = require('./response/command.js')
 var replyFile = require('./response/reply.js')
 var botFile = require('./response/bot.js')
 
-var collectionCommands = new discord.Collection();
-var collectionReply = new discord.Collection();
-var collectionBot = new discord.Collection();
+var collectionCommands = new Collection();
+var collectionReply = new Collection();
+var collectionBot = new Collection();
 
 // Command Collection
 collectionCommands.set(commandFile.version.name, commandFile.version);
@@ -42,18 +42,19 @@ collectionReply.set(replyFile.tqt.name, replyFile.tqt);
 // Bot Collection
 collectionBot.set(botFile.trashtalk.name, botFile.trashtalk);
 
-// const discordIntents = new discord.IntentsBitField();
-// discordIntents.add(
-// 	discord.IntentsBitField.Flags.GuildMembers,
-// 	discord.IntentsBitField.Flags.GuildInvites,
-// 	discord.IntentsBitField.Flags.GuildMessages,
-// 	discord.IntentsBitField.Flags.GuildPresences,
-// 	discord.IntentsBitField.Flags.GuildMessageReactions,
-// 	discord.IntentsBitField.Flags.GuildMessageTyping,
-// 	discord.IntentsBitField.Flags.MessageContent,
-// 	discord.IntentsBitField.Flags.GuildEmojisAndStickers,
-// 	discord.IntentsBitField.Flags.DirectMessages
-// );
+const discordIntents = new Intents();
+discordIntents.add(
+	Intents.FLAGS.GUILDS,
+	Intents.FLAGS.GUILD_MEMBERS,
+	Intents.FLAGS.GUILD_INVITES,
+	Intents.FLAGS.GUILD_MESSAGES,
+	Intents.FLAGS.GUILD_PRESENCES,
+	Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
+	Intents.FLAGS.GUILD_MESSAGE_TYPING,
+	Intents.FLAGS.MESSAGE_CONTENT,
+	Intents.FLAGS.GUILD_EMOJIS_AND_STICKERS,
+	Intents.FLAGS.DIRECT_MESSAGES
+);
 const oauth = {
 	options: {
 		debug: true,
@@ -64,8 +65,7 @@ const oauth = {
 	connection: { reconnect: true }
 };
 
-// const daftbot_client = new discord.Client({ intents: discordIntents });
-const daftbot_client = new discord.Client();
+const daftbot_client = new Client({ intents: discordIntents });
 const mobbot_client = new tmi.Client(oauth);
 
 var date = new Date();
@@ -96,156 +96,140 @@ function getCurrentDatetime(choice) {
 // 	}
 // })();
 
-daftbot_client//.rest
-	.on('ready', async () => {
-		await wait(5000);
-		daftbot_client.user.setPresence({
-			// 	activities: [{
-			activity: {
-				name: 'la chaîne du daftmob',
-				type: 'WATCHING',
-				url: 'https://youtu.be/_XJNXeyDW0A'
-			},
-			status: 'idle'
-		});
-	});
 
-daftbot_client//.rest
-	.on('guildMemberAdd', member => {
+daftbot_client.on('ready', () => {
+	wait(5000);
+	daftbot_client.user.setPresence({
+		activities: [{
+			name: 'la chaîne du daftmob',
+			type: 'WATCHING',
+			url: 'https://youtu.be/_XJNXeyDW0A'
+		}],
+		status: 'idle'
+	});
+});
+
+daftbot_client.on('messageCreate', (message) => {		// TODO : en faire une classe d'action
+	var args = message.content.slice(prefix.length).trim().split(/ +/);
+	var command = args.shift().toLowerCase();
+	var msg = message.content.toLowerCase();
+	var author = message.author.username;
+	var badBot = ['757970907992948826', '758319298325905428'];
+	var badChannels = [];
+	var badBoy = [];
+	var checkCollection;
+	collectionCommands.has(command) ? checkCollection = collectionCommands.get(command).name : checkCollection = false;
+
+	function invitation() {
 		try {
-			// const userRoles = member.roles.cache
-			// if (this.member.id === memberber.id) {
-			// 	this.member.get(userRoles)
-			// } else { }
-			member.guild.channels.cache
-				.find(ch => ch.name === 'general-chat')
-				.send(`Jeune padawan ${member.displayName}, bienvenue à toi.`);
-		} catch (err) {
-			console.log(`[${getCurrentDatetime('comm')}]# Error message new member : `, err);
-		}
-	});
-
-daftbot_client//.rest.
-	.on('message', async message => {		// TODO : en faire une classe d'action
-		var args = message.content.slice(prefix.length).trim().split(/ +/);
-		var command = args.shift().toLowerCase();
-		var msg = message.content.toLowerCase();
-		var author = message.author.username;
-		var badBot = ['757970907992948826', '758319298325905428'];
-		var badChannels = [];
-		var badBoy = [];
-		var checkCollection;
-		collectionCommands.has(command) ? checkCollection = collectionCommands.get(command).name : checkCollection = false;
-
-		function invitation() {
-			try {
-				message.guild.fetchInvites()
-					.then(invites => {
-						let newObject = invites.array().filter(element => {
-							if (element.maxAge === 0) {
-								object = `${element.code}`;
-								console.log(object);
-							} else {
-								message.channel.send('Aucun invitation éternel');
-							};
-						});
-						return newObject;
+			message.guild.fetchInvites()
+				.then(invites => {
+					let newObject = invites.array().filter(element => {
+						if (element.maxAge === 0) {
+							object = `${element.code}`;
+							console.log(object);
+						} else {
+							message.channel.send('Aucun invitation éternel');
+						};
 					});
+					return newObject;
+				});
+		} catch (err) {
+			console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # Sortie invit() :`, err);
+		};
+	};
+
+	// invitation(invit);
+	// console.log(invitDiscord);
+	// message.channel.send('Aller j\'suis gentil : ' + invitDiscord);
+
+	if (message.author.bot) return;
+
+	if (message.author.id === owner) {
+		if (Math.random() < .15) {
+			try {
+				let dio = daftbot_client.emojis.cache.find(emoji => emoji.name === "dio_sama");
+				message.react(dio)
+				console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ZA WARUDO!!!`)
 			} catch (err) {
-				console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # Sortie invit() :`, err);
+				console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # Can't find emoji her`)
 			};
 		};
+	};
 
-		// invitation(invit);
-		// console.log(invitDiscord);
-		// message.channel.send('Aller j\'suis gentil : ' + invitDiscord);
+	if (message.content.startsWith(prefix)) {
+		switch (command) {
+			case 'mobbot':
+				setTwitchMobBot(message, author, msg, args);
+				return;
+			case 'uptime':
+				getUptime(message, daftbot_client, author, msg);
+				return;
+			case 'status':
+				setStatus(message, daftbot_client, author, msg, args);
+				return;
+			case 'kill':
+				killBot(message, daftbot_client, author, msg);
+				return;
+			case 'mute':
+				setMute(message, author, msg, args);
+				return;
+			case 'reset':
+				resetBot(message, daftbot_client, author, msg);
+				return;
+			case checkCollection:
+				collectionCommands
+					.get(command)
+					.execute(message, args, daftbot_client);
+				console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`)
+				return;
+			default:
+				console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # Tentative de commande (${msg}) par (${author})`);
+				message.channel.send('Nos développeurs travaillent actuellement sur cette commande.');
+		};
+	};
 
-		if (message.author.bot) return;
+	if (isMuted) return;
+	console.log('isMuted : ' + isMuted)
 
-		if (message.author.id === owner) {
-			if (Math.random() < .15) {
-				try {
-					let dio = daftbot_client.emojis.cache.find(emoji => emoji.name === "dio_sama");
-					message.react(dio)
-					console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ZA WARUDO!!!`)
-				} catch (err) {
-					console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # Can't find emoji her`)
-				};
+	if (badBot.includes(message.author.id) && !(badChannels.includes(message.channel.name))) {
+
+		if (Math.random() <= .005) {
+			try {
+				collectionBot.get('trashtalk').execute(message);
+				console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}\n[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${daftbot_client.user.username} use (or not) a trashtalk`)
+			} catch (err) {
+				console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # Erreur sortie randomCollection : `, err);
 			};
 		};
+	};
 
-		if (message.content.startsWith(prefix)) {
-			switch (command) {
-				case 'mobbot':
-					setTwitchMobBot(message, author, msg, args);
-					return;
-				case 'uptime':
-					getUptime(message, daftbot_client, author, msg);
-					return;
-				case 'status':
-					setStatus(message, daftbot_client, author, msg, args);
-					return;
-				case 'kill':
-					killBot(message, daftbot_client, author, msg);
-					return;
-				case 'mute':
-					setMute(message, author, msg, args);
-					return;
-				case 'reset':
-					resetBot(message, daftbot_client, author, msg);
-					return;
-				case checkCollection:
-					collectionCommands
-						.get(command)
-						.execute(message, args, daftbot_client);
-					console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`)
-					return;
-				default:
-					console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # Tentative de commande (${msg}) par (${author})`);
-					message.channel.send('Nos développeurs travaillent actuellement sur cette commande.');
-			};
+	if (!message.content.startsWith(prefix)) {
+
+		if (!collectionReply.has(msg)) return;
+
+		try {
+			collectionReply
+				.get(msg)
+				.execute(message);
+			console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
+		} catch (err) {
+			console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # Erreur sortie Reply : `, err);
 		};
 
-		if (isMuted) return;
+		if (badBoy.includes(message.author.id)) {
 
-		if (badBot.includes(message.author.id) && !(badChannels.includes(message.channel.name))) {
-
-			if (Math.random() <= .005) {
-				try {
-					collectionBot.get('trashtalk').execute(message);
-					console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}\n[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${daftbot_client.user.username} use (or not) a trashtalk`)
-				} catch (err) {
-					console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # Erreur sortie randomCollection : `, err);
-				};
-			};
-		};
-
-		if (!message.content.startsWith(prefix)) {
-
-			if (!collectionReply.has(msg)) return;
+			if (Math.random() > .005) return;
 
 			try {
-				collectionReply
-					.get(msg)
-					.execute(message);
-				console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
+				message.delete().catch(O_o => { })	// NEVER DELETE
+				console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # message deleted`);
 			} catch (err) {
-				console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # Erreur sortie Reply : `, err);
-			};
-
-			if (badBoy.includes(message.author.id)) {
-
-				if (Math.random() > .005) return;
-
-				try {
-					message.delete().catch(O_o => { })	// NEVER DELETE
-					console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # message deleted`);
-				} catch (err) {
-					console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # Can't delete badBoy's message`);
-				};
+				console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # Can't delete badBoy's message`);
 			};
 		};
-	});
+	};
+});
 
 function setTwitchMobBot(message, author, msg, args) {
 	let action = args[0];
@@ -280,20 +264,12 @@ function processMobBot(message, state) {
 			mobbot_client.connect()
 			message.channel.send(`* MobBot connecté sur irc-ws.chat.twitch.tv:443 *`);
 
-			// daftbot_client.user.setPresence({
-			// 		name: 'daftmob',
-			// 		type: 'STREAMING',
-			// 		url: 'https://www.twitch.tv/daftmob'
-			// 	}],
-			// 	status: 'dnd'
-			// });
 			daftbot_client.user.setPresence({
-				// activities: [{
-				activity: {
+				activities: [{
 					name: 'daftmob',
 					type: 'STREAMING',
 					url: 'https://www.twitch.tv/daftmob'
-				},
+				}],
 				status: 'dnd'
 			});
 
@@ -322,12 +298,11 @@ function processMobBot(message, state) {
 				exportingDataSet(message);
 
 				daftbot_client.user.setPresence({
-					// activities: [{
-					activity: {
+					activities: [{
 						name: 'la chaîne du daftmob',
 						type: 'WATCHING',
 						url: 'https://youtu.be/_XJNXeyDW0A'
-					},
+					}],
 					status: 'idle'
 				});
 
@@ -375,24 +350,24 @@ function setStatus(message, client, author, msg, args) {
 	let nameText = args[0];
 	let urlLike = args[3];
 
+	console.log(nameText, stOnOff, typeThings, urlLike)
+
 	if (message.author.id === owner) {
 		if (urlLike === undefined) {
 			client.user.setPresence({
-				// activities: [{
-				activity: {
+				activities: [{
 					name: `${nameText}`,
 					type: `${typeThings}`
-				},
+				}],
 				status: `${stOnOff}`
 			});
 		} else {
 			client.user.setPresence({
-				// activities: [{
-				activity: {
+				activities: [{
 					name: `${nameText}`,
 					type: `${typeThings}`,
 					url: `${urlLike}`
-				},
+				}],
 				status: `${stOnOff}`
 			});
 		};
@@ -419,12 +394,12 @@ async function setMute(message, author, msg, args) {
 	let action = args[0];
 	if (message.author.id === owner) {
 		if (action != undefined) {
-			if ((action.toLowerCase()) === 'off') {
+			if ((action.toLowerCase()) === 'on') {
 				console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
 				message.channel.send('Incapable de répliquer');
 				isMuted = true;
 				return isMuted;
-			} else if ((action.toLowerCase()) === 'on') {
+			} else if ((action.toLowerCase()) === 'off') {
 				console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
 				message.channel.send('Capable de répliquer');
 				isMuted = false;
@@ -457,6 +432,14 @@ async function resetBot(message, client, author, msg) {
 			.then(() => {
 				wait(1000)
 				client.login(token)
+				daftbot_client.user.setPresence({
+					activities: [{
+						name: 'la chaîne du daftmob',
+						type: 'WATCHING',
+						url: 'https://youtu.be/_XJNXeyDW0A'
+					}],
+					status: 'idle'
+				});
 			});
 		console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
 	} else {
