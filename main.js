@@ -3,7 +3,7 @@
 const tmi = require('tmi.js');
 const { parse } = require('json2csv');
 const fs = require('fs');
-const { Discord, Client, Collection, Intents, Message } = require('discord.js');
+const { Discord, Client, Collection, IntentsBitField, ActivityType } = require('discord.js');
 const wait = require('util').promisify(setTimeout);
 
 const {
@@ -42,18 +42,18 @@ collectionReply.set(replyFile.tqt.name, replyFile.tqt);
 // Bot Collection
 collectionBot.set(botFile.trashtalk.name, botFile.trashtalk);
 
-const discordIntents = new Intents();
+const discordIntents = new IntentsBitField();
 discordIntents.add(
-	Intents.FLAGS.GUILDS,
-	Intents.FLAGS.GUILD_MEMBERS,
-	Intents.FLAGS.GUILD_INVITES,
-	Intents.FLAGS.GUILD_MESSAGES,
-	Intents.FLAGS.GUILD_PRESENCES,
-	Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
-	Intents.FLAGS.GUILD_MESSAGE_TYPING,
-	Intents.FLAGS.MESSAGE_CONTENT,
-	Intents.FLAGS.GUILD_EMOJIS_AND_STICKERS,
-	Intents.FLAGS.DIRECT_MESSAGES
+	IntentsBitField.Flags.Guilds,
+	IntentsBitField.Flags.GuildMembers,
+	IntentsBitField.Flags.GuildInvites,
+	IntentsBitField.Flags.GuildMessages,
+	IntentsBitField.Flags.GuildPresences,
+	IntentsBitField.Flags.GuildMessageReactions,
+	IntentsBitField.Flags.GuildMessageTyping,
+	IntentsBitField.Flags.MessageContent,
+	IntentsBitField.Flags.GuildEmojisAndStickers,
+	IntentsBitField.Flags.DirectMessages
 );
 const oauth = {
 	options: {
@@ -101,11 +101,11 @@ daftbot_client.on('ready', () => {
 	wait(5000);
 	daftbot_client.user.setPresence({
 		activities: [{
-			name: 'la chaîne du daftmob',
-			type: 'WATCHING',
-			url: 'https://youtu.be/_XJNXeyDW0A'
+			name: `la chaîne de daftmob`,
+			type: ActivityType.Watching,
+			url: 'https://www.youtube.com/@daftm0b'
 		}],
-		status: 'idle'
+		status: 'online'
 	});
 });
 
@@ -267,7 +267,7 @@ function processMobBot(message, state) {
 			daftbot_client.user.setPresence({
 				activities: [{
 					name: 'daftmob',
-					type: 'STREAMING',
+					type: ActivityType.Streaming,
 					url: 'https://www.twitch.tv/daftmob'
 				}],
 				status: 'dnd'
@@ -299,11 +299,11 @@ function processMobBot(message, state) {
 
 				daftbot_client.user.setPresence({
 					activities: [{
-						name: 'la chaîne du daftmob',
-						type: 'WATCHING',
-						url: 'https://youtu.be/_XJNXeyDW0A'
+						name: 'la chaîne de daftmob',
+						type: ActivityType.Watching,
+						url: 'https://www.youtube.com/@daftm0b'
 					}],
-					status: 'idle'
+					status: 'online'
 				});
 
 			} else { message.channel.send(`Mais... Il est même pas lancé débilus...`); }
@@ -345,34 +345,89 @@ function getUptime(message, client, author, msg) {
 };
 
 function setStatus(message, client, author, msg, args) {
-	let stOnOff = args[1];
-	let typeThings = args[2];
-	let nameText = args[0];
-	let urlLike = args[3];
+	if (!(message.author.id === owner)) return message.channel.send('T\'as pas le droit d\'y toucher');
 
-	console.log(nameText, stOnOff, typeThings, urlLike)
+	let typeThings = args[0],
+		stOnOff = args[1],
+		nameText = args[2],
+		urlLike = args[3],
+		urlBool,
+		argNb = 3;
 
-	if (message.author.id === owner) {
-		if (urlLike === undefined) {
-			client.user.setPresence({
-				activities: [{
-					name: `${nameText}`,
-					type: `${typeThings}`
-				}],
-				status: `${stOnOff}`
-			});
-		} else {
-			client.user.setPresence({
-				activities: [{
-					name: `${nameText}`,
-					type: `${typeThings}`,
-					url: `${urlLike}`
-				}],
-				status: `${stOnOff}`
-			});
+	for (it in args) {
+		if (String(args[it]).startsWith('http')) {
+			urlBool = true;
+			break;
+		} else { urlBool = false; }
+	};
+
+	if (urlBool) {
+		while (!String(urlLike).startsWith('http')) {
+			urlLike = args[argNb + 1];
+			nameText = nameText + ' ' + args[argNb];
+			argNb++;
 		};
-		message.channel.send('Changement d\'activité !');
-	} else return message.channel.send('T\'as pas le droit d\'y toucher');
+	} else {
+		while (!(urlLike == undefined)) {
+			urlLike = args[argNb + 1];
+			nameText = nameText + ' ' + args[argNb];
+			argNb++;
+		};
+	};
+
+	switch (stOnOff) {
+		case 'online':
+			break;
+		case 'idle':
+			break;
+		case 'dnd':
+			break;
+		default:
+			return message.reply(
+				`Mauvais status, les status sont :\ronline, idle, dnd\n\n*e.g. ${prefix}status ${typeThings} online ${nameText} ${urlLike == undefined ? ' ' : urlLike}*`);
+	};
+
+	switch (typeThings) {
+		case 'play':
+			typeThings = ActivityType.Playing;
+			break;
+		case 'watch':
+			typeThings = ActivityType.Watching;
+			break;
+		case 'listen':
+			typeThings = ActivityType.Listening;
+			break;
+		case 'stream':
+			typeThings = ActivityType.Streaming;
+			break;
+		case 'compet':
+			typeThings = ActivityType.Competing;
+			break;
+		default:
+			return message.reply(
+				`Mauvaise activité, les activités sont :\rplay, watch, stream, listen and compet\n\n*e.g. ${prefix}status stream ${stOnOff} ${nameText} ${urlLike == undefined ? ' ' : urlLike}*`);
+	};
+
+	if (!urlBool) {
+		client.user.setPresence({
+			activities: [{
+				name: String(nameText)
+			}],
+			status: String(stOnOff)
+		});
+		client.user.setActivity(String(nameText), { type: typeThings });
+	} else {
+		client.user.setPresence({
+			activities: [{
+				name: String(nameText),
+				type: typeThings,
+				url: String(urlLike)
+			}],
+			status: String(stOnOff)
+		});
+	};
+
+	message.channel.send('Changement d\'activité !');
 	console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
 };
 
@@ -434,11 +489,11 @@ async function resetBot(message, client, author, msg) {
 				client.login(token)
 				daftbot_client.user.setPresence({
 					activities: [{
-						name: 'la chaîne du daftmob',
-						type: 'WATCHING',
-						url: 'https://youtu.be/_XJNXeyDW0A'
+						name: 'la chaîne de daftmob',
+						type: ActivityType.Watching,
+						url: 'https://www.youtube.com/@daftm0b'
 					}],
-					status: 'idle'
+					status: 'online'
 				});
 			});
 		console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
