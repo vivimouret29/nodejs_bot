@@ -1,13 +1,13 @@
 'use.strict'
 
-const tmi = require('tmi.js');
-const { parse } = require('json2csv');
-const fs = require('fs');
-const {
-    clientId,
-    identity,
-    channels
-} = require("./config_mobbot.json");
+const { Client } = require('tmi.js'),
+    { parse } = require('json2csv'),
+    fs = require('fs'),
+    { 
+        clientId,
+        identity,
+        channels
+    } = require('./config_mobbot.json');
 
 const oauth = {
     options: {
@@ -19,7 +19,7 @@ const oauth = {
     connection: { reconnect: true }
 };
 
-const mobbot_client = new tmi.Client(oauth);
+const mobbot_client = new Client(oauth);
 
 var data_to_exp = [];
 var date = new Date();
@@ -69,7 +69,7 @@ function getCurrentDatetime(choice) {
 function exportingData(message) {
     if (data_to_exp.length === 0) { return };
 
-    fs.writeFile(`./twitch_mobbot/mobbot_analytics_${getCurrentDatetime('csv')}.csv`, parse(data_to_exp), function (err) {
+    writeFile(`./twitch_mobbot/mobbot_analytics_${getCurrentDatetime('csv')}.csv`, parse(data_to_exp), function (err) {
         if (err) { throw err };
     });
 };
