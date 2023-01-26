@@ -1,7 +1,7 @@
 'use.strict'
 
 const package = require("../package.json"),
-    owner = require("../config_daftbot.json");
+    owner = require("../config.json");
 
 module.exports = {
     version: {
