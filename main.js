@@ -190,7 +190,6 @@ daftbot_client.on('messageCreate', (message) => {		// TODO : en faire une classe
 	};
 
 	if (isMuted) return;
-	console.log('isMuted : ' + isMuted)
 
 	if (badBot.includes(message.author.id) && !(badChannels.includes(message.channel.name))) {
 
