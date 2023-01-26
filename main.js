@@ -1,24 +1,13 @@
 'use.strict'
 
-const tmi = require('tmi.js');
-const { parse } = require('json2csv');
-const fs = require('fs');
-const { Discord, Client, Collection, IntentsBitField, ActivityType } = require('discord.js');
-const wait = require('util').promisify(setTimeout);
-
-const {
-	clientId,
-	identity,
-	channels
-} = require("./twitch_mobbot/config_mobbot.json");
-const {
-	prefix,
-	token,
-	owner
-} = require("./config_daftbot.json");
-const {
-	fr, en, uk
-} = require("./resx/lang.json");
+const tmi = require('tmi.js'),
+	{ parse } = require('json2csv'),
+	fs = require('fs'),
+	{ Discord, Client, Collection, IntentsBitField, ActivityType } = require('discord.js'),
+	wait = require('util').promisify(setTimeout),
+	{ clientId, identity, channels } = require("./twitch_mobbot/config_mobbot.json"),
+	{ prefix, token, owner } = require("./config_daftbot.json"),
+	{ fr, en, uk } = require("./resx/lang.json");
 
 var commandFile = require('./appdata/command.js'),
 	replyFile = require('./appdata/reply.js'),
@@ -346,7 +335,7 @@ function setLanguage(message, author, msg, args) {
 		case 'en':
 			languageChoosen = en;
 			message.channel.send(`Language changed to English`);
-			
+
 			wait(1000);
 			daftbot_client.user.setPresence({
 				activities: [{
@@ -356,13 +345,13 @@ function setLanguage(message, author, msg, args) {
 				status: 'online'
 			});
 
-			
+
 			console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
 			return languageChoosen;
 		case 'uk':
 			languageChoosen = uk;
 			message.channel.send(`Мову змінено на українську`);
-			
+
 			wait(1000);
 			daftbot_client.user.setPresence({
 				activities: [{
@@ -371,7 +360,7 @@ function setLanguage(message, author, msg, args) {
 				}],
 				status: 'online'
 			});
-			
+
 			console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
 			return languageChoosen;
 		default:
@@ -538,7 +527,7 @@ async function resetBot(message, client, author, msg) {
 				activities: [{
 					name: languageChoosen.activities,
 					type: ActivityType.Watching
-					
+
 				}],
 				status: 'online'
 			});
