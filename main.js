@@ -20,9 +20,9 @@ const {
 	fr, en, uk
 } = require("./resx/lang.json");
 
-var commandFile = require('./response/command.js'),
-	replyFile = require('./response/reply.js'),
-	botFile = require('./response/bot.js'),
+var commandFile = require('./appdata/command.js'),
+	replyFile = require('./appdata/reply.js'),
+	botFile = require('./appdata/bot.js'),
 	packageVersion = require("./package.json");
 
 var collectionCommands = new Collection(),
