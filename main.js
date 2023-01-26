@@ -94,8 +94,7 @@ daftbot_client
 		daftbot_client.user.setPresence({
 			activities: [{
 				name: languageChoosen.activities,
-				type: ActivityType.Watching,
-				url: 'https://www.youtube.com/@daftm0b'
+				type: ActivityType.Watching
 			}],
 			status: 'online'
 		});
@@ -129,6 +128,9 @@ daftbot_client.on('messageCreate', (message) => {
 
 	if (message.content.startsWith(prefix)) {
 		switch (command) {
+			case 'help':
+				help(message)
+				return;
 			case 'mobbot':
 				setTwitchMobBot(message, author, msg, args);
 				return;
@@ -153,7 +155,7 @@ daftbot_client.on('messageCreate', (message) => {
 			case checkCollection:
 				collectionCommands
 					.get(command)
-					.execute(message, args, daftbot_client);
+					.execute(message, { args, languageChoosen });
 				console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`)
 				return;
 			default:
@@ -183,7 +185,7 @@ daftbot_client.on('messageCreate', (message) => {
 		try {
 			collectionReply
 				.get(msg)
-				.execute(message);
+				.execute(message, { args, languageChoosen });
 			console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
 		} catch (err) {
 			console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # Error output reply() : `, err);
@@ -272,8 +274,7 @@ function processMobBot(message, state) {
 				daftbot_client.user.setPresence({
 					activities: [{
 						name: languageChoosen.activities,
-						type: ActivityType.Watching,
-						url: 'https://www.youtube.com/@daftm0b'
+						type: ActivityType.Watching
 					}],
 					status: 'online'
 				});
@@ -302,21 +303,75 @@ function exportingDataSet(message) {
 	});
 };
 
+function help(message) {
+	message.reply({
+		'channel_id': `${message.channel.channel_id}`,
+		'content': '',
+		'tts': false,
+		'embeds': [
+			{
+				'type': 'rich',
+				'title': `${languageChoosen.helpTitle}`,
+				'description': `${languageChoosen.helpDescp}`,
+				'color': 0x0eb70b,
+				'timestamp': `2023-01-25T15:20:42.000Z`,
+				'author': {
+					'name': `${daftbot_client.user.username}`
+				},
+				'footer': {
+					'text': `${languageChoosen.helpAuthor}`
+				}
+			}
+		]
+	});
+};
+
 function setLanguage(message, author, msg, args) {
 	switch (args[0]) {
 		case 'fr':
 			languageChoosen = fr;
 			message.channel.send(`Langue changée en Français`);
+
+			wait(1000);
+			daftbot_client.user.setPresence({
+				activities: [{
+					name: languageChoosen.activities,
+					type: ActivityType.Watching
+				}],
+				status: 'online'
+			});
+
 			console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
 			return languageChoosen;
 		case 'en':
 			languageChoosen = en;
 			message.channel.send(`Language changed to English`);
+			
+			wait(1000);
+			daftbot_client.user.setPresence({
+				activities: [{
+					name: languageChoosen.activities,
+					type: ActivityType.Watching
+				}],
+				status: 'online'
+			});
+
+			
 			console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
 			return languageChoosen;
 		case 'uk':
 			languageChoosen = uk;
 			message.channel.send(`Мову змінено на українську`);
+			
+			wait(1000);
+			daftbot_client.user.setPresence({
+				activities: [{
+					name: languageChoosen.activities,
+					type: ActivityType.Watching
+				}],
+				status: 'online'
+			});
+			
 			console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
 			return languageChoosen;
 		default:
@@ -428,39 +483,32 @@ function setStatus(message, client, author, msg, args) {
 };
 
 async function killBot(message, client, author, msg) {
-	if (message.author.id === owner) {
-		await message.channel.send(languageChoosen.killBot)
-			.then(() => {
-				wait(1000)
-				client.destroy()
-			});
-		console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
-	} else {
-		console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
-		message.channel.send(languageChoosen.restricted);
-	};
+	if (!(message.author.id === owner)) return message.channel.send(languageChoosen.areYouOwner);
+
+	await message.channel.send(languageChoosen.killBot)
+		.then(() => {
+			wait(1000)
+			client.destroy()
+		});
+
+	console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
 };
 
 async function setMute(message, author, msg, args) {
+	if (!(message.author.id === owner)) return message.channel.send(languageChoosen.restricted);
+
 	let action = args[0];
-	if (message.author.id === owner) {
-		if (action != undefined) {
-			if ((action.toLowerCase()) === 'on') {
-				console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
-				message.channel.send(languageChoosen.botMuted);
-				isMuted = true;
-				return isMuted;
-			} else if ((action.toLowerCase()) === 'off') {
-				console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
-				message.channel.send(languageChoosen.botUnmuted);
-				isMuted = false;
-				return isMuted;
-			} else {
-				console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
-				message.channel.send(`${languageChoosen.howMute}\n\r*e.g. : ${prefix}mute on*`);
-				isMuted = false;
-				return isMuted;
-			}
+	if (action != undefined) {
+		if ((action.toLowerCase()) === 'on') {
+			console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
+			message.channel.send(languageChoosen.botMuted);
+			isMuted = true;
+			return isMuted;
+		} else if ((action.toLowerCase()) === 'off') {
+			console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
+			message.channel.send(languageChoosen.botUnmuted);
+			isMuted = false;
+			return isMuted;
 		} else {
 			console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
 			message.channel.send(`${languageChoosen.howMute}\n\r*e.g. : ${prefix}mute on*`);
@@ -469,34 +517,34 @@ async function setMute(message, author, msg, args) {
 		}
 	} else {
 		console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
-		message.channel.send(languageChoosen.restricted);
+		message.channel.send(`${languageChoosen.howMute}\n\r*e.g. : ${prefix}mute on*`);
+		isMuted = false;
+		return isMuted;
 	};
 };
 
 async function resetBot(message, client, author, msg) {
-	if (message.author.id === owner) {
-		await message.channel.send(languageChoosen.resetBot)
-			.then(() => {
-				wait(1000)
-				client.destroy()
-			})
-			.then(() => {
-				wait(1000)
-				client.login(token)
-				daftbot_client.user.setPresence({
-					activities: [{
-						name: languageChoosen.activities,
-						type: ActivityType.Watching,
-						url: 'https://www.youtube.com/@daftm0b'
-					}],
-					status: 'online'
-				});
+	if (!(message.author.id === owner)) return message.channel.send(languageChoosen.areYouOwner);
+
+	await message.channel.send(languageChoosen.resetBot)
+		.then(() => {
+			wait(1000)
+			client.destroy()
+		})
+		.then(() => {
+			wait(1000)
+			client.login(token)
+			daftbot_client.user.setPresence({
+				activities: [{
+					name: languageChoosen.activities,
+					type: ActivityType.Watching
+					
+				}],
+				status: 'online'
 			});
-		console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
-	} else {
-		console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
-		message.channel.send(languageChoosen.restricted);
-	};
+		});
+
+	console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
 };
 
 daftbot_client.login(token)

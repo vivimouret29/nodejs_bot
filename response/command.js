@@ -1,13 +1,14 @@
 'use.strict'
 
-var packageVersion = require("../package.json");
+const package = require("../package.json"),
+    owner = require("../config_daftbot.json");
 
 module.exports = {
     version: {
         name: 'version',
         description: 'a dynamic view version',
         execute(message) {
-            message.channel.send(`daftbot ${packageVersion.version}`);
+            message.channel.send(`daftbot ${package.version}`);
         }
     },
     say: {
@@ -25,29 +26,27 @@ module.exports = {
         description: 'a dynamic prune',
         args: true,
         execute(message, args) {
-            if (message.author.id === '431915542610313217') {
-                var amount = parseInt(args[0]);
-                if (isNaN(amount)) {
-                    message.reply('Pas un nombre valide ça frère');
-                } else if (amount > 0 && amount < 101) {
-                    message.channel.bulkDelete(amount, true).catch(err => {
-                        console.error(err);
-                        message.channel.send('Petit problème sur le channel, rien n\'est partie..');
-                    });
-                } else {
-                    message.reply('Donnes moi un nombre entre 1 et 100');
-                };
+            if (message.author.id === owner) return message.channel.send(args.languageChoosen.restricted); // TODO: check this out
+
+            var amount = parseInt(args.args[0]);
+            if (isNaN(amount)) {
+                message.reply(args.languageChoosen.pruneInvalid);
+            } else if (amount > 0 && amount < 101) {
+                message.channel.bulkDelete(amount, true).catch(err => {
+                    console.error(err);
+                    message.channel.send(args.languageChoosen.pruneError);
+                });
             } else {
-                message.channel.send(`Trop de lignes ${message.author.toString()}`);
+                message.reply(args.languageChoosen.pruneOut);
             };
         }
     },
     ping: {
         name: 'ping',
         description: 'a dynamic ping',
-        async execute(message) {
-            const wait = await message.channel.send("AAAAAAAATTTEEEEEEENNNNNNNNNNNNNDDDDDDDDDSSSSSSSSSSSSS!!!!");
-            wait.edit(`Bip. Latence de ${wait.createdTimestamp - message.createdTimestamp}ms.. Bip Boup..`);
+        async execute(message, args) {
+            const wait = await message.channel.send(args.languageChoosen.pingWait);
+            wait.edit(`Bip. ${args.languageChoosen.pingEdit} ${wait.createdTimestamp - message.createdTimestamp}ms.. Bip Boup..`);
         }
     }
 };

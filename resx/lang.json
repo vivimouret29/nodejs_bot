@@ -1,7 +1,10 @@
 {
     "fr": {
+        "helpTitle": "Liste des commandes",
+        "helpDescp" : "Voici la list des commandes utilisables à ce jour :\n\r-  mobbot [on | **off**] : permet de lancer ou d'arrêter le twitch bot Mobbot\r-  uptime : permet de connaître le temps de diffusion en direct\r-  mute [on | **off**] : permet de couper ou de remettre les répliques du bot\r-  language [fr | **en** | uk] : permet de changer la langue du bot\r-  version : permet de connaître la version du bot\r-  say : permet de faire parler le bot (e.g.: say Hello World !)\r-  ping : permet de connaître le ping du bot",
+        "helpAuthor": "par daftmob",
         "uptime": "Jour initiale",
-        "activities": "la chaîne de daftmob",
+        "activities": "la chaîne de daftmob | help",
         "areYouOwner": "T\\'as pas le droit d\\'y toucher",
         "invitation": "Aucun invitation éternel",
         "commandNotFound": "Nos développeurs travaillent actuellement sur cette commande",
@@ -23,11 +26,22 @@
         "howMute": "Renseignez **On** ou **Off**",
         "resetBot": "Petite douche je reviens...",
         "languageNtReco": "Langue non reconnue",
-        "commandAttempt": "Tentative de commande"
+        "commandAttempt": "Tentative de commande",
+        "pruneInvalid": "Pas un nombre valide ça frère",
+        "pruneError": "Petit problème sur le channel, rien n\\'est partie..",
+        "pruneOut": "Donnes moi un nombre entre 1 et 100",
+        "pingWait": "AAAAAAAATTTEEEEEEENNNNNNNNNNNNNDDDDDDDDDSSSSSSSSSSSSS!!!!",
+        "pingEdit": "Latence de",
+        "replyAgg": "ta gueule",
+        "replyBot": "Je suis un petit être dans une fiole",
+        "replyWorried": "Oui je m\\'inquiète pour toi..."
     },
     "en": {
+        "helpTitle": "List of orders",
+        "helpDescp" : "Here is a list of the commands that can be used to date :\n\r-  mobbot [on | **off**] : allows you to start or stop the Mobbot twitch bot\r-  uptime : allows you to know the time of the live broadcast\r-  mute [on | **off**] : allows to cut or put back the replicas of the bot\r-  language [fr | **en** | uk] : allows you to change the language of the bot\r-  version : allows to know the version of the bot\r-  say : allows the bot to speak (e.g.: say Hello World !)\r-  ping : allows to know the ping of the bot",
+        "helpAuthor": "by daftmob",
         "uptime": "Initial day",
-        "activities": "daftmob's channel",
+        "activities": "daftmob's channel | help",
         "areYouOwner": "You can\\'t touch it",
         "invitation": "No eternal invitation",
         "commandNotFound": "Our developers are currently working on this command",
@@ -49,11 +63,22 @@
         "howMute": "Enter **On** or **Off**",
         "resetBot": "Small shower I come back...",
         "languageNtReco": "Language not recognized",
-        "commandAttempt": "Attempt to order"
+        "commandAttempt": "Attempt to order",
+        "pruneInvalid": "Not a valid number brother",
+        "pruneError": "Small problem on the channel, nothing is gone.",
+        "pruneOut": "Give me a number between 1 and 100",
+        "pingWait": "WWWWWWWWWWWAAAAAAAAAAAAAIIIIIIIIIIIIIIIIIIITTTTTTTTTTTTTTTTTTTTT!!!!",
+        "pingEdit": "Latency of",
+        "replyAgg": "Shut up",
+        "replyBot": "I am a little being in a vial",
+        "replyWorried": "Yes, I worry about you..."
     },
     "uk": {
+        "helpTitle": "Список замовлень",
+        "helpDescp" : "Ось список команд, які можна використовувати на сьогоднішній день :\n\r-  mobbot [on | **off**] : дозволяє запустити або зупинити твіч-бота Mobbot- uptime: дозволяє дізнатися час прямої трансляції\r-  mute [on | **off**] : дозволяє вирізати або повернути назад репліки бота\r-  language [fr | **en** | uk] : дозволяє змінити мову бота\r-  version : дозволяє дізнатися версію бота\r-  say : дозволяє боту говорити (e.g.: say Привіт, світ. !)\r-  ping : дозволяє дізнатися пінг бота",
+        "helpAuthor": "by daftmob",
         "uptime": "Перший день",
-        "activities": "канал daftmob",
+        "activities": "канал daftmob | help",
         "areYouOwner": "Ти не можеш до нього доторкнутися.",
         "invitation": "Немає вічного запрошення",
         "commandNotFound": "Наразі наші розробники працюють над цією командою",
@@ -75,6 +100,14 @@
         "howMute": "Введіть **Увімкнути** або **Вимкнути**",
         "resetBot": "Невеликий душ, я повертаюся...",
         "languageNtReco": "Мова не розпізнається",
-        "commandAttempt": "Спроба замовлення"
+        "commandAttempt": "Спроба замовлення",
+        "pruneInvalid": "Недійсний номер, брате",
+        "pruneError": "Невелика проблема на каналі, нічого не працює...",
+        "pruneOut": "Назвіть число від 1 до 100",
+        "pingWait": "ввввввііііііддддддвввввііііііддддддддуууууууууєєєєєєєєєєєєєєєє!!!!",
+        "pingEdit": "Латентність",
+        "replyAgg": "Замовкни!",
+        "replyBot": "Я маленька істота у флаконі",
+        "replyWorried": "Так, я хвилююся за тебе..."
     }
 }

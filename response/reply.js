@@ -6,9 +6,9 @@ module.exports = {
     daftbot: {
         name: 'daftbot',
         description: 'a dynamic reply',
-        execute(message) {
+        execute(message, args) {
             let reply = new EmbedBuilder()
-                .setDescription('Je suis un petit être dans une fiole')
+                .setDescription(args.languageChoosen.replyBot)
                 .setImage('https://i.skyrock.net/7297/93457297/pics/3273728730_1_2_yrHEcA4w.gif');
 
             message.channel.send({ embeds: [reply] });
@@ -17,8 +17,8 @@ module.exports = {
     laugh: {
         name: 'hahaha',
         description: 'a dynamic reply',
-        execute(message) {
-            message.channel.send('ta gueule');
+        execute(message, args) {
+            message.channel.send(args.languageChoosen.replyAgg);
         }
     },
     no: {
@@ -46,8 +46,8 @@ module.exports = {
     tqt: {
         name: 'tqt',
         description: 'a dynamic reply',
-        execute(message) {
-            message.reply('oui je m\'inquiète pour toi...');
+        execute(message, args) {
+            message.reply(args.languageChoosen.replyWorried);
         }
     }
 };
