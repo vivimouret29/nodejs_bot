@@ -1,4 +1,5 @@
-config_daftbot.json
-config_mobbot.json
 node_modules
 .vscode
+/config.json
+/mobbot/config.json
+/mobbot/oauth.txt

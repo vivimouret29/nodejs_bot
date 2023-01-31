@@ -130,7 +130,11 @@ daftbot_client.on('messageCreate', async (message) => {
 	if (message.content.startsWith(prefix)) {
 		switch (command) {
 			case 'help':
-				help(message)
+				if (!(message.author.id === owner)) {
+					getHelp(message, language.helpDescp);
+				} else {
+					getHelp(message, language.helpDescpTotal);
+				};
 				return;
 			case 'mobbot':
 				setTwitchMobBot(message, author, msg, args);
@@ -150,13 +154,13 @@ daftbot_client.on('messageCreate', async (message) => {
 			case 'reset':
 				resetBot(message, daftbot_client, author, msg);
 				return;
-			case 'language':
+			case 'language' || 'lang':
 				setLanguage(message, author, msg, args);
 				return;
 			case checkCollection:
 				collectionCommands
 					.get(command)
-					.execute(message, { args, languageChoosen: language });
+					.execute(message, { args, language: language });
 				console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`)
 				return;
 			default:
@@ -186,7 +190,7 @@ daftbot_client.on('messageCreate', async (message) => {
 		try {
 			collectionReply
 				.get(msg)
-				.execute(message, { args, languageChoosen: language });
+				.execute(message, { args, language: language });
 			console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
 		} catch (err) {
 			console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # Error output reply() : `, err);
@@ -207,29 +211,27 @@ daftbot_client.on('messageCreate', async (message) => {
 });
 
 function setTwitchMobBot(message, author, msg, args) {
+	if (!(message.author.id === owner)) return message.channel.send(language.areYouOwner);
+
 	let action = args[0];
-	if (message.author.id === owner) {
-		if (action != undefined) {
-			if ((action.toLowerCase()) === 'on') {
-				message.channel.send(language.mobbotOn);
-				console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
-				processMobBot(message, true);
-			} else if ((action.toLowerCase()) === 'off') {
-				message.channel.send(language.mobbotOff);
-				console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
-				processMobBot(message, false);
-			} else {
-				console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
-				message.channel.send(`${language.mobbotFail}\n\r*e.g. : ${prefix}mobbot on*`);
-			}
+
+	if (action != undefined) {
+		if ((action.toLowerCase()) === 'on') {
+			message.channel.send(language.mobbotOn);
+			console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
+			processMobBot(message, true);
+		} else if ((action.toLowerCase()) === 'off') {
+			message.channel.send(language.mobbotOff);
+			console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
+			processMobBot(message, false);
 		} else {
 			console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
 			message.channel.send(`${language.mobbotFail}\n\r*e.g. : ${prefix}mobbot on*`);
 		}
 	} else {
 		console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
-		message.channel.send(language.restricted);
-	};
+		message.channel.send(`${language.mobbotFail}\n\r*e.g. : ${prefix}mobbot on*`);
+	}
 };
 
 function processMobBot(message, state) {
@@ -252,16 +254,15 @@ function processMobBot(message, state) {
 				.on('message', (channel, tags, message, self) => {
 					if (self || tags['username'] === 'moobot') return;
 
-					let data =
-					{
-						"id": Number(tags['user-id']),
-						"date": getCurrentDatetime('date'),
-						"badges": tags['badges'],
-						"color": String(tags['color']),
-						"username": String(tags['username']),
-						"message": String(message),
-						"emotes": tags['emotes-raw'] == null ? null : String(tags['emotes-raw']),
-						"turbo": Boolean(tags['turbo'])
+					let data = {
+						'id': Number(tags['user-id']),
+						'date': getCurrentDatetime('date'),
+						'badges': tags['badges'],
+						'color': String(tags['color']),
+						'username': String(tags['username']),
+						'message': String(message),
+						'emotes': tags['emotes-raw'] == null ? null : String(tags['emotes-raw']),
+						'turbo': Boolean(tags['turbo'])
 					};
 
 					return dataToExport.push(data);
@@ -279,9 +280,7 @@ function processMobBot(message, state) {
 					}],
 					status: 'online'
 				});
-
-			} 
-			else { message.channel.send(language.mobbotErrorStart) }
+			} else { message.channel.send(language.mobbotErrorStart) }
 			break;
 		default:
 			message.channel.send(language.mobbotErrorStart);
@@ -308,7 +307,7 @@ function exportingDataSet(message) {
 	});
 };
 
-function help(message) {
+function getHelp(message, desc) {
 	message.reply({
 		'channel_id': `${message.channel.channel_id}`,
 		'content': '',
@@ -317,7 +316,7 @@ function help(message) {
 			{
 				'type': 'rich',
 				'title': `${language.helpTitle}`,
-				'description': `${language.helpDescp}`,
+				'description': `${desc}`,
 				'color': 0x0eb70b,
 				'timestamp': `2023-01-25T15:20:42.000Z`,
 				'author': {
