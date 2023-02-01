@@ -1,11 +1,11 @@
 {
     "fr": {
         "helpTitle": "Liste des commandes",
-        "helpDescp" : "Voici la list des commandes utilisables à ce jour :\n\r-  uptime : permet de connaître le temps de diffusion en direct\r-  mute [on | **off**] : permet de couper ou de remettre les répliques du bot\r-  language [fr | **en** | uk] : permet de changer la langue du bot\r-  version : permet de connaître la version du bot\r-  say : permet de faire parler le bot (e.g.: say Hello World !)\r-  ping : permet de connaître le ping du bot",
-        "helpDescpTotal" : "Voici la list des commandes utilisables à ce jour :\n\r-  mobbot [on | **off**] : permet de lancer ou d'arrêter le twitch bot Mobbot\r-  reset : redémarre le bot\r-  kill : tue le bot\r-  status : mets à jour le status afficher sur le bot\r-  uptime : permet de connaître le temps de diffusion en direct\r-  mute [on | **off**] : permet de couper ou de remettre les répliques du bot\r-  language (lang) [fr | **en** | uk] : permet de changer la langue du bot\r-  version : permet de connaître la version du bot\r-  say : permet de faire parler le bot (e.g.: say Hello World !)\r-  ping : permet de connaître le ping du bot",
+        "helpDescp" : "Voici la list des commandes utilisables à ce jour :\n\r-  streamers : ajoute des streamers à la liste pour avoir des notifications\r-  uptime : permet de connaître le temps de diffusion en direct\r-  mute [on | **off**] : permet de couper ou de remettre les répliques du bot\r-  language [fr | **en** | uk] : permet de changer la langue du bot\r-  version : permet de connaître la version du bot\r-  say : permet de faire parler le bot (e.g.: say Hello World !)\r-  ping : permet de connaître le ping du bot",
+        "helpDescpTotal" : "Voici la list des commandes utilisables à ce jour :\n\r-  streamers : ajoute des streamers à la liste pour avoir des notifications\r-  mobbot [on | **off**] : permet de lancer ou d'arrêter le twitch bot Mobbot\r-  reset : redémarre le bot\r-  kill : tue le bot\r-  status : mets à jour le status afficher sur le bot\r-  uptime : permet de connaître le temps de diffusion en direct\r-  mute [on | **off**] : permet de couper ou de remettre les répliques du bot\r-  language (lang) [fr | **en** | uk] : permet de changer la langue du bot\r-  version : permet de connaître la version du bot\r-  say : permet de faire parler le bot (e.g.: say Hello World !)\r-  ping : permet de connaître le ping du bot",
         "helpAuthor": "par daftmob",
         "uptime": "Jour initiale",
-        "activities": "la chaîne de daftmob | help",
+        "activities": "tout Twitch | help",
         "areYouOwner": "T\\'as pas le droit d\\'y toucher",
         "invitation": "Aucun invitation éternel",
         "commandNotFound": "Nos développeurs travaillent actuellement sur cette commande",
@@ -35,15 +35,17 @@
         "pingEdit": "Latence de",
         "replyAgg": "ta gueule",
         "replyBot": "Je suis un petit être dans une fiole",
-        "replyWorried": "Oui je m\\'inquiète pour toi..."
+        "replyWorried": "Oui je m\\'inquiète pour toi...",
+        "descLiveSt": "À l'instant présent, le live du petit",
+        "descLiveNd": "vient de se lancer !"
     },
     "en": {
         "helpTitle": "List of orders",
-        "helpDescp" : "Here is a list of the commands that can be used to date :\n\r-  uptime : allows you to know the time of the live broadcast\r-  mute [on | **off**] : allows to cut or put back the replicas of the bot\r-  language [fr | **en** | uk] : allows you to change the language of the bot\r-  version : allows to know the version of the bot\r-  say : allows the bot to speak (e.g.: say Hello World !)\r-  ping : allows to know the ping of the bot",
-        "helpDescpTotal" : "Here is the list of the commands that can be used at this time :\n\r- mobbot [on | **off**] : allows to launch or stop the twitch bot Mobbot\r- reset : restarts the bot\r- kill : kills the bot\r- status : updates the status displayed on the bot\r- uptime : allows you to know the live broadcast time\r- mute [on | **off**]: allows you to cut or put back the bot's replicas\r- language (lang) [fr | **en** | uk]: allows you to change the bot's language\r- version: allows you to know the bot's version\r- say: allows you to make the bot speak (e. e.g.: say Hello World !)\r- ping : allows to know the ping of the bot",
+        "helpDescp" : "Here is a list of the commands that can be used to date :\n\r-  streamers : add streamers to the list to get notifications\r-  uptime : allows you to know the time of the live broadcast\r-  mute [on | **off**] : allows to cut or put back the replicas of the bot\r-  language [fr | **en** | uk] : allows you to change the language of the bot\r-  version : allows to know the version of the bot\r-  say : allows the bot to speak (e.g.: say Hello World !)\r-  ping : allows to know the ping of the bot",
+        "helpDescpTotal" : "Here is the list of the commands that can be used at this time :\n\r-  streamers : add streamers to the list to get notifications\r- mobbot [on | **off**] : allows to launch or stop the twitch bot Mobbot\r- reset : restarts the bot\r- kill : kills the bot\r- status : updates the status displayed on the bot\r- uptime : allows you to know the live broadcast time\r- mute [on | **off**]: allows you to cut or put back the bot's replicas\r- language (lang) [fr | **en** | uk]: allows you to change the bot's language\r- version: allows you to know the bot's version\r- say: allows you to make the bot speak (e. e.g.: say Hello World !)\r- ping : allows to know the ping of the bot",
         "helpAuthor": "by daftmob",
         "uptime": "Initial day",
-        "activities": "daftmob's channel | help",
+        "activities": "all Twitch | help",
         "areYouOwner": "You can\\'t touch it",
         "invitation": "No eternal invitation",
         "commandNotFound": "Our developers are currently working on this command",
@@ -73,15 +75,17 @@
         "pingEdit": "Latency of",
         "replyAgg": "Shut up",
         "replyBot": "I am a little being in a vial",
-        "replyWorried": "Yes, I worry about you..."
+        "replyWorried": "Yes, I worry about you...",
+        "descLiveSt": "At the moment, the little one's live",
+        "descLiveNd": "has just been launched!"
     },
     "uk": {
         "helpTitle": "Список замовлень",
-        "helpDescp" : "Ось список команд, які можна використовувати на сьогоднішній день :\n\r- uptime: дозволяє дізнатися час прямої трансляції\r-  mute [on | **off**] : дозволяє вирізати або повернути назад репліки бота\r-  language [fr | **en** | uk] : дозволяє змінити мову бота\r-  version : дозволяє дізнатися версію бота\r-  say : дозволяє боту говорити (e.g.: say Привіт, світ. !)\r-  ping : дозволяє дізнатися пінг бота",
-        "helpDescpTotal" : "Ось список команд, які можна використовувати в цей час:\n\r- mobbot [on | **off**] : дозволяє запустити або зупинити сіпаючогося бота Mobbot\r- reset : перезапустити бота\r- kill : вбити бота\r- status : оновити статус, що відображається на боті\r- uptime : дозволяє дізнатися час прямої трансляції\r- mute [on | **off**]: дозволяє вирізати або повернути репліки бота\r- language (lang) [fr | **en** | uk]: дозволяє змінити мову бота\r- version: дозволяє дізнатися версію бота\r- say: дозволяє змусити бота розмовляти (напр. наприклад: say Hello World!)\r- ping: дозволяє дізнатися пінг бота",
+        "helpDescp" : "Ось список команд, які можна використовувати на сьогоднішній день :\n\r-  streamers : додайте стрімерів до списку, щоб отримувати сповіщення\r- uptime: дозволяє дізнатися час прямої трансляції\r-  mute [on | **off**] : дозволяє вирізати або повернути назад репліки бота\r-  language [fr | **en** | uk] : дозволяє змінити мову бота\r-  version : дозволяє дізнатися версію бота\r-  say : дозволяє боту говорити (e.g.: say Привіт, світ. !)\r-  ping : дозволяє дізнатися пінг бота",
+        "helpDescpTotal" : "Ось список команд, які можна використовувати в цей час:\n\r-  streamers : додайте стрімерів до списку, щоб отримувати сповіщення\r- mobbot [on | **off**] : дозволяє запустити або зупинити сіпаючогося бота Mobbot\r- reset : перезапустити бота\r- kill : вбити бота\r- status : оновити статус, що відображається на боті\r- uptime : дозволяє дізнатися час прямої трансляції\r- mute [on | **off**]: дозволяє вирізати або повернути репліки бота\r- language (lang) [fr | **en** | uk]: дозволяє змінити мову бота\r- version: дозволяє дізнатися версію бота\r- say: дозволяє змусити бота розмовляти (напр. наприклад: say Hello World!)\r- ping: дозволяє дізнатися пінг бота",
         "helpAuthor": "by daftmob",
         "uptime": "Перший день",
-        "activities": "канал daftmob | help",
+        "activities": "весь Сіпатися | help",
         "areYouOwner": "Ти не можеш до нього доторкнутися.",
         "invitation": "Немає вічного запрошення",
         "commandNotFound": "Наразі наші розробники працюють над цією командою",
@@ -111,6 +115,8 @@
         "pingEdit": "Латентність",
         "replyAgg": "Замовкни!",
         "replyBot": "Я маленька істота у флаконі",
-        "replyWorried": "Так, я хвилююся за тебе..."
+        "replyWorried": "Так, я хвилююся за тебе...",
+        "descLiveSt": "У теперішньому часі життя маленького",
+        "descLiveNd": "щойно запущено!"
     }
 }

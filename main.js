@@ -4,7 +4,7 @@ const { Client, Collection, IntentsBitField, ActivityType } = require('discord.j
 	tmi = require('tmi.js'),
 	{ parse } = require('json2csv'),
 	fs = require('fs'),
-	wait = require('util').promisify(setTimeout);
+	axios = require('axios');
 
 const packageVersion = require("./package.json"),
 	{
@@ -68,6 +68,13 @@ const oauth = {
 	channels: channels,
 	connection: { reconnect: true }
 };
+const params = {
+	headers: {
+		Connection: 'keep-alive',
+		Authorization: `Bearer ${identity.password}`,
+		'Client-ID': clientId
+	}
+};
 
 const daftbot_client = new Client({ intents: discordIntents }),
 	mobbot_client = new tmi.Client(oauth);
@@ -76,6 +83,8 @@ var date = new Date(),
 	initDateTime = `${date.getHours()}:${date.getMinutes()} - ${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`,
 	isMuted = false,
 	dataToExport = [],
+	channelTwitch = ['twitch'],
+	streamers = ['daftmob', 'dpl0', 'fantabobshow', 'mistermv', 'drfeelgood', 'laink', 'ponce'],
 	language = language === undefined ? en : language;
 
 function getCurrentDatetime(choice) {
@@ -89,17 +98,41 @@ function getCurrentDatetime(choice) {
 	}
 };
 
-daftbot_client
-	.on('ready', () => {
-		wait(5000);
-		daftbot_client.user.setPresence({
-			activities: [{
-				name: language.activities,
-				type: ActivityType.Watching
-			}],
-			status: 'online'
-		});
+daftbot_client.on('ready', async () => {
+	await new Promise(resolve => setTimeout(resolve, 5000));
+	daftbot_client.user.setPresence({
+		activities: [{
+			name: language.activities,
+			type: ActivityType.Watching
+		}],
+		status: 'online'
 	});
+
+	let descpMemory = [],
+		oldDescpMemory = [];
+	for (let xTime = 0; xTime < streamers.length; xTime++) {
+		descpMemory.push('');
+		oldDescpMemory.push('');
+	};
+
+	while (true) {
+		for (streamId in streamers) {
+			let ax = await axios.get(`http://api.twitch.tv/helix/streams?user_login=${streamers[streamId]}`, params)
+
+			if (ax.data.data.length == 0) {
+				descpMemory[streamId] = ''
+				continue
+			}
+			else { descpMemory[streamId] = ax.data.data[0].title }
+
+			if (descpMemory[streamId] != oldDescpMemory[streamId] && ax.data.data.length == 1) { sendLiveNotifEmbed(ax) }
+			console.log(`[${getCurrentDatetime('comm')}] Notif Twitch ${ax.data.data[0].user_name}`)
+		};
+
+		oldDescpMemory = descpMemory;
+		await new Promise(resolve => setTimeout(resolve, 300000)); // 5 minutes for API
+	};
+});
 
 daftbot_client.on('messageCreate', async (message) => {
 	var args = message.content.slice(prefix.length).trim().split(/ +/),
@@ -118,7 +151,7 @@ daftbot_client.on('messageCreate', async (message) => {
 	if (message.author.id === owner) {
 		if (Math.random() < .15) {
 			try {
-				let dio = daftbot_client.emojis.cache.find(emoji => emoji.name === "dio_sama");
+				let dio = daftbot_client.emojis.cache.find(emoji => emoji.name === 'dio_sama');
 				message.react(dio)
 				console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ZA WARUDO!!!`)
 			} catch (err) {
@@ -139,6 +172,9 @@ daftbot_client.on('messageCreate', async (message) => {
 			case 'mobbot':
 				setTwitchMobBot(message, author, msg, args);
 				return;
+			case 'streamers':
+				setStreamers(message, author, msg, args);
+				break;
 			case 'uptime':
 				getUptime(message, daftbot_client, author, msg);
 				return;
@@ -234,18 +270,19 @@ function setTwitchMobBot(message, author, msg, args) {
 	}
 };
 
-function processMobBot(message, state) {
+async function processMobBot(message, state) {
 	switch (state) {
 		case true:
-			mobbot_client.on('connected', onConnectedHandler)
-			mobbot_client.connect()
-			message.channel.send(`*${language.mobbotSucceed}*`);
+			mobbot_client.on('connected', onConnectedHandler);
+			mobbot_client.connect();
 
+			message.channel.send(`*${language.mobbotSucceed}*`)
+				
 			daftbot_client.user.setPresence({
 				activities: [{
-					name: 'daftmob',
+					name: `daftmob`,
 					type: ActivityType.Streaming,
-					url: 'https://www.twitch.tv/daftmob'
+					url: `https://www.twitch.tv/daftmob`
 				}],
 				status: 'dnd'
 			});
@@ -288,8 +325,51 @@ function processMobBot(message, state) {
 	};
 };
 
-function onConnectedHandler(addr, port) {
-	console.log(`* Connected to ${addr}:${port} *`);
+async function sendLiveNotifEmbed(ax) {
+	let guid = await axios.get(`https://twitch.tv/${ax.data.data[0].user_login}`);
+	guid = guid.data.split(new RegExp(`(s\/[^.]*-p)`, 'giu'))[1];
+	guid = guid.split('s/')[1].split('-p')[0];
+
+	for (chan in channelTwitch) {
+		var channelSend = daftbot_client.channels.cache.find(channel => channel.name == channelTwitch[chan]);
+
+		channelSend.send({
+			"channel_id": `${channelTwitch[chan].id}`,
+			"content": '',
+			"tts": false,
+			"embeds": [{
+				"type": "rich",
+				"title": `Live de ${ax.data.data[0].user_name}`,
+				"description": `${language.descLiveSt} ${ax.data.data[0].user_name} ${language.descLiveNd}`,
+				"color": 0x4d04bb,
+				"fields": [{
+					"name": `${ax.data.data[0].game_name}`,
+					"value": `${ax.data.data[0].title}`,
+				}],
+				"image": {
+					"url": `https://static-cdn.jtvnw.net/previews-ttv/live_user_${ax.data.data[0].user_login}-360x220.jpg`,
+					"proxy_url": `https://twitch.tv/${ax.data.data[0].user_login}`,
+					"height": 0,
+					"width": 0
+				},
+				"thumbnail": {
+					"url": `https://static-cdn.jtvnw.net/jtv_user_pictures/${guid}-profile_image-300x300.png`,
+					"proxy_url": `https://twitch.tv/${ax.data.data[0].user_login}`,
+				},
+				"author": {
+					"name": `mobbot`,
+					"url": `https://twitch.tv/${ax.data.data[0].user_login}`,
+					"icon_url": `https://preview.redd.it/76awrcvcm9i51.jpg?auto=webp&s=a5bff4bb66eebdf449e865fb166099e6988e66b5`
+				},
+				"footer": {
+					"text": `Viewers : ${ax.data.data[0].viewer_count}`,
+					"icon_url": `https://cdn-icons-png.flaticon.com/512/4299/4299106.png`,
+					"proxy_icon_url": `https://twitch.tv/${ax.data.data[0].user_login}`
+				},
+				"url": `https://twitch.tv/${ax.data.data[0].user_login}`
+			}]
+		});
+	};
 };
 
 function exportingDataSet(message) {
@@ -312,31 +392,29 @@ function getHelp(message, desc) {
 		'channel_id': `${message.channel.channel_id}`,
 		'content': '',
 		'tts': false,
-		'embeds': [
-			{
-				'type': 'rich',
-				'title': `${language.helpTitle}`,
-				'description': `${desc}`,
-				'color': 0x0eb70b,
-				'timestamp': `2023-01-25T15:20:42.000Z`,
-				'author': {
-					'name': `${daftbot_client.user.username}`
-				},
-				'footer': {
-					'text': `${language.helpAuthor}`
-				}
+		'embeds': [{
+			'type': 'rich',
+			'title': `${language.helpTitle}`,
+			'description': `${desc}`,
+			'color': 0x0eb70b,
+			'timestamp': `2023-01-25T15:20:42.000Z`,
+			'author': {
+				'name': `${daftbot_client.user.username}`
+			},
+			'footer': {
+				'text': `${language.helpAuthor}`
 			}
-		]
+		}]
 	});
 };
 
-function setLanguage(message, author, msg, args) {
+async function setLanguage(message, author, msg, args) {
 	switch (args[0]) {
 		case 'fr':
 			language = fr;
 			message.channel.send(`Langue changée en Français`);
 
-			wait(1000);
+			await new Promise(resolve => setTimeout(resolve, 1000));
 			daftbot_client.user.setPresence({
 				activities: [{
 					name: language.activities,
@@ -351,7 +429,7 @@ function setLanguage(message, author, msg, args) {
 			language = en;
 			message.channel.send(`Language changed to English`);
 
-			wait(1000);
+			await new Promise(resolve => setTimeout(resolve, 1000));
 			daftbot_client.user.setPresence({
 				activities: [{
 					name: language.activities,
@@ -367,7 +445,7 @@ function setLanguage(message, author, msg, args) {
 			language = uk;
 			message.channel.send(`Мову змінено на українську`);
 
-			wait(1000);
+			await new Promise(resolve => setTimeout(resolve, 1000));
 			daftbot_client.user.setPresence({
 				activities: [{
 					name: language.activities,
@@ -491,7 +569,7 @@ async function killBot(message, client, author, msg) {
 
 	await message.channel.send(language.killBot)
 		.then(() => {
-			wait(1000)
+			new Promise(resolve => setTimeout(resolve, 1000))
 			client.destroy()
 		});
 
@@ -532,11 +610,11 @@ async function resetBot(message, client, author, msg) {
 
 	await message.channel.send(language.resetBot)
 		.then(() => {
-			wait(1000)
+			new Promise(resolve => setTimeout(resolve, 1000));
 			client.destroy()
 		})
 		.then(() => {
-			wait(1000)
+			new Promise(resolve => setTimeout(resolve, 1000));
 			client.login(token)
 			daftbot_client.user.setPresence({
 				activities: [{
@@ -551,7 +629,12 @@ async function resetBot(message, client, author, msg) {
 	console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
 };
 
-daftbot_client.login(token)
+function onConnectedHandler(addr, port) {
+	console.log(`* Connected to ${addr}:${port} *`);
+};
+
+daftbot_client
+	.login(token)
 	.then(() => console.log(`[${getCurrentDatetime('comm')}] ${daftbot_client.user.username}\'s logged
-[${getCurrentDatetime('comm')}] v${packageVersion.version}`))
+[${getCurrentDatetime('comm')}] ${daftbot_client.user.username} v${packageVersion.version}`))
 	.catch(console.error);
