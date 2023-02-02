@@ -83,8 +83,8 @@ var date = new Date(),
 	initDateTime = `${date.getHours()}:${date.getMinutes()} - ${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`,
 	isMuted = false,
 	dataToExport = [],
-	channelTwitch = ['twitch'],
-	streamers = ['daftmob', 'dpl0', 'fantabobshow', 'mistermv', 'drfeelgood', 'laink', 'ponce'],
+	channelTwitch = ['twitch', ':cinema: -fox-stream- :cinema:'],
+	streamers = ['daftmob', 'dpl0', 'fantabobshow', 'mistermv', 'drfeelgood', 'laink', 'ponce', 'captainfracas'],
 	language = language === undefined ? en : language;
 
 function getCurrentDatetime(choice) {
@@ -95,7 +95,7 @@ function getCurrentDatetime(choice) {
 			return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}`;
 		case 'comm':
 			return `${date.getHours()}:${date.getMinutes()} - ${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`;
-	}
+	};
 };
 
 daftbot_client.on('ready', async () => {
@@ -112,6 +112,7 @@ daftbot_client.on('ready', async () => {
 
 	let descpMemory = [],
 		oldDescpMemory = [];
+
 	for (let xTime = 0; xTime < streamers.length; xTime++) {
 		descpMemory.push('');
 		oldDescpMemory.push('');
@@ -122,14 +123,14 @@ daftbot_client.on('ready', async () => {
 			let ax = await axios.get(`http://api.twitch.tv/helix/streams?user_login=${streamers[streamId]}`, params);
 
 			if (ax.data.data.length == 0) {
-				descpMemory[streamId] = ''
-				continue
+				descpMemory[streamId] = '';
+				continue;
 			}
 			else { descpMemory[streamId] = ax.data.data[0].title };
 
-			if (descpMemory[streamId] != oldDescpMemory[streamId] && ax.data.data.length == 1) { 
-				sendLiveNotifEmbed(ax) 
-				console.log(`[${getCurrentDatetime('comm')}] Notif Twitch ${ax.data.data[0].user_name}`)
+			if (descpMemory[streamId] != oldDescpMemory[streamId] && ax.data.data.length == 1) {
+				sendLiveNotifEmbed(ax);
+				console.log(`[${getCurrentDatetime('comm')}] Notif Twitch ${ax.data.data[0].user_name}`);
 			};
 		};
 
@@ -138,12 +139,19 @@ daftbot_client.on('ready', async () => {
 	};
 });
 
+daftbot_client.on('guildMemberAdd', async (guild) => {
+	console.log(guild);
+
+
+	daftbot_client.channels.cache.get(guild.id).send(`Joined the server ${guild.name}`);
+});
+
 daftbot_client.on('messageCreate', async (message) => {
 	var args = message.content.slice(prefix.length).trim().split(/ +/),
 		command = args.shift().toLowerCase(),
 		msg = message.content.toLowerCase(),
 		author = message.author.username,
-		badBot = ['757970907992948826', '758319298325905428'],
+		badBot = ['757970907992948826', '758393470024155186'],
 		badChannels = [],
 		badBoy = [],
 		checkCollection;
@@ -156,10 +164,10 @@ daftbot_client.on('messageCreate', async (message) => {
 		if (Math.random() < .15) {
 			try {
 				let dio = daftbot_client.emojis.cache.find(emoji => emoji.name === 'dio_sama');
-				message.react(dio)
-				console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ZA WARUDO!!!`)
+				message.react(dio);
+				console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ZA WARUDO!!!`);
 			} catch (err) {
-				console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # Can't find emoji here`)
+				console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # Can't find emoji here`);
 			};
 		};
 	};
@@ -201,7 +209,7 @@ daftbot_client.on('messageCreate', async (message) => {
 				collectionCommands
 					.get(command)
 					.execute(message, { args, language: language });
-				console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`)
+				console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
 				return;
 			default:
 				console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${language.commandAttempt} : (${msg}) / (${author})`);
@@ -216,7 +224,7 @@ daftbot_client.on('messageCreate', async (message) => {
 		if (Math.random() <= .005) {
 			try {
 				collectionBot.get('trashtalk').execute(message);
-				console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}\n[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${daftbot_client.user.username} used (or not) a trashtalk`)
+				console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}\n[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${daftbot_client.user.username} used (or not) a trashtalk`);
 			} catch (err) {
 				console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # Error output randomCollection() : `, err);
 			};
@@ -267,11 +275,11 @@ function setTwitchMobBot(message, author, msg, args) {
 		} else {
 			console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
 			message.channel.send(`${language.mobbotFail}\n\r*e.g. : ${prefix}mobbot on*`);
-		}
+		};
 	} else {
 		console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
 		message.channel.send(`${language.mobbotFail}\n\r*e.g. : ${prefix}mobbot on*`);
-	}
+	};
 };
 
 async function processMobBot(message, state) {
@@ -280,8 +288,8 @@ async function processMobBot(message, state) {
 			mobbot_client.on('connected', onConnectedHandler);
 			mobbot_client.connect();
 
-			message.channel.send(`*${language.mobbotSucceed}*`)
-				
+			message.channel.send(`*${language.mobbotSucceed}*`);
+
 			daftbot_client.user.setPresence({
 				activities: [{
 					name: `daftmob`,
@@ -405,7 +413,7 @@ function getHelp(message, desc) {
 			'title': `${language.helpTitle}`,
 			'description': `${desc}`,
 			'color': 0x0eb70b,
-			'timestamp': `2023-01-25T15:20:42.000Z`,
+			'timestamp': `2023-02-02T03:20:42.000Z`,
 			'author': {
 				'name': `${daftbot_client.user.username}`
 			},
@@ -445,7 +453,6 @@ async function setLanguage(message, author, msg, args) {
 				}],
 				status: 'online'
 			});
-
 
 			console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
 			return language;
@@ -604,7 +611,7 @@ async function setMute(message, author, msg, args) {
 			message.channel.send(`${language.howMute}\n\r*e.g. : ${prefix}mute on*`);
 			isMuted = false;
 			return isMuted;
-		}
+		};
 	} else {
 		console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
 		message.channel.send(`${language.howMute}\n\r*e.g. : ${prefix}mute on*`);
@@ -619,11 +626,11 @@ async function resetBot(message, client, author, msg) {
 	await message.channel.send(language.resetBot)
 		.then(() => {
 			new Promise(resolve => setTimeout(resolve, 1000));
-			client.destroy()
+			client.destroy();
 		})
 		.then(() => {
 			new Promise(resolve => setTimeout(resolve, 1000));
-			client.login(token)
+			client.login(token);
 			daftbot_client.user.setPresence({
 				activities: [{
 					name: language.activities,

@@ -17,7 +17,8 @@ module.exports = {
         args: true,
         execute(message, args) {
             var sayMessage = args.args.join(' ');
-            message.delete().catch(O_o => { })
+
+            message.delete().catch(O_o => { });
             message.channel.send(sayMessage);
         }
     },
@@ -29,6 +30,7 @@ module.exports = {
             if (message.author.id === owner) return message.channel.send(args.language.restricted); // TODO: check this out
 
             var amount = parseInt(args.args[0]);
+
             if (isNaN(amount)) {
                 message.reply(args.language.pruneInvalid);
             } else if (amount > 0 && amount < 101) {
