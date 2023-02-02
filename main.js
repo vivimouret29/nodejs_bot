@@ -326,9 +326,13 @@ async function processMobBot(message, state) {
 };
 
 async function sendLiveNotifEmbed(ax) {
-	let guid = await axios.get(`https://twitch.tv/${ax.data.data[0].user_login}`);
-	guid = guid.data.split(new RegExp(`(s\/[^.]*-p)`, 'giu'))[1];
+	let guidDot = await axios.get(`https://twitch.tv/${ax.data.data[0].user_login}`);
+
+	let guid = guidDot.data.split(new RegExp(`(s\/[^.]*-p)`, 'giu'))[1];
 	guid = guid.split('s/')[1].split('-p')[0];
+
+	let dot = guidDot.data.split(new RegExp(`(ge-[.]*...........)`, 'giu'))[1];
+	dot = dot.split('.')[1].split(' ')[0];
 
 	for (chan in channelTwitch) {
 		var channelSend = daftbot_client.channels.cache.find(channel => channel.name == channelTwitch[chan]);
@@ -353,7 +357,7 @@ async function sendLiveNotifEmbed(ax) {
 					"width": 0
 				},
 				"thumbnail": {
-					"url": `https://static-cdn.jtvnw.net/jtv_user_pictures/${guid}-profile_image-300x300.png`,
+					"url": `https://static-cdn.jtvnw.net/jtv_user_pictures/${guid}-profile_image-300x300.${dot}`,
 					"proxy_url": `https://twitch.tv/${ax.data.data[0].user_login}`,
 				},
 				"author": {
