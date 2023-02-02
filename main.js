@@ -108,6 +108,8 @@ daftbot_client.on('ready', async () => {
 		status: 'online'
 	});
 
+	if (daftbot_client.user.id == '758393470024155186') return;
+
 	let descpMemory = [],
 		oldDescpMemory = [];
 	for (let xTime = 0; xTime < streamers.length; xTime++) {
@@ -382,9 +384,9 @@ function exportingDataSet(message) {
 	if (dataToExport.length === 0) {
 		message.author.send(language.mobbotNoData);
 		return;
-	}
+	};
 
-	fs.writeFile(`./twitch_mobbot/mobbot_analytics_${getCurrentDatetime('csv')}.csv`, parse(dataToExport), function (err) {
+	fs.writeFile(`./mobbot/mobbot_analytics_${getCurrentDatetime('csv')}.csv`, parse(dataToExport), function (err) {
 		if (err) {
 			message.author.send(language.csvFail);
 			throw err;
