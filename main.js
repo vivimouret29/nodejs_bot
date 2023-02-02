@@ -299,18 +299,18 @@ function setTwitchMobBot(message, author, msg, args) {
 	if (action != undefined) {
 		if ((action.toLowerCase()) === 'on') {
 			message.channel.send(language.mobbotOn);
-			console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
+			console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
 			processMobBot(message, true);
 		} else if ((action.toLowerCase()) === 'off') {
 			message.channel.send(language.mobbotOff);
-			console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
+			console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
 			processMobBot(message, false);
 		} else {
-			console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
+			console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
 			message.channel.send(`${language.mobbotFail}\n\r*e.g. : ${prefix}mobbot on*`);
 		};
 	} else {
-		console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
+		console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
 		message.channel.send(`${language.mobbotFail}\n\r*e.g. : ${prefix}mobbot on*`);
 	};
 };
@@ -432,13 +432,26 @@ function exportingDataSet(message) {
 	fs.writeFile(`./mobbot/mobbot_analytics_${getCurrentDatetime('csv')}.csv`, parse(dataToExport), function (err) {
 		if (err) {
 			message.author.send(language.csvFail);
+			console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${message.author.username} : ${message.content.toLowerCase()} ${err}`);
 			throw err;
 		}
-		else { message.author.send(language.csvSucceed) };
+		else { 
+			message.author.send(language.csvSucceed);
+			console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${message.author.username} : ${message.content.toLowerCase()}`);
+		};
 	});
 };
 
-function getHelp(message, desc) {
+async function getHelp(message, desc) {
+	let twitch = 'https://twitch.tv/daftmob',
+		guidDot = await axios.get(twitch);
+
+	let guid = guidDot.data.split(new RegExp(`(s\/[^.]*-p)`, 'giu'))[1];
+	guid = guid.split('s/')[1].split('-p')[0];
+
+	let dot = guidDot.data.split(new RegExp(`(ge-[.]*...........)`, 'giu'))[1];
+	dot = dot.split('.')[1].split(' ')[0];
+
 	message.author.send({
 		'channel_id': `${message.channel.channel_id}`,
 		'content': '',
@@ -453,10 +466,14 @@ function getHelp(message, desc) {
 				'name': `${daftbot_client.user.username}`
 			},
 			'footer': {
-				'text': `${language.helpAuthor}`
+				'text': `${language.helpAuthor}`,
+				'icon_url': `https://static-cdn.jtvnw.net/jtv_user_pictures/${guid}-profile_image-300x300.${dot}`,
+				'proxy_icon_url': twitch
 			}
 		}]
 	});
+
+	console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${message.author.username} : ${message.content.toLowerCase()}`);
 };
 
 async function setLanguage(message, author, msg, args) {
@@ -474,7 +491,7 @@ async function setLanguage(message, author, msg, args) {
 				status: 'online'
 			});
 
-			console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
+			console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
 			return language;
 		case 'en':
 			language = en;
@@ -489,7 +506,7 @@ async function setLanguage(message, author, msg, args) {
 				status: 'online'
 			});
 
-			console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
+			console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
 			return language;
 		case 'uk':
 			language = uk;
@@ -504,11 +521,11 @@ async function setLanguage(message, author, msg, args) {
 				status: 'online'
 			});
 
-			console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
+			console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
 			return language;
 		default:
 			message.channel.send(language.languageNtReco);
-			console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
+			console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
 			return language;
 	};
 };
@@ -524,7 +541,7 @@ function getUptime(message, client, author, msg) {
 	let start = initDateTime;
 
 	message.channel.send(`${language.uptime} : ${start}\n${days}D:${hours}H:${minutes}M:${seconds}S`);
-	console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
+	console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
 };
 
 function setStatus(message, client, author, msg, args) {
@@ -611,7 +628,7 @@ function setStatus(message, client, author, msg, args) {
 	};
 
 	message.channel.send(language.changedActivites);
-	console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
+	console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
 };
 
 async function killBot(message, client, author, msg) {
@@ -623,7 +640,7 @@ async function killBot(message, client, author, msg) {
 			client.destroy()
 		});
 
-	console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
+	console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
 };
 
 async function setMute(message, author, msg, args) {
@@ -632,23 +649,23 @@ async function setMute(message, author, msg, args) {
 	let action = args[0];
 	if (action != undefined) {
 		if ((action.toLowerCase()) === 'on') {
-			console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
+			console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
 			message.channel.send(language.botMuted);
 			isMuted = true;
 			return isMuted;
 		} else if ((action.toLowerCase()) === 'off') {
-			console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
+			console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
 			message.channel.send(language.botUnmuted);
 			isMuted = false;
 			return isMuted;
 		} else {
-			console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
+			console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
 			message.channel.send(`${language.howMute}\n\r*e.g. : ${prefix}mute on*`);
 			isMuted = false;
 			return isMuted;
 		};
 	} else {
-		console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
+		console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
 		message.channel.send(`${language.howMute}\n\r*e.g. : ${prefix}mute on*`);
 		isMuted = false;
 		return isMuted;
@@ -676,7 +693,7 @@ async function resetBot(message, client, author, msg) {
 			});
 		});
 
-	console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
+	console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
 };
 
 function randomIntFromInterval(min, max) {
