@@ -117,16 +117,18 @@ daftbot_client.on('ready', async () => {
 
 	while (true) {
 		for (streamId in streamers) {
-			let ax = await axios.get(`http://api.twitch.tv/helix/streams?user_login=${streamers[streamId]}`, params)
+			let ax = await axios.get(`http://api.twitch.tv/helix/streams?user_login=${streamers[streamId]}`, params);
 
 			if (ax.data.data.length == 0) {
 				descpMemory[streamId] = ''
 				continue
 			}
-			else { descpMemory[streamId] = ax.data.data[0].title }
+			else { descpMemory[streamId] = ax.data.data[0].title };
 
-			if (descpMemory[streamId] != oldDescpMemory[streamId] && ax.data.data.length == 1) { sendLiveNotifEmbed(ax) }
-			console.log(`[${getCurrentDatetime('comm')}] Notif Twitch ${ax.data.data[0].user_name}`)
+			if (descpMemory[streamId] != oldDescpMemory[streamId] && ax.data.data.length == 1) { 
+				sendLiveNotifEmbed(ax) 
+				console.log(`[${getCurrentDatetime('comm')}] Notif Twitch ${ax.data.data[0].user_name}`)
+			};
 		};
 
 		oldDescpMemory = descpMemory;
@@ -378,21 +380,21 @@ async function sendLiveNotifEmbed(ax) {
 
 function exportingDataSet(message) {
 	if (dataToExport.length === 0) {
-		message.channel.send(language.mobbotNoData);
+		message.author.send(language.mobbotNoData);
 		return;
 	}
 
 	fs.writeFile(`./twitch_mobbot/mobbot_analytics_${getCurrentDatetime('csv')}.csv`, parse(dataToExport), function (err) {
 		if (err) {
-			message.channel.send(language.csvFail);
+			message.author.send(language.csvFail);
 			throw err;
 		}
-		else { message.channel.send(language.csvSucceed) }
+		else { message.author.send(language.csvSucceed) };
 	});
 };
 
 function getHelp(message, desc) {
-	message.reply({
+	message.author.send({
 		'channel_id': `${message.channel.channel_id}`,
 		'content': '',
 		'tts': false,
