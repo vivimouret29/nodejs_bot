@@ -37,7 +37,9 @@
         "replyBot": "Je suis un petit être dans une fiole",
         "replyWorried": "Oui je m\\'inquiète pour toi...",
         "descLiveSt": "À l'instant présent, le live du petit",
-        "descLiveNd": "vient de se lancer !"
+        "descLiveNd": "vient de se lancer !",
+        "guildJoin": "vient de rejoindre la galaxie !",
+        "guildJoinDesc": "Sors de la bordure extérieur pour rejoindre nos rangs ..."
     },
     "en": {
         "helpTitle": "List of orders",
@@ -77,7 +79,9 @@
         "replyBot": "I am a little being in a vial",
         "replyWorried": "Yes, I worry about you...",
         "descLiveSt": "At the moment, the little one's live",
-        "descLiveNd": "has just been launched!"
+        "descLiveNd": "has just been launched!",
+        "guildJoin": "has just joined the galaxy!",
+        "guildJoinDesc": "Come out of the outer rim to join our ranks..."
     },
     "uk": {
         "helpTitle": "Список замовлень",
@@ -117,6 +121,8 @@
         "replyBot": "Я маленька істота у флаконі",
         "replyWorried": "Так, я хвилююся за тебе...",
         "descLiveSt": "У теперішньому часі життя маленького",
-        "descLiveNd": "щойно запущено!"
+        "descLiveNd": "щойно запущено!",
+        "guildJoin": "щойно приєднався до галактики!",
+        "guildJoinDesc": "Виходьте із зовнішнього кільця, щоб приєднатися до наших лав..."
     }
 }

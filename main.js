@@ -1,27 +1,27 @@
 'use.strict'
 
-const { Client, Collection, IntentsBitField, ActivityType } = require('discord.js'),
+const { Client, Collection, IntentsBitField, ActivityType, Events, Partials } = require('discord.js'),
 	tmi = require('tmi.js'),
 	{ parse } = require('json2csv'),
 	fs = require('fs'),
 	axios = require('axios');
 
-const packageVersion = require("./package.json"),
+const packageVersion = require('./package.json'),
 	{
 		prefix,
 		token,
 		owner
-	} = require("./config.json"),
+	} = require('./config.json'),
 	{
 		clientId,
 		identity,
 		channels
-	} = require("./mobbot/config.json"),
+	} = require('./mobbot/config.json'),
 	{
 		fr,
 		en,
 		uk
-	} = require("./resx/lang.json"),
+	} = require('./resx/lang.json'),
 	commandFile = require('./appdata/command.js'),
 	replyFile = require('./appdata/reply.js'),
 	botFile = require('./appdata/bot.js');
@@ -48,6 +48,8 @@ collectionBot.set(botFile.trashtalk.name, botFile.trashtalk);
 
 const discordIntents = new IntentsBitField();
 discordIntents.add(
+	IntentsBitField.Flags.DirectMessages,
+	IntentsBitField.Flags.DirectMessageReactions,
 	IntentsBitField.Flags.Guilds,
 	IntentsBitField.Flags.GuildMembers,
 	IntentsBitField.Flags.GuildInvites,
@@ -55,9 +57,8 @@ discordIntents.add(
 	IntentsBitField.Flags.GuildPresences,
 	IntentsBitField.Flags.GuildMessageReactions,
 	IntentsBitField.Flags.GuildMessageTyping,
-	IntentsBitField.Flags.MessageContent,
 	IntentsBitField.Flags.GuildEmojisAndStickers,
-	IntentsBitField.Flags.DirectMessages
+	IntentsBitField.Flags.MessageContent
 );
 const oauth = {
 	options: {
@@ -76,6 +77,7 @@ const params = {
 	}
 };
 
+
 const daftbot_client = new Client({ intents: discordIntents }),
 	mobbot_client = new tmi.Client(oauth);
 
@@ -83,9 +85,14 @@ var date = new Date(),
 	initDateTime = `${date.getHours()}:${date.getMinutes()} - ${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`,
 	isMuted = false,
 	dataToExport = [],
-	channelTwitch = ['twitch', ':cinema: -fox-stream- :cinema:'],
+	channelTwitch = ['twitch'],// ':cinema: -fox-stream- :cinema:'],
 	streamers = ['daftmob', 'dpl0', 'fantabobshow', 'mistermv', 'drfeelgood', 'laink', 'ponce', 'captainfracas'],
-	language = language === undefined ? en : language;
+	language = language === undefined ? en : language,
+	memes = [
+		'https://media3.giphy.com/media/3o84sCIUu49AtNYkDK/giphy.gif',
+		'https://media1.giphy.com/media/3ohuPwwRuluP6GiZoI/giphy.gif',
+		'https://media2.giphy.com/media/3ohuPePwzcG9sA3VSw/giphy.gif'
+	]
 
 function getCurrentDatetime(choice) {
 	switch (choice) {
@@ -98,7 +105,7 @@ function getCurrentDatetime(choice) {
 	};
 };
 
-daftbot_client.on('ready', async () => {
+daftbot_client.on(Events.ClientReady, async () => {
 	await new Promise(resolve => setTimeout(resolve, 5000));
 	daftbot_client.user.setPresence({
 		activities: [{
@@ -135,18 +142,42 @@ daftbot_client.on('ready', async () => {
 		};
 
 		oldDescpMemory = descpMemory;
-		await new Promise(resolve => setTimeout(resolve, 300000)); // 5 minutes for API
+		await new Promise(resolve => setTimeout(resolve, 300000));
 	};
 });
 
-daftbot_client.on('guildMemberAdd', async (guild) => {
-	console.log(guild);
-
-
-	daftbot_client.channels.cache.get(guild.id).send(`Joined the server ${guild.name}`);
+daftbot_client.on(Events.GuildMemberAdd, async (guild) => {
+	daftbot_client.channels.cache
+		.get(guild.guild.systemChannelId)
+		.send({
+			'channel_id': `${guild.guild.systemChannelId}`,
+			'content': '',
+			'tts': false,
+			'embeds': [{
+				'type': 'rich',
+				'title': `${guild.user.username} ${language.guildJoin}`,
+				'description': `${language.guildJoinDesc}`,
+				'color': 0x890b0b,
+				'image': {
+					'url': `${memes[randomIntFromInterval(0, (memes.length - 1))]}`,
+					'height': 0,
+					'width': 0
+				},
+				'thumbnail': {
+					'url': `${daftbot_client.users.cache.get(guild.user.id).avatarURL({ format: 'png', dynamic: true, size: 1024 })}`,
+					'height': 0,
+					'width': 0
+				},
+				'author': {
+					'name': `daftbot`,
+					'icon_url': `${daftbot_client.user.avatarURL({ format: 'png', dynamic: true, size: 1024 })}`
+				}
+			}]
+		});
+	console.log(`[${getCurrentDatetime('comm')}] New member \'${guild.user.username}\' join server : ${guild.guild.name}`);
 });
 
-daftbot_client.on('messageCreate', async (message) => {
+daftbot_client.on(Events.MessageCreate, async (message) => {
 	var args = message.content.slice(prefix.length).trim().split(/ +/),
 		command = args.shift().toLowerCase(),
 		msg = message.content.toLowerCase(),
@@ -223,7 +254,9 @@ daftbot_client.on('messageCreate', async (message) => {
 
 		if (Math.random() <= .005) {
 			try {
-				collectionBot.get('trashtalk').execute(message);
+				collectionBot
+					.get('trashtalk')
+					.execute(message);
 				console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}\n[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${daftbot_client.user.username} used (or not) a trashtalk`);
 			} catch (err) {
 				console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # Error output randomCollection() : `, err);
@@ -349,42 +382,44 @@ async function sendLiveNotifEmbed(ax) {
 	for (chan in channelTwitch) {
 		var channelSend = daftbot_client.channels.cache.find(channel => channel.name == channelTwitch[chan]);
 
-		channelSend.send({
-			"channel_id": `${channelTwitch[chan].id}`,
-			"content": '',
-			"tts": false,
-			"embeds": [{
-				"type": "rich",
-				"title": `Live de ${ax.data.data[0].user_name}`,
-				"description": `${language.descLiveSt} ${ax.data.data[0].user_name} ${language.descLiveNd}`,
-				"color": 0x4d04bb,
-				"fields": [{
-					"name": `${ax.data.data[0].game_name}`,
-					"value": `${ax.data.data[0].title}`,
-				}],
-				"image": {
-					"url": `https://static-cdn.jtvnw.net/previews-ttv/live_user_${ax.data.data[0].user_login}-360x220.jpg`,
-					"proxy_url": `https://twitch.tv/${ax.data.data[0].user_login}`,
-					"height": 0,
-					"width": 0
-				},
-				"thumbnail": {
-					"url": `https://static-cdn.jtvnw.net/jtv_user_pictures/${guid}-profile_image-300x300.${dot}`,
-					"proxy_url": `https://twitch.tv/${ax.data.data[0].user_login}`,
-				},
-				"author": {
-					"name": `mobbot`,
-					"url": `https://twitch.tv/${ax.data.data[0].user_login}`,
-					"icon_url": `https://preview.redd.it/76awrcvcm9i51.jpg?auto=webp&s=a5bff4bb66eebdf449e865fb166099e6988e66b5`
-				},
-				"footer": {
-					"text": `Viewers : ${ax.data.data[0].viewer_count}`,
-					"icon_url": `https://cdn-icons-png.flaticon.com/512/4299/4299106.png`,
-					"proxy_icon_url": `https://twitch.tv/${ax.data.data[0].user_login}`
-				},
-				"url": `https://twitch.tv/${ax.data.data[0].user_login}`
-			}]
-		});
+		daftbot_client.channels.cache
+			.get(channelSend.id)
+			.send({
+				'channel_id': `${channelSend.id}`,
+				'content': '',
+				'tts': false,
+				'embeds': [{
+					'type': 'rich',
+					'title': `Live de ${ax.data.data[0].user_name}`,
+					'description': `${language.descLiveSt} ${ax.data.data[0].user_name} ${language.descLiveNd}`,
+					'color': 0x4d04bb,
+					'fields': [{
+						'name': `${ax.data.data[0].game_name}`,
+						'value': `${ax.data.data[0].title}`,
+					}],
+					'image': {
+						'url': `https://static-cdn.jtvnw.net/previews-ttv/live_user_${ax.data.data[0].user_login}-360x220.jpg`,
+						'proxy_url': `https://twitch.tv/${ax.data.data[0].user_login}`,
+						'height': 0,
+						'width': 0
+					},
+					'thumbnail': {
+						'url': `https://static-cdn.jtvnw.net/jtv_user_pictures/${guid}-profile_image-300x300.${dot}`,
+						'proxy_url': `https://twitch.tv/${ax.data.data[0].user_login}`,
+					},
+					'author': {
+						'name': `mobbot`,
+						'url': `https://twitch.tv/${ax.data.data[0].user_login}`,
+						'icon_url': `${daftbot_client.user.avatarURL({ format: 'png', dynamic: true, size: 1024 })}`
+					},
+					'footer': {
+						'text': `Viewers : ${ax.data.data[0].viewer_count}`,
+						'icon_url': `https://cdn-icons-png.flaticon.com/512/4299/4299106.png`,
+						'proxy_icon_url': `https://twitch.tv/${ax.data.data[0].user_login}`
+					},
+					'url': `https://twitch.tv/${ax.data.data[0].user_login}`
+				}]
+			});
 	};
 };
 
@@ -642,6 +677,10 @@ async function resetBot(message, client, author, msg) {
 		});
 
 	console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} :  ${msg}`);
+};
+
+function randomIntFromInterval(min, max) {
+	return Math.floor(Math.random() * (max - min + 1) + min)
 };
 
 function onConnectedHandler(addr, port) {
