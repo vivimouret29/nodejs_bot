@@ -10,8 +10,9 @@ const packageVersion = require('./package.json'),
 	{
 		prefix,
 		token,
-		owner
-	} = require('./config.json'),
+		owner,
+		openai_apikey
+	} = require("./config.json"),
 	{
 		clientId,
 		identity,
@@ -25,10 +26,12 @@ const packageVersion = require('./package.json'),
 	commandFile = require('./appdata/command.js'),
 	replyFile = require('./appdata/reply.js'),
 	botFile = require('./appdata/bot.js');
+	openaiFile = require('./appdata/openai.js');
 
 var collectionCommands = new Collection(),
 	collectionReply = new Collection(),
-	collectionBot = new Collection();
+	collectionBot = new Collection(),
+	collectionOpenAI = new Collection();
 
 // Command Collection
 collectionCommands.set(commandFile.version.name, commandFile.version);
@@ -45,6 +48,9 @@ collectionReply.set(replyFile.tqt.name, replyFile.tqt);
 
 // Bot Collection
 collectionBot.set(botFile.trashtalk.name, botFile.trashtalk);
+
+// OpenAI Collection
+collectionOpenAI.set(openaiFile.openai.name, openaiFile.openai);
 
 const discordIntents = new IntentsBitField();
 discordIntents.add(
@@ -125,25 +131,25 @@ daftbot_client.on(Events.ClientReady, async () => {
 		oldDescpMemory.push('');
 	};
 
-	while (true) {
-		for (streamId in streamers) {
-			let ax = await axios.get(`http://api.twitch.tv/helix/streams?user_login=${streamers[streamId]}`, params);
+	// while (true) {
+	// 	for (streamId in streamers) {
+	// 		let ax = await axios.get(`http://api.twitch.tv/helix/streams?user_login=${streamers[streamId]}`, params);
 
-			if (ax.data.data.length == 0) {
-				descpMemory[streamId] = '';
-				continue;
-			}
-			else { descpMemory[streamId] = ax.data.data[0].title };
+	// 		if (ax.data.data.length == 0) {
+	// 			descpMemory[streamId] = '';
+	// 			continue;
+	// 		}
+	// 		else { descpMemory[streamId] = ax.data.data[0].title };
 
-			if (descpMemory[streamId] != oldDescpMemory[streamId] && ax.data.data.length == 1) {
-				sendLiveNotifEmbed(ax);
-				console.log(`[${getCurrentDatetime('comm')}] Notif Twitch ${ax.data.data[0].user_name}`);
-			};
-		};
+	// 		if (descpMemory[streamId] != oldDescpMemory[streamId] && ax.data.data.length == 1) {
+	// 			sendLiveNotifEmbed(ax);
+	// 			console.log(`[${getCurrentDatetime('comm')}] Notif Twitch ${ax.data.data[0].user_name}`);
+	// 		};
+	// 	};
 
-		oldDescpMemory = descpMemory;
-		await new Promise(resolve => setTimeout(resolve, 300000));
-	};
+	// 	oldDescpMemory = descpMemory;
+	// 	await new Promise(resolve => setTimeout(resolve, 300000));
+	// };
 });
 
 daftbot_client.on(Events.GuildMemberAdd, async (guild) => {
@@ -189,7 +195,7 @@ daftbot_client.on(Events.MessageCreate, async (message) => {
 
 	collectionCommands.has(command) ? checkCollection = collectionCommands.get(command).name : checkCollection = false;
 
-	if (message.author.bot) return;
+	if ((message.author.bot) && (isMuted)) return;
 
 	if (message.author.id === owner) {
 		if (Math.random() < .15) {
@@ -266,16 +272,38 @@ daftbot_client.on(Events.MessageCreate, async (message) => {
 
 	if (!message.content.startsWith(prefix)) {
 
-		if (!collectionReply.has(msg)) return;
+		if (openai_apikey != "") {
 
-		try {
-			collectionReply
-				.get(msg)
-				.execute(message, { args, language: language });
-			console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
-		} catch (err) {
-			console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # Error output reply() : `, err);
-		};
+			if (message.mentions.has(daftbot_client.user.id)) {
+				try {
+					collectionOpenAI.get('openai').execute(message);
+				} catch (err) {
+					console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # Error output openai() : `, err);
+				}
+			} 
+			else if ((message.reference != undefined) && (message.channel.messages.fetch(message.reference.messageId).user == daftbot_client.user)) {
+				try {
+					collectionOpenAI.get('openai').execute(message);
+				} catch (err) {
+					console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # Error output openai() : `, err);
+				}
+			}
+		}
+
+		else if (collectionReply.has(msg)) {
+			try {
+				collectionReply
+					.get(msg)
+					.execute(message, { args, languageChoosen: language });
+				console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
+			} catch (err) {
+				console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # Error output reply() : `, err);
+			};
+		}
+
+		else {
+			return;
+		}
 
 		if (badBoy.includes(message.author.id)) {
 
