@@ -131,25 +131,25 @@ daftbot_client.on(Events.ClientReady, async () => {
 		oldDescpMemory.push('');
 	};
 
-	// while (true) {
-	// 	for (streamId in streamers) {
-	// 		let ax = await axios.get(`http://api.twitch.tv/helix/streams?user_login=${streamers[streamId]}`, params);
+	while (true) {
+		for (streamId in streamers) {
+			let ax = await axios.get(`http://api.twitch.tv/helix/streams?user_login=${streamers[streamId]}`, params);
 
-	// 		if (ax.data.data.length == 0) {
-	// 			descpMemory[streamId] = '';
-	// 			continue;
-	// 		}
-	// 		else { descpMemory[streamId] = ax.data.data[0].title };
+			if (ax.data.data.length == 0) {
+				descpMemory[streamId] = '';
+				continue;
+			}
+			else { descpMemory[streamId] = ax.data.data[0].title };
 
-	// 		if (descpMemory[streamId] != oldDescpMemory[streamId] && ax.data.data.length == 1) {
-	// 			sendLiveNotifEmbed(ax);
-	// 			console.log(`[${getCurrentDatetime('comm')}] Notif Twitch ${ax.data.data[0].user_name}`);
-	// 		};
-	// 	};
+			if (descpMemory[streamId] != oldDescpMemory[streamId] && ax.data.data.length == 1) {
+				sendLiveNotifEmbed(ax);
+				console.log(`[${getCurrentDatetime('comm')}] Notif Twitch ${ax.data.data[0].user_name}`);
+			};
+		};
 
-	// 	oldDescpMemory = descpMemory;
-	// 	await new Promise(resolve => setTimeout(resolve, 300000));
-	// };
+		oldDescpMemory = descpMemory;
+		await new Promise(resolve => setTimeout(resolve, 300000));
+	};
 });
 
 daftbot_client.on(Events.GuildMemberAdd, async (guild) => {
