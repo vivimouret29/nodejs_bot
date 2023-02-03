@@ -1,5 +1,6 @@
 { 
     "prefix" : "!",
     "token"  : "YOUR-TOKEN-HERE",
-    "owner" : "your_discord_id"
+    "owner" : "your_discord_id",
+    "openai_apikey" : ""
 }
