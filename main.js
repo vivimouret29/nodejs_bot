@@ -10,7 +10,8 @@ const packageVersion = require('./package.json'),
 	{
 		prefix,
 		token,
-		owner
+		owner,
+		openAI
 	} = require('./config.json'),
 	{
 		clientId,
@@ -24,11 +25,13 @@ const packageVersion = require('./package.json'),
 	} = require('./resx/lang.json'),
 	commandFile = require('./appdata/command.js'),
 	replyFile = require('./appdata/reply.js'),
-	botFile = require('./appdata/bot.js');
+	botFile = require('./appdata/bot.js'),
+	openaiFile = require('./appdata/openai.js');
 
 var collectionCommands = new Collection(),
 	collectionReply = new Collection(),
-	collectionBot = new Collection();
+	collectionBot = new Collection(),
+	collectionOpenAI = new Collection();
 
 // Command Collection
 collectionCommands.set(commandFile.version.name, commandFile.version);
@@ -45,6 +48,9 @@ collectionReply.set(replyFile.tqt.name, replyFile.tqt);
 
 // Bot Collection
 collectionBot.set(botFile.trashtalk.name, botFile.trashtalk);
+
+// OpenAI Collection
+collectionOpenAI.set(openaiFile.openai.name, openaiFile.openai);
 
 const intents = new IntentsBitField();
 intents.add(
@@ -215,7 +221,7 @@ dbClient.on(Events.MessageCreate, async (message) => {
 
 	collectionCommands.has(command) ? checkCollection = collectionCommands.get(command).name : checkCollection = false;
 
-	if (message.author.bot) return;
+	if ((message.author.bot) && (isMuted)) return;
 
 	if (message.author.id === owner) {
 		if (Math.random() < .05) {
@@ -290,12 +296,24 @@ dbClient.on(Events.MessageCreate, async (message) => {
 
 	if (!message.content.startsWith(prefix)) {
 
+		if ((message.mentions.has(dbClient.user.id)) ||
+			((message.reference != undefined) && (message.channel.messages.fetch(message.reference.messageId).user == dbClient.user))) {
+			try {
+				collectionOpenAI
+					.get('openai')
+					.execute(message);
+				console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
+			} catch (err) {
+				console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # Error output openai() : `, err);
+			};
+		};
+
 		if (!collectionReply.has(msg)) return;
 
 		try {
 			collectionReply
 				.get(msg)
-				.execute(message, { args, language: language });
+				.execute(message, { args, languageChoosen: language });
 			console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
 		} catch (err) {
 			console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # Error output reply() : `, err);

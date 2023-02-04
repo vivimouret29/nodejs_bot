@@ -22,6 +22,7 @@
     "fs": "^0.0.1-security",
     "install": "^0.13.0",
     "json2csv": "^6.0.0-alpha.2",
+    "openai": "^3.1.0",
     "tmi.js": "^1.8.5"
   }
 }
