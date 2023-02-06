@@ -221,7 +221,7 @@ dbClient.on(Events.MessageCreate, async (message) => {
 
 	collectionCommands.has(command) ? checkCollection = collectionCommands.get(command).name : checkCollection = false;
 
-	if ((message.author.bot) && (isMuted)) return;
+	if (message.author.bot) return;
 
 	if (message.author.id === owner) {
 		if (Math.random() < .05) {
@@ -236,11 +236,9 @@ dbClient.on(Events.MessageCreate, async (message) => {
 	if (message.content.startsWith(prefix)) {
 		switch (command) {
 			case 'help':
-				if (!(message.author.id === owner)) {
-					getHelp(message, language.helpDescp);
-				} else {
-					getHelp(message, language.helpDescpTotal);
-				};
+				if (message.author.id === owner) { getHelp(message, language.helpDescpTotal) }
+				else if (message.guild.name == 'Top.gg Verification Center') { getHelp(message, language.helpTopGg) }
+				else { getHelp(message, language.helpDescp) };
 				return;
 			case 'mobbot':
 				setTwitchMobBot(message, author, msg, args);
@@ -485,37 +483,43 @@ function exportingDataSet(message) {
 };
 
 async function getHelp(message, desc) {
-	let twitch = 'https://twitch.tv/daftmob',
-		guidDot = await axios.get(twitch);
+	try {
+		let twitch = 'https://twitch.tv/daftmob',
+			guidDot = await axios.get(twitch);
 
-	let guid = guidDot.data.split(new RegExp(`(s\/[^.]*-p)`, 'giu'))[1];
-	guid = guid.split('s/')[1].split('-p')[0];
+		let guid = guidDot.data.split(new RegExp(`(s\/[^.]*-p)`, 'giu'))[1];
+		guid = guid.split('s/')[1].split('-p')[0];
 
-	let dot = guidDot.data.split(new RegExp(`(ge-[.]*...........)`, 'giu'))[1];
-	dot = dot.split('.')[1].split(' ')[0];
+		let dot = guidDot.data.split(new RegExp(`(ge-[.]*...........)`, 'giu'))[1];
+		dot = dot.split('.')[1].split(' ')[0];
 
-	message.author.send({
-		'channel_id': `${message.channel.channel_id}`,
-		'content': '',
-		'tts': false,
-		'embeds': [{
-			'type': 'rich',
-			'title': `${language.helpTitle}`,
-			'description': `${desc}`,
-			'color': 0x0eb70b,
-			'timestamp': `2023-02-02T03:20:42.000Z`,
-			'author': {
-				'name': `${dbClient.user.username}`
-			},
-			'footer': {
-				'text': `${language.helpAuthor}`,
-				'icon_url': `https://static-cdn.jtvnw.net/jtv_user_pictures/${guid}-profile_image-300x300.${dot}`,
-				'proxy_icon_url': twitch
-			}
-		}]
-	});
-
-	console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${message.author.username} : ${message.content.toLowerCase()}`);
+		message.author.send({
+			'channel_id': `${message.channel.channel_id}`,
+			'content': '',
+			'tts': false,
+			'embeds': [{
+				'type': 'rich',
+				'title': `${language.helpTitle}`,
+				'description': `${desc}`,
+				'color': 0x0eb70b,
+				'timestamp': `2023-02-02T03:20:42.000Z`,
+				'author': {
+					'name': `${dbClient.user.username}`
+				},
+				'footer': {
+					'text': `${language.helpAuthor}`,
+					'icon_url': `https://static-cdn.jtvnw.net/jtv_user_pictures/${guid}-profile_image-300x300.${dot}`,
+					'proxy_icon_url': twitch
+				}
+			}]
+		});
+		
+		if (desc == language.helpTopGg) console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${message.author.username} : ${message.content.toLowerCase()} trolled`);
+		else console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${message.author.username} : ${message.content.toLowerCase()}`);
+	} catch (err) {
+		message.channel.send(language.error);
+		console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # Error help() : ${err}`);
+	};
 };
 
 async function setLanguage(message, author, msg, args) {
