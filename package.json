@@ -1,6 +1,6 @@
 {
-  "name": "daftbeta",
-  "version": "beta-1.4.1",
+  "name": "daftbot",
+  "version": "1.4.3",
   "description": "it's a discord's bot",
   "main": "main.js",
   "scripts": {
