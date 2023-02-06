@@ -1,5 +1,6 @@
 { 
-    "prefix" : "!",
-    "token"  : "YOUR-TOKEN-HERE",
-    "owner" : "your_discord_id"
+    "prefix" : "YOUR_PREFIX_HERE",
+    "token"  : "YOUR_TOKEN_HERE",
+    "owner" : "YOUR_DISCORD_HERE",
+    "openAI" : "YOUR_OPENAI_API_KEY_HERE",
 }

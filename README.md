@@ -28,6 +28,63 @@ npm install
 node main.js
 ```
 
+### Petit plus
+  
+Voici un petit lien [trello](https://trello.com/b/kdy25wXP/daftbot-mobbot) afin de suivre l'avancée des bots
+
+  
+## Prerequisites
+
+- Token of your Discord bot
+- Token of your Twitch bot (optional)
+- Nodejs and npm
+
+## Usage
+
+After cloning the repo, simply go to the root of the project and copy the `config.json.example` file to `config.json` and put in your secret discord bot token and the prefix you will use. 
+  
+You can then run the following commands:
+  
+```bash
+# To install the necessary packages
+npm install
+
+# To launch the bot
+node main.js
+```
+
+### Little extra
+  
+Here is a small link [trello](https://trello.com/b/kdy25wXP/daftbot-mobbot) to follow the progress of the bots
+
+### Petit plus
+  
+Voici un petit lien [trello](https://trello.com/b/kdy25wXP/daftbot-mobbot) afin de suivre l'avancée des bots
+
+  
+## Prerequisites
+
+- Token of your Discord bot
+- Token of your Twitch bot (optional)
+- Nodejs and npm
+
+## Usage
+
+After cloning the repo, simply go to the root of the project and copy the `config.json.example` file to `config.json` and put in your secret discord bot token and the prefix you will use. 
+  
+You can then run the following commands:
+  
+```bash
+# To install the necessary packages
+npm install
+
+# To launch the bot
+node main.js
+```
+
+### Little extra
+  
+Here is a small link [trello](https://trello.com/b/kdy25wXP/daftbot-mobbot) to follow the progress of the bots
 ## Prerequisites
 
 - Token of your Discord bot
