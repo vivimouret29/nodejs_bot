@@ -41,7 +41,9 @@
         "descLiveSt": "À l'instant présent, le live du petit",
         "descLiveNd": "vient de se lancer !",
         "guildJoin": "vient de rejoindre la galaxie !",
-        "guildJoinDesc": "Sors de la bordure extérieur pour rejoindre nos rangs ..."
+        "guildJoinDesc": "Sors de la bordure extérieur pour rejoindre nos rangs ...",
+        "addRole": "Tu as déjà ce rôle !\nPas besoin de l'avoir deux fois !",
+        "remRole": "Tu n'as pas ce rôle !\nIl faut l'avoir pour se l'enlever !"
     },
     "en": {
         "helpTitle": "List of orders",
@@ -85,7 +87,9 @@
         "descLiveSt": "At the moment, the little one's live",
         "descLiveNd": "has just been launched!",
         "guildJoin": "has just joined the galaxy!",
-        "guildJoinDesc": "Come out of the outer rim to join our ranks..."
+        "guildJoinDesc": "Come out of the outer rim to join our ranks...",
+        "addRole": "You already have that part !\nYou don't need to have it twice !",
+        "remRole": "You don't have that part !\nYou have to have it to take it off !"
     },
     "uk": {
         "helpTitle": "Список замовлень",
@@ -129,6 +133,8 @@
         "descLiveSt": "У теперішньому часі життя маленького",
         "descLiveNd": "щойно запущено!",
         "guildJoin": "щойно приєднався до галактики!",
-        "guildJoinDesc": "Виходьте із зовнішнього кільця, щоб приєднатися до наших лав..."
+        "guildJoinDesc": "Виходьте із зовнішнього кільця, щоб приєднатися до наших лав...",
+        "addRole": "Ви вже маєте цю частину!\nВам не потрібно мати її двічі!",
+        "remRole": "У вас немає цієї частини!\nВи повинні мати її, щоб зняти його!"
     }
 }

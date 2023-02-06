@@ -108,6 +108,22 @@ var date = new Date(),
 	channelTwitch = ['twitch'],// ':cinema: -fox-stream- :cinema:'],
 	streamers = ['daftmob', 'dpl0', 'fantabobshow', 'mistermv', 'drfeelgood', 'laink', 'ponce', 'captainfracas'],
 	language = language === undefined ? en : language,
+	emojiRoles = [
+		'💜',
+		'❤️',
+		'looners',
+		'mandalorian',
+		'linkitem',
+		'croisade'
+	],
+	rolesNames = [
+		'/D/TWITCH',
+		'/D/YOUTUBE',
+		'/D/STALKERS',
+		'/D/CHASSEURS',
+		'/D/HÉROS',
+		'/D/GUERRIERS'
+	],
 	memes = [
 		'https://media3.giphy.com/media/3o84sCIUu49AtNYkDK/giphy.gif',
 		'https://media1.giphy.com/media/3ohuPwwRuluP6GiZoI/giphy.gif',
@@ -157,7 +173,7 @@ dbClient.on(Events.ClientReady, async () => {
 
 			if (descpMemory[streamId] != oldDescpMemory[streamId] && ax.data.data.length == 1) {
 				sendLiveNotifEmbed(ax);
-				console.log(`[${getCurrentDatetime('comm')}] Notif Twitch ${ax.data.data[0].user_name}`);
+				console.log(`[${getCurrentDatetime('comm')}]# Notif Twitch ${ax.data.data[0].user_name}`);
 			};
 		};
 
@@ -166,17 +182,111 @@ dbClient.on(Events.ClientReady, async () => {
 	};
 });
 
-dbClient.on(Events.MessageReactionAdd, (react) => {
-	var emoji = react.emoji.name,
+dbClient.on(Events.MessageReactionAdd, (react, user) => {
+	var rChan = '1068559351570247741',
+		rMsg = '1071286935726854216',
+		emoji = react.emoji.name,
 		channel = dbClient.channels.cache.get(react.message.channelId),
 		messageId = react.message.id,
-		message = channel.messages.cache.get(messageId);
+		message = channel.messages.cache.get(messageId),
+		guild = dbClient.guilds.cache.get(channel.guildId);
 
-	if (['diosama'].includes(emoji) && message.channel.id == channel.id) {
-		console.log('dio', react);
-		// TODO: add role here now with a switch case
+	if (message.channelId != rChan && message.id != rMsg && emoji.includes(emojiRoles)) return;
+
+	switch (emoji) {
+		case '💜':
+			switchAddingRoles(guild, user.id, 0);
+			break;
+		case '❤️':
+			switchAddingRoles(guild, user.id, 1);
+			break;
+		case 'looners':
+			switchAddingRoles(guild, user.id, 2);
+			break;
+		case 'mandalorian':
+			switchAddingRoles(guild, user.id, 3);
+			break;
+		case 'linkitem':
+			switchAddingRoles(guild, user.id, 4);
+			break;
+		case 'croisade':
+			switchAddingRoles(guild, user.id, 5);
+			break;
+		default:
+			break;
 	};
+
 });
+
+function switchAddingRoles(guild, userId, roleIndex) {
+	var role = guild.roles.cache.find(r => r.name == rolesNames[roleIndex]),
+		user = guild.members.cache.get(userId);
+
+	if (!(role.members.has(user.id))) {
+		try {
+			user.roles.add(role);
+			console.log(`[${getCurrentDatetime('comm')}] ${user.user.username} get ${role.name}`);
+		} catch (error) {
+			console.log(`[${getCurrentDatetime('comm')}] Error when assigning the role ${role.name} to ${user.user.username} : ${error}`);
+		}
+	} else {
+		user.send(language.addRole);
+		console.log(`[${getCurrentDatetime('comm')}] ${user.user.username} already have the role ${role.name}`);
+	};
+};
+
+dbClient.on(Events.MessageReactionRemove, (react, user) => {
+	var rChan = '1068559351570247741',
+		rMsg = '1071286935726854216',
+		emoji = react.emoji.name,
+		channel = dbClient.channels.cache.get(react.message.channelId),
+		messageId = react.message.id,
+		message = channel.messages.cache.get(messageId),
+		guild = dbClient.guilds.cache.get(channel.guildId);
+
+	if (message.channelId != rChan && message.id != rMsg && emoji.includes(emojiRoles)) return;
+
+	switch (emoji) {
+		case '💜':
+			switchRemovingRoles(guild, user.id, 0);
+			break;
+		case '❤️':
+			switchRemovingRoles(guild, user.id, 1);
+			break;
+		case 'looners':
+			switchRemovingRoles(guild, user.id, 2);
+			break;
+		case 'mandalorian':
+			switchRemovingRoles(guild, user.id, 3);
+			break;
+		case 'linkitem':
+			switchRemovingRoles(guild, user.id, 4);
+			break;
+		case 'croisade':
+			switchRemovingRoles(guild, user.id, 5);
+			break;
+		default:
+			break;
+	};
+
+});
+
+function switchRemovingRoles(guild, userId, roleIndex) {
+	var role = guild.roles.cache.find(r => r.name == rolesNames[roleIndex]),
+		user = guild.members.cache.get(userId);
+
+	if (role.members.has(user.id)) {
+		try {
+			user.roles.remove(role);
+			console.log(`[${getCurrentDatetime('comm')}] ${user.user.username} remove ${role.name}`);
+		} catch (error) {
+			console.log(`[${getCurrentDatetime('comm')}] Error when unassigning the role ${role.name} to ${user.user.username} : ${error}`);
+		}
+	} else {
+		user.send(language.remRole);
+		console.log(`[${getCurrentDatetime('comm')}] ${user.user.username} have not the role ${role.name}`);
+	};
+};
 
 dbClient.on(Events.GuildMemberAdd, async (guild) => {
 	dbClient.channels.cache
@@ -513,7 +623,7 @@ async function getHelp(message, desc) {
 				}
 			}]
 		});
-		
+
 		if (desc == language.helpTopGg) console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${message.author.username} : ${message.content.toLowerCase()} trolled`);
 		else console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${message.author.username} : ${message.content.toLowerCase()}`);
 	} catch (err) {
