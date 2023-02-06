@@ -10,8 +10,7 @@ const packageVersion = require('./package.json'),
 	{
 		prefix,
 		token,
-		owner,
-		openAI
+		owner
 	} = require('./config.json'),
 	{
 		clientId,
@@ -151,7 +150,7 @@ dbClient.on(Events.ClientReady, async () => {
 		status: 'online'
 	});
 
-	if (dbClient.user.id == '758393470024155186') return;
+	// if (dbClient.user.id == '758393470024155186') return;
 
 	let descpMemory = [],
 		oldDescpMemory = [];
@@ -521,13 +520,24 @@ async function processMobBot(message, state) {
 };
 
 async function sendLiveNotifEmbed(ax) {
-	let guidDot = await axios.get(`https://twitch.tv/${ax.data.data[0].user_login}`);
+	let guidDot = await axios.get(`https://twitch.tv/${ax.data.data[0].user_login}`),
+		guid = '', 
+		dot = '';
 
-	let guid = guidDot.data.split(new RegExp(`(s\/[^.]*-p)`, 'giu'))[1];
-	guid = guid.split('s/')[1].split('-p')[0];
+	try {
+		guid = guidDot.data.split(new RegExp(`(s\/[^.]*-p)`, 'giu'))[1];
+		guid = guid.split('s/')[1].split('-p')[0];
 
-	let dot = guidDot.data.split(new RegExp(`(ge-[.]*...........)`, 'giu'))[1];
-	dot = dot.split('.')[1].split(' ')[0];
+		dot = guidDot.data.split(new RegExp(`(ge-[.]*...........)`, 'giu'))[1];
+		dot = dot.split('.')[1].split(' ')[0];
+	} catch (err) {
+		console.log(`[${getCurrentDatetime('comm')}] # Can't get guid and dot : `, err);
+	};
+
+	if (guid == undefined || dot == undefined) {
+		guid = 0;
+		dot = 0;
+	}
 
 	for (chan in channelTwitch) {
 		var channelSend = dbClient.channels.cache.find(channel => channel.name == channelTwitch[chan]);
