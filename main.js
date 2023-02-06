@@ -172,7 +172,7 @@ dbClient.on(Events.ClientReady, async () => {
 
 			if (descpMemory[streamId] != oldDescpMemory[streamId] && ax.data.data.length == 1) {
 				sendLiveNotifEmbed(ax);
-				console.log(`[${getCurrentDatetime('comm')}]# Notif Twitch ${ax.data.data[0].user_name}`);
+				console.log(`[${getCurrentDatetime('comm')}] Notif Twitch ${ax.data.data[0].user_name}`);
 			};
 		};
 
@@ -370,7 +370,10 @@ dbClient.on(Events.MessageCreate, async (message) => {
 			case 'reset':
 				resetBot(message, dbClient, author, msg);
 				return;
-			case 'language' || 'lang':
+			case 'language':
+				setLanguage(message, author, msg, args);
+				return;
+			case 'lang':
 				setLanguage(message, author, msg, args);
 				return;
 			case checkCollection:
@@ -521,7 +524,7 @@ async function processMobBot(message, state) {
 
 async function sendLiveNotifEmbed(ax) {
 	let guidDot = await axios.get(`https://twitch.tv/${ax.data.data[0].user_login}`),
-		guid = '', 
+		guid = '',
 		dot = '';
 
 	try {
@@ -531,13 +534,8 @@ async function sendLiveNotifEmbed(ax) {
 		dot = guidDot.data.split(new RegExp(`(ge-[.]*...........)`, 'giu'))[1];
 		dot = dot.split('.')[1].split(' ')[0];
 	} catch (err) {
-		console.log(`[${getCurrentDatetime('comm')}] # Can't get guid and dot : `, err);
+		console.log(`[${getCurrentDatetime('comm')}] Can't get guid and dot : `, err);
 	};
-
-	if (guid == undefined || dot == undefined) {
-		guid = 0;
-		dot = 0;
-	}
 
 	for (chan in channelTwitch) {
 		var channelSend = dbClient.channels.cache.find(channel => channel.name == channelTwitch[chan]);
@@ -603,43 +601,45 @@ function exportingDataSet(message) {
 };
 
 async function getHelp(message, desc) {
-	try {
-		let twitch = 'https://twitch.tv/daftmob',
-			guidDot = await axios.get(twitch);
+	let twitch = 'https://twitch.tv/daftmob',
+		guidDot = await axios.get(twitch),
+		guid = '',
+		dot = '';
 
-		let guid = guidDot.data.split(new RegExp(`(s\/[^.]*-p)`, 'giu'))[1];
+	try {
+		guid = guidDot.data.split(new RegExp(`(s\/[^.]*-p)`, 'giu'))[1];
 		guid = guid.split('s/')[1].split('-p')[0];
 
-		let dot = guidDot.data.split(new RegExp(`(ge-[.]*...........)`, 'giu'))[1];
+		dot = guidDot.data.split(new RegExp(`(ge-[.]*...........)`, 'giu'))[1];
 		dot = dot.split('.')[1].split(' ')[0];
-
-		message.author.send({
-			'channel_id': `${message.channel.channel_id}`,
-			'content': '',
-			'tts': false,
-			'embeds': [{
-				'type': 'rich',
-				'title': `${language.helpTitle}`,
-				'description': `${desc}`,
-				'color': 0x0eb70b,
-				'timestamp': `2023-02-02T03:20:42.000Z`,
-				'author': {
-					'name': `${dbClient.user.username}`
-				},
-				'footer': {
-					'text': `${language.helpAuthor}`,
-					'icon_url': `https://static-cdn.jtvnw.net/jtv_user_pictures/${guid}-profile_image-300x300.${dot}`,
-					'proxy_icon_url': twitch
-				}
-			}]
-		});
-
-		if (desc == language.helpTopGg) console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${message.author.username} : ${message.content.toLowerCase()} trolled`);
-		else console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${message.author.username} : ${message.content.toLowerCase()}`);
 	} catch (err) {
 		message.channel.send(language.error);
-		console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # Error help() : ${err}`);
+		console.log(`[${getCurrentDatetime('comm')}] Can't get guid and dot : `, err);
 	};
+
+	message.author.send({
+		'channel_id': `${message.channel.channel_id}`,
+		'content': '',
+		'tts': false,
+		'embeds': [{
+			'type': 'rich',
+			'title': `${language.helpTitle}`,
+			'description': `${desc}`,
+			'color': 0x0eb70b,
+			'timestamp': `2023-02-06T19:20:42.000Z`,
+			'author': {
+				'name': `${dbClient.user.username}`
+			},
+			'footer': {
+				'text': `${language.helpAuthor}`,
+				'icon_url': `https://static-cdn.jtvnw.net/jtv_user_pictures/${guid}-profile_image-300x300.${dot}`,
+				'proxy_icon_url': twitch
+			}
+		}]
+	});
+
+	if (desc == language.helpTopGg) console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${message.author.username} : ${message.content.toLowerCase()} trolled`);
+	else console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${message.author.username} : ${message.content.toLowerCase()}`);
 };
 
 async function setLanguage(message, author, msg, args) {
