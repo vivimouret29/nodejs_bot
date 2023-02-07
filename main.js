@@ -139,8 +139,10 @@ function getCurrentDatetime(choice) {
 	};
 };
 
+async function sleep(sec) { return await new Promise(resolve => setTimeout(resolve, sec * 1000)); };
+
 dbClient.on(Events.ClientReady, async () => {
-	await new Promise(resolve => setTimeout(resolve, 5000));
+	sleep(30);
 
 	dbClient.user.setPresence({
 		activities: [{
@@ -165,7 +167,7 @@ dbClient.on(Events.ClientReady, async () => {
 			if (ax.data.data.length == 0) {
 				descpMemory[streamId] = '';
 			} else {
-				descpMemory[streamId] = ax.data.data[0].title
+				descpMemory[streamId] = ax.data.data[0].title;
 
 				if (descpMemory[streamId] != oldDescpMemory[streamId] && ax.data.data.length == 1) {
 					sendLiveNotifEmbed(ax);
@@ -175,7 +177,7 @@ dbClient.on(Events.ClientReady, async () => {
 		};
 
 		oldDescpMemory = descpMemory;
-		await new Promise(resolve => setTimeout(resolve, 300000));
+		sleep(300);
 	};
 });
 
@@ -646,7 +648,7 @@ async function setLanguage(message, author, msg, args) {
 			language = fr;
 			message.channel.send(`Langue changée en Français`);
 
-			await new Promise(resolve => setTimeout(resolve, 1000));
+			sleep(2);
 			dbClient.user.setPresence({
 				activities: [{
 					name: language.activities,
@@ -661,7 +663,7 @@ async function setLanguage(message, author, msg, args) {
 			language = en;
 			message.channel.send(`Language changed to English`);
 
-			await new Promise(resolve => setTimeout(resolve, 1000));
+			sleep(2);
 			dbClient.user.setPresence({
 				activities: [{
 					name: language.activities,
@@ -676,7 +678,7 @@ async function setLanguage(message, author, msg, args) {
 			language = uk;
 			message.channel.send(`Мову змінено на українську`);
 
-			await new Promise(resolve => setTimeout(resolve, 1000));
+			sleep(2);
 			dbClient.user.setPresence({
 				activities: [{
 					name: language.activities,
