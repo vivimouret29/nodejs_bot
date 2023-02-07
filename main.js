@@ -76,7 +76,6 @@ const oauth = {
 };
 const params = {
 	headers: {
-		Connection: 'keep-alive',
 		Authorization: `Bearer ${identity.password}`,
 		'Client-ID': clientId
 	}
@@ -104,7 +103,7 @@ var date = new Date(),
 	initDateTime = `${date.getHours()}:${date.getMinutes()} - ${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`,
 	isMuted = false,
 	dataToExport = [],
-	channelTwitch = ['twitch'],// ':cinema: -fox-stream- :cinema:'],
+	channelTwitch = ['twitch'],
 	streamers = ['daftmob', 'dpl0', 'fantabobshow', 'mistermv', 'drfeelgood', 'laink', 'ponce', 'captainfracas'],
 	language = language === undefined ? en : language,
 	emojiRoles = [
@@ -142,6 +141,7 @@ function getCurrentDatetime(choice) {
 
 dbClient.on(Events.ClientReady, async () => {
 	await new Promise(resolve => setTimeout(resolve, 5000));
+
 	dbClient.user.setPresence({
 		activities: [{
 			name: language.activities,
@@ -149,8 +149,6 @@ dbClient.on(Events.ClientReady, async () => {
 		}],
 		status: 'online'
 	});
-
-	// if (dbClient.user.id == '758393470024155186') return;
 
 	let descpMemory = [],
 		oldDescpMemory = [];
@@ -166,13 +164,13 @@ dbClient.on(Events.ClientReady, async () => {
 
 			if (ax.data.data.length == 0) {
 				descpMemory[streamId] = '';
-				continue;
-			}
-			else { descpMemory[streamId] = ax.data.data[0].title };
+			} else {
+				descpMemory[streamId] = ax.data.data[0].title
 
-			if (descpMemory[streamId] != oldDescpMemory[streamId] && ax.data.data.length == 1) {
-				sendLiveNotifEmbed(ax);
-				console.log(`[${getCurrentDatetime('comm')}] Notif Twitch ${ax.data.data[0].user_name}`);
+				if (descpMemory[streamId] != oldDescpMemory[streamId] && ax.data.data.length == 1) {
+					sendLiveNotifEmbed(ax);
+					console.log(`[${getCurrentDatetime('comm')}] Notif Twitch ${ax.data.data[0].user_name}`);
+				};
 			};
 		};
 
