@@ -25,6 +25,7 @@ collectionCommands.set(commandFile.version.name, commandFile.version);
 collectionCommands.set(commandFile.say.name, commandFile.say);
 collectionCommands.set(commandFile.prune.name, commandFile.prune);
 collectionCommands.set(commandFile.ping.name, commandFile.ping);
+collectionCommands.set(commandFile.invit.name, commandFile.invit);
 
 // Reply Collection
 collectionReply.set(replyFile.daftbot.name, replyFile.daftbot);

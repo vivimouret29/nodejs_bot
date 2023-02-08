@@ -114,7 +114,7 @@ module.exports = {
                 client.channels.cache
                     .get(channelSend.id)
                     .send({
-                        'channel_id': `${channelSend.id}`,
+                        'channel_id': channelSend.id,
                         'content': '',
                         'tts': false,
                         'embeds': [{
@@ -123,8 +123,8 @@ module.exports = {
                             'description': `${language.descLiveSt} ${axios.data.data[0].user_name} ${language.descLiveNd}`,
                             'color': 0x4d04bb,
                             'fields': [{
-                                'name': `${axios.data.data[0].game_name}`,
-                                'value': `${axios.data.data[0].title}`,
+                                'name': axios.data.data[0].game_name,
+                                'value': axios.data.data[0].title,
                             }],
                             'image': {
                                 'url': `https://static-cdn.jtvnw.net/previews-ttv/live_user_${axios.data.data[0].user_login}-360x220.jpg`,

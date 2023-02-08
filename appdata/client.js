@@ -2,11 +2,9 @@
 
 const { ActivityType } = require('discord.js'),
     axios = require('axios'),
-    {
-        prefix,
-        token,
-        owner
-    } = require('../config.json'),
+    { prefix, token, owner } = require('../config.json'),
+    { fr, en, uk } = require('../resx/lang.json'),
+    { master, user, topgg } = require('../resx/help.json'),
     date = new Date();
 
 function getCurrentDatetime() { return `${date.getHours()}:${date.getMinutes()} - ${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`; };
@@ -20,13 +18,59 @@ module.exports = {
                 guidDot = await axios.get(twitch),
                 guid = '',
                 dot = '',
-                desc = '';
+                desc = '',
+                descSplit = '',
+                lang = '';
 
+            switch (language) {
+                case fr:
+                    lang = 'fr';
+                    break;
+                case en:
+                    lang = 'en';
+                    break;
+                case uk:
+                    lang = 'uk';
+                    break;
+            };
 
-
-            if (message.author.id === owner) { desc = language.helpDescpTotal; }
-            else if (message.guild.name == 'Top.gg Verification Center') { desc = language.helpTopGg; }
-            else { desc = language.helpDescp; };
+            if (message.author.id === owner) {
+                switch (lang) {
+                    case 'fr':
+                        descSplit = master.fr;
+                        break;
+                    case 'en':
+                        descSplit = master.en;
+                        break;
+                    case 'uk':
+                        descSplit = master.uk;
+                        break;
+                };
+            } else if (message.guild.name == 'Top.gg Verification Center') {
+                switch (lang) {
+                    case 'fr':
+                        descSplit = topgg.fr;
+                        break;
+                    case 'en':
+                        descSplit = topgg.en;
+                        break;
+                    case 'uk':
+                        descSplit = topgg.uk;
+                        break;
+                };
+            } else {
+                switch (lang) {
+                    case 'fr':
+                        descSplit = user.fr;
+                        break;
+                    case 'en':
+                        descSplit = user.en;
+                        break;
+                    case 'uk':
+                        descSplit = user.uk;
+                        break;
+                };
+            };
 
             try {
                 guid = guidDot.data.split(new RegExp(`(s\/[^.]*-p)`, 'giu'))[1];
@@ -38,29 +82,30 @@ module.exports = {
                 console.log(`[${getCurrentDatetime()}] Can't get guid or dot`);
             };
 
+            for (i in descSplit) { desc += descSplit[i]; };
+
             message.author.send({
-                'channel_id': `${message.channel.channel_id}`,
+                'channel_id': message.channel.channel_id,
                 'content': '',
                 'tts': false,
                 'embeds': [{
                     'type': 'rich',
-                    'title': `${language.helpTitle}`,
-                    'description': `${desc}`,
+                    'title': language.help,
+                    'description': desc,
                     'color': 0x0eb70b,
                     'timestamp': `2023-02-06T19:20:42.000Z`,
                     'author': {
-                        'name': `${client.user.username}`
+                        'name': client.user.username
                     },
                     'footer': {
-                        'text': `${language.helpAuthor}`,
+                        'text': language.helpAuthor,
                         'icon_url': `https://static-cdn.jtvnw.net/jtv_user_pictures/${guid}-profile_image-300x300.${dot}`,
                         'proxy_icon_url': twitch
                     }
                 }]
             });
 
-            if (desc == language.helpTopGg) console.log(`[${getCurrentDatetime()}] ${message.guild.name} / ${message.channel.name} # ${message.author.username} : ${message.content.toLowerCase()} trolled`);
-            else console.log(`[${getCurrentDatetime()}] ${message.guild.name} / ${message.channel.name} # ${message.author.username} : ${message.content.toLowerCase()}`);
+            if (desc == language.helpTopGg) console.log(`[${getCurrentDatetime()}] ${message.guild.name} / ${message.channel.name} # ${message.author.username} been trolled`);
         }
     },
     uptime: {

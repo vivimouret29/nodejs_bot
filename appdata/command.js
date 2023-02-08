@@ -4,6 +4,14 @@ const package = require("../package.json"),
     owner = require("../config.json");
 
 module.exports = {
+    invit: {
+        name: 'invit',
+        description: 'a dynamic invit',
+        args: true,
+        execute(message, args) {
+            message.reply(args.language.invitMsg);
+        }
+    },
     version: {
         name: 'version',
         description: 'a dynamic view version',

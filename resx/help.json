@@ -1,0 +1,98 @@
+{
+    "master": {
+        "fr": {
+            "littleLine": "Voici la liste des commandes utilisables à ce jour :\n\r",
+            "mobbot": "-  mobbot : permet d'enregistrer les données agglomérées par mobbot\r",
+            "reset": "-  reset : redémarre le bot\r",
+            "kill": "-  kill : tue le bot\r",
+            "status": "-  status : mets à jour le status afficher sur le bot\r",
+            "mute": "-  mute [on | **off**] : permet de couper ou de remettre les répliques du bot\r",
+            "uptime": "-  uptime : permet de connaître le temps de diffusion en direct\r",
+            "lang": "-  language (lang) [**fr** | en | uk] : permet de changer la langue du bot\r",
+            "version": "-  version : permet de connaître la version du bot\r",
+            "say": "-  say : permet de faire parler le bot (e.g.: !say Hello World !)\r",
+            "ping": "-  ping : permet de connaître le ping du bot\r",
+            "invit": "-  invit : permet d'obtenir le lien d'invitation du bot\r"
+        },
+        "en": {
+            "littleLine": "Here is the list of commands that can be used at this time\r",
+            "mobbot": "-  mobbot : allows to record the data agglomerated by mobbot\r",
+            "reset": "-  reset : restarts the bot\r",
+            "kill": "-  kill : kill the bot\r",
+            "status": "-  status : update the status displayed on the bot\r",
+            "mute": "-  mute [on | **off**] : mute or unmute the bot\r",
+            "uptime": "-  uptime: allows you to know the time of the live broadcast\r",
+            "lang": "-  language (lang) [**fr** | en | uk] : allows to change the language of the bot\r",
+            "version": "-  version : allows to know the version of the bot\r",
+            "say": "-  say : allows to make the bot speak (e.g.: !say Hello World !)\r",
+            "ping": "-  ping : allows to know the ping of the bot\r",
+            "invit": "-  invit : allows to get the invitation link of the bot"
+        },
+        "uk": {
+            "littleLine": "Ось список команд, які можна використовувати в цей час\r",
+            "mobbot": "-  mobbot : дозволяє записувати дані, агломеровані mobbot\r",
+            "reset": "-  reset : перезапускає бота\r",
+            "kill": "-  kill : вбити бота\r",
+            "status": "-  status : оновити статус, що відображається у бота\r",
+            "mute": "-  mute [on | **off**] : увімкнути або вимкнути звук бота\r",
+            "uptime": "-  час безвідмовної роботи: дозволяє дізнатися час прямої трансляції\r",
+            "lang": "-  мова (lang) [**fr** | en | uk] : дозволяє змінити мову бота\r",
+            "version": "-  версія : дозволяє дізнатися версію бота\r",
+            "say": "-  say: дозволяє змусити бота говорити (наприклад: !say Hello World!)\r",
+            "ping": "-  ping : дозволяє дізнатися пінг бота\r",
+            "invit": "-  invit : дозволяє отримати посилання запрошення бота"
+        }
+    },
+    "user": {
+        "fr": {
+            "littleLine": "Voici la liste des commandes utilisables à ce jour :\n\r",
+            "uptime": "-  uptime : permet de connaître le temps de diffusion en direct\r",
+            "mute": "-  mute [on | **off**] : permet de couper ou de remettre les répliques du bot\r",
+            "lang": "-  language [**fr** | en | uk] : permet de changer la langue du bot\r",
+            "version": "-  version : permet de connaître la version du bot\r",
+            "say": "-  say : permet de faire parler le bot (e.g.: !say Hello World !)\r",
+            "ping": "-  ping : permet de connaître le ping du bot\r",
+            "invit": "-  invit : permet d'obtenir le lien d'invitation du bot\r"
+        },
+        "en": {
+            "littleLine": "Here is the list of commands that can be used to date\r",
+            "uptime": "- uptime : allows you to know the time of the live broadcast\r",
+            "mute": "- mute [on | **off**] : allows you to mute or unmute the bot's replicas\r",
+            "lang": "- language [**fr** | en | uk] : allows to change the language of the bot\r",
+            "version": "- version : allows to know the version of the bot\r",
+            "say": "- say : allows to make the bot speak (e.g.: !say Hello World !)\r",
+            "ping": "- ping : allows to know the ping of the bot\r",
+            "invit": "-  invit : allows to get the invitation link of the bot"
+        },
+        "uk": {
+            "littleLine": "Ось список команд, які можна використовувати на сьогоднішній день\r",
+            "uptime": "-  uptime : дозволяє дізнатися час прямої трансляції\r",
+            "mute": "-  mute [on | **off**] : дозволяє увімкнути або вимкнути звук реплік бота\r",
+            "lang": "-  language [**fr** | en | uk] : дозволяє змінити мову бота\r",
+            "version": "-  версія : дозволяє дізнатися версію бота\r",
+            "say": "-  say : дозволяє змусити бота говорити (наприклад: !say Hello World !)\r",
+            "ping": "-  ping : дозволяє дізнатися пінг бота\r",
+            "invit": "-  invit : дозволяє отримати посилання запрошення бота"
+        }
+    },
+    "topgg": {
+        "fr": {
+            "littleLine": "Voici la liste des commandes utilisables à ce jour :\n\r",
+            "lorem": "-  lorem : It is a long established fact that a reader will be distracted by the readable\r",
+            "ipsum": "-  ipsum : Content of a page when looking at its layout. The point of using Lorem Ipsum\n\n",
+            "glhf": "T'as pas besoin de help, amuse toi bien  (° ͜ʖ͡°)╭∩╮\r"
+        },
+        "en": {
+            "littleLine": "Here is the list of commands that can be used to date\n\r",
+            "lorem": "-  lorem: It is a long-established fact that a reader will be distracted by readability\r",
+            "ipsum": "-  ipsum: The content of a page when one looks at its layout. The interest in using Lorem Ipsum",
+            "glhf": "You don't need help, have fun (° ͜ʖ͡°)╭∩╮\r"
+        },
+        "uk": {
+            "littleLine": "Ось список команд, які можна використовувати на сьогоднішній день\n\r",
+            "lorem": "-  lorem: Давно встановлений факт, що читач буде відволікатися на читабельність\r",
+            "ipsum": "-  ipsum: Вміст сторінки, коли дивишся на її макет. Інтерес до використання Lorem Ipsum\n\n",
+            "glhf": "Вам не потрібна допомога, розважайтеся (° ͜ʖ͡°)╭∩╮\r"
+        }
+    }
+}
