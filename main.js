@@ -1,35 +1,23 @@
 'use.strict'
 
 const { Client, Collection, IntentsBitField, ActivityType, Events, Partials } = require('discord.js'),
-	tmi = require('tmi.js'),
-	{ parse } = require('json2csv'),
-	fs = require('fs'),
-	axios = require('axios');
-
-const packageVersion = require('./package.json'),
-	{
-		prefix,
-		token,
-		owner
-	} = require('./config.json'),
-	{
-		clientId,
-		identity,
-		channels
-	} = require('./mobbot/config.json'),
-	{
-		fr,
-		en,
-		uk
-	} = require('./resx/lang.json'),
+	axios = require('axios'),
+	packageVersion = require('./package.json'),
+	{ prefix, token, owner } = require('./config.json'),
+	{ clientId, identity } = require('./mobbot/config.json'),
+	{ fr, en, uk } = require('./resx/lang.json'),
 	commandFile = require('./appdata/command.js'),
 	replyFile = require('./appdata/reply.js'),
-	botFile = require('./appdata/bot.js'),
+	mobbotFile = require('./mobbot/mobbot.js'),
+	clientFile = require('./appdata/client.js'),
+	reactionFile = require('./appdata/reaction.js'),
 	openaiFile = require('./appdata/openai.js');
 
 var collectionCommands = new Collection(),
 	collectionReply = new Collection(),
-	collectionBot = new Collection(),
+	collectionMobbot = new Collection(),
+	collectionClient = new Collection(),
+	collectionReaction = new Collection(),
 	collectionOpenAI = new Collection();
 
 // Command Collection
@@ -45,8 +33,20 @@ collectionReply.set(replyFile.yes.name, replyFile.yes);
 collectionReply.set(replyFile.no.name, replyFile.no);
 collectionReply.set(replyFile.tqt.name, replyFile.tqt);
 
-// Bot Collection
-collectionBot.set(botFile.trashtalk.name, botFile.trashtalk);
+// Mobbot Collection
+collectionMobbot.set(mobbotFile.mobbot.name, mobbotFile.mobbot);
+collectionMobbot.set(mobbotFile.exportmobbot.name, mobbotFile.exportmobbot);
+collectionMobbot.set(mobbotFile.livenotif.name, mobbotFile.livenotif);
+
+// Client Collection
+collectionClient.set(clientFile.help.name, clientFile.help);
+collectionClient.set(clientFile.uptime.name, clientFile.uptime);
+collectionClient.set(clientFile.status.name, clientFile.status);
+collectionClient.set(clientFile.kill.name, clientFile.kill);
+collectionClient.set(clientFile.reset.name, clientFile.reset);
+
+// Reaction Collection
+collectionReaction.set(reactionFile.trashtalk.name, reactionFile.trashtalk);
 
 // OpenAI Collection
 collectionOpenAI.set(openaiFile.openai.name, openaiFile.openai);
@@ -65,15 +65,6 @@ intents.add(
 	IntentsBitField.Flags.GuildEmojisAndStickers,
 	IntentsBitField.Flags.MessageContent
 );
-const oauth = {
-	options: {
-		debug: true,
-		clientId: clientId
-	},
-	identity: identity,
-	channels: channels,
-	connection: { reconnect: true }
-};
 const params = {
 	headers: {
 		Authorization: `Bearer ${identity.password}`,
@@ -96,16 +87,13 @@ const partials = [
 	Partials.User
 ];
 
-const dbClient = new Client({ intents: intents, partials: partials }),
-	mbClient = new tmi.Client(oauth);
+const dbClient = new Client({ intents: intents, partials: partials });
 
 var date = new Date(),
 	initDateTime = `${date.getHours()}:${date.getMinutes()} - ${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`,
 	isMuted = false,
-	dataToExport = [],
-	channelTwitch = ['twitch'],
+	language = language == undefined ? fr : language,
 	streamers = ['daftmob', 'dpl0', 'fantabobshow', 'mistermv', 'drfeelgood', 'laink', 'ponce', 'captainfracas'],
-	language = language === undefined ? en : language,
 	emojiRoles = [
 		'💜',
 		'❤️',
@@ -152,6 +140,11 @@ dbClient.on(Events.ClientReady, async () => {
 		status: 'online'
 	});
 
+	collectionMobbot
+		.get('mobbot')
+		.execute();
+	console.log(`[${getCurrentDatetime('comm')}] ${language.mobbotSucceed}`);
+
 	let descpMemory = [],
 		oldDescpMemory = [];
 
@@ -170,7 +163,10 @@ dbClient.on(Events.ClientReady, async () => {
 				descpMemory[streamId] = ax.data.data[0].title;
 
 				if (descpMemory[streamId] != oldDescpMemory[streamId] && ax.data.data.length == 1) {
-					sendLiveNotifEmbed(ax);
+					let guiDot = await axios.get(`https://twitch.tv/${ax.data.data[0].user_login}`);
+					collectionMobbot
+						.get('livenotif')
+						.execute(dbClient, language, guiDot, ax);
 					console.log(`[${getCurrentDatetime('comm')}] Notif Twitch ${ax.data.data[0].user_name}`);
 				};
 			};
@@ -180,112 +176,6 @@ dbClient.on(Events.ClientReady, async () => {
 		sleep(300);
 	};
 });
-
-dbClient.on(Events.MessageReactionAdd, (react, user) => {
-	var rChan = '1068559351570247741',
-		rMsg = '1071286935726854216',
-		emoji = react.emoji.name,
-		channel = dbClient.channels.cache.get(react.message.channelId),
-		messageId = react.message.id,
-		message = channel.messages.cache.get(messageId),
-		guild = dbClient.guilds.cache.get(channel.guildId);
-
-	if (message.channelId != rChan && message.id != rMsg && emoji.includes(emojiRoles)) return;
-
-	switch (emoji) {
-		case '💜':
-			switchAddingRoles(guild, user.id, 0);
-			break;
-		case '❤️':
-			switchAddingRoles(guild, user.id, 1);
-			break;
-		case 'looners':
-			switchAddingRoles(guild, user.id, 2);
-			break;
-		case 'mandalorian':
-			switchAddingRoles(guild, user.id, 3);
-			break;
-		case 'linkitem':
-			switchAddingRoles(guild, user.id, 4);
-			break;
-		case 'croisade':
-			switchAddingRoles(guild, user.id, 5);
-			break;
-		default:
-			break;
-	};
-
-});
-
-function switchAddingRoles(guild, userId, roleIndex) {
-	var role = guild.roles.cache.find(r => r.name == rolesNames[roleIndex]),
-		user = guild.members.cache.get(userId);
-
-	if (!(role.members.has(user.id))) {
-		try {
-			user.roles.add(role);
-			console.log(`[${getCurrentDatetime('comm')}] ${user.user.username} get ${role.name}`);
-		} catch (error) {
-			console.log(`[${getCurrentDatetime('comm')}] Error when assigning the role ${role.name} to ${user.user.username} : ${error}`);
-		}
-	} else {
-		user.send(language.addRole);
-		console.log(`[${getCurrentDatetime('comm')}] ${user.user.username} already have the role ${role.name}`);
-	};
-};
-
-dbClient.on(Events.MessageReactionRemove, (react, user) => {
-	var rChan = '1068559351570247741',
-		rMsg = '1071286935726854216',
-		emoji = react.emoji.name,
-		channel = dbClient.channels.cache.get(react.message.channelId),
-		messageId = react.message.id,
-		message = channel.messages.cache.get(messageId),
-		guild = dbClient.guilds.cache.get(channel.guildId);
-
-	if (message.channelId != rChan && message.id != rMsg && emoji.includes(emojiRoles)) return;
-
-	switch (emoji) {
-		case '💜':
-			switchRemovingRoles(guild, user.id, 0);
-			break;
-		case '❤️':
-			switchRemovingRoles(guild, user.id, 1);
-			break;
-		case 'looners':
-			switchRemovingRoles(guild, user.id, 2);
-			break;
-		case 'mandalorian':
-			switchRemovingRoles(guild, user.id, 3);
-			break;
-		case 'linkitem':
-			switchRemovingRoles(guild, user.id, 4);
-			break;
-		case 'croisade':
-			switchRemovingRoles(guild, user.id, 5);
-			break;
-		default:
-			break;
-	};
-
-});
-
-function switchRemovingRoles(guild, userId, roleIndex) {
-	var role = guild.roles.cache.find(r => r.name == rolesNames[roleIndex]),
-		user = guild.members.cache.get(userId);
-
-	if (role.members.has(user.id)) {
-		try {
-			user.roles.remove(role);
-			console.log(`[${getCurrentDatetime('comm')}] ${user.user.username} remove ${role.name}`);
-		} catch (error) {
-			console.log(`[${getCurrentDatetime('comm')}] Error when unassigning the role ${role.name} to ${user.user.username} : ${error}`);
-		}
-	} else {
-		user.send(language.remRole);
-		console.log(`[${getCurrentDatetime('comm')}] ${user.user.username} have not the role ${role.name}`);
-	};
-};
 
 dbClient.on(Events.GuildMemberAdd, async (guild) => {
 	dbClient.channels.cache
@@ -326,86 +216,65 @@ dbClient.on(Events.MessageCreate, async (message) => {
 		badBot = ['757970907992948826', '758393470024155186'],
 		badChannels = [],
 		badBoy = [],
-		checkCollection;
+		checkCollection,
+		checkClientCollection;
 
 	collectionCommands.has(command) ? checkCollection = collectionCommands.get(command).name : checkCollection = false;
+	collectionClient.has(command) ? checkClientCollection = collectionClient.get(command).name : checkClientCollection = false;
 
 	if (message.author.bot) return;
 
-	if (message.author.id === owner) {
-		if (Math.random() < .05) {
-			let dio = dbClient.emojis.cache.find(emoji => emoji.name === 'dio_sama');
-
-			if (dio == undefined) return console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} : Emoji not found`);
-			message.react(dio);
-			console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} : Za Warudo`);
-		};
-	};
-
 	if (message.content.startsWith(prefix)) {
 		switch (command) {
-			case 'help':
-				if (message.author.id === owner) { getHelp(message, language.helpDescpTotal) }
-				else if (message.guild.name == 'Top.gg Verification Center') { getHelp(message, language.helpTopGg) }
-				else { getHelp(message, language.helpDescp) };
-				return;
 			case 'mobbot':
-				setTwitchMobBot(message, author, msg, args);
-				return;
-			case 'streamers':
-				setStreamers(message, author, msg, args);
+				if (!(message.author.id === owner)) return message.channel.send(language.restricted);
+				collectionMobbot
+					.get('exportmobbot')
+					.execute(message, dbClient.emojis);
 				break;
-			case 'uptime':
-				getUptime(message, dbClient, author, msg);
-				return;
-			case 'status':
-				setStatus(message, dbClient, author, msg, args);
-				return;
-			case 'kill':
-				killBot(message, dbClient, author, msg);
-				return;
-			case 'mute':
-				setMute(message, author, msg, args);
-				return;
-			case 'reset':
-				resetBot(message, dbClient, author, msg);
-				return;
-			case 'language':
-				setLanguage(message, author, msg, args);
-				return;
 			case 'lang':
 				setLanguage(message, author, msg, args);
-				return;
+				break;
+			case 'language':
+				setLanguage(message, author, msg, args);
+				break;
+			case 'mute':
+				setMute(message, author, msg, args);
+				break;
+			case checkClientCollection:
+				console.log(language == fr)
+				collectionClient
+					.get(command)
+					.execute(message, dbClient, language, initDateTime, args);
+				console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
+				console.log(language == fr)
+				break;
 			case checkCollection:
 				collectionCommands
 					.get(command)
 					.execute(message, { args, language: language });
 				console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
-				return;
+				break;
 			default:
 				console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${language.commandAttempt} : (${msg}) / (${author})`);
 				message.channel.send(language.commandNotFound);
+				break;
+		};
+	};
+
+	if (message.author.id === owner) {
+		if (Math.random() < .05) {
+			let dio = dbClient.emojis.cache.find(emoji => emoji.name === 'dio_sama');
+
+			if (dio == undefined) return console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # Emoji not found`);
+			message.react(dio);
+			console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # Za Warudo`);
 		};
 	};
 
 	if (isMuted) return;
 
-	if (badBot.includes(message.author.id) && !(badChannels.includes(message.channel.name))) {
-
-		if (Math.random() <= .005) {
-			try {
-				collectionBot
-					.get('trashtalk')
-					.execute(message);
-				console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}\n[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${dbClient.user.username} used (or not) a trashtalk`);
-			} catch (err) {
-				console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # Error output randomCollection() : `, err);
-			};
-		};
-	};
-
 	if (!message.content.startsWith(prefix)) {
-
 		if ((message.mentions.has(dbClient.user.id)) ||
 			((message.reference != undefined) && (message.channel.messages.fetch(message.reference.messageId).user == dbClient.user))) {
 			try {
@@ -429,10 +298,21 @@ dbClient.on(Events.MessageCreate, async (message) => {
 			console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # Error output reply() : `, err);
 		};
 
+		if (badBot.includes(message.author.id) && !(badChannels.includes(message.channel.name))) {
+			if (Math.random() <= .005) {
+				try {
+					collectionReaction
+						.get('trashtalk')
+						.execute(message);
+					console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}\n[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${dbClient.user.username} used (or not) a trashtalk`);
+				} catch (err) {
+					console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # Error output randomCollection() : `, err);
+				};
+			};
+		};
+
 		if (badBoy.includes(message.author.id)) {
-
 			if (Math.random() > .005) return;
-
 			try {
 				message.delete().catch(O_o => { })
 				console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # Message deleted`);
@@ -443,210 +323,117 @@ dbClient.on(Events.MessageCreate, async (message) => {
 	};
 });
 
-function setTwitchMobBot(message, author, msg, args) {
-	if (!(message.author.id === owner)) return message.channel.send(language.areYouOwner);
+dbClient.on(Events.MessageReactionAdd, (react, user) => {
+	var rChan = '1068559351570247741',
+		rMsg = '1071286935726854216',
+		emoji = react.emoji.name,
+		channel = dbClient.channels.cache.get(react.message.channelId),
+		messageId = react.message.id,
+		message = channel.messages.cache.get(messageId),
+		guild = dbClient.guilds.cache.get(channel.guildId);
 
-	let action = args[0];
+	if (message.channelId != rChan && message.id != rMsg && emoji.includes(emojiRoles)) return;
 
-	if (action != undefined) {
-		if ((action.toLowerCase()) === 'on') {
-			message.channel.send(language.mobbotOn);
-			console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
-			processMobBot(message, true);
-		} else if ((action.toLowerCase()) === 'off') {
-			message.channel.send(language.mobbotOff);
-			console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
-			processMobBot(message, false);
-		} else {
-			console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
-			message.channel.send(`${language.mobbotFail}\n\r*e.g. : ${prefix}mobbot on*`);
-		};
-	} else {
-		console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
-		message.channel.send(`${language.mobbotFail}\n\r*e.g. : ${prefix}mobbot on*`);
-	};
-};
-
-async function processMobBot(message, state) {
-	switch (state) {
-		case true:
-			mbClient.on('connected', onConnectedHandler);
-			mbClient.connect();
-
-			message.channel.send(`*${language.mobbotSucceed}*`);
-
-			dbClient.user.setPresence({
-				activities: [{
-					name: `daftmob`,
-					type: ActivityType.Streaming,
-					url: `https://www.twitch.tv/daftmob`
-				}],
-				status: 'dnd'
-			});
-
-			mbClient
-				.on('message', (channel, tags, message, self) => {
-					if (self || tags['username'] === 'moobot') return;
-
-					let data = {
-						'id': Number(tags['user-id']),
-						'date': getCurrentDatetime('date'),
-						'badges': tags['badges'],
-						'color': String(tags['color']),
-						'username': String(tags['username']),
-						'message': String(message),
-						'emotes': tags['emotes-raw'] == null ? null : String(tags['emotes-raw']),
-						'turbo': Boolean(tags['turbo'])
-					};
-
-					return dataToExport.push(data);
-				});
+	switch (emoji) {
+		case '💜':
+			switchRoles(guild, user.id, 0, true);
 			break;
-		case false:
-			if (mbClient.readyState() === `OPEN`) {
-				mbClient.disconnect();
-				exportingDataSet(message);
-
-				dbClient.user.setPresence({
-					activities: [{
-						name: language.activities,
-						type: ActivityType.Watching
-					}],
-					status: 'online'
-				});
-			} else { message.channel.send(language.mobbotErrorStart) }
+		case '❤️':
+			switchRoles(guild, user.id, 1, true);
+			break;
+		case 'looners':
+			switchRoles(guild, user.id, 2, true);
+			break;
+		case 'mandalorian':
+			switchRoles(guild, user.id, 3, true);
+			break;
+		case 'linkitem':
+			switchRoles(guild, user.id, 4, true);
+			break;
+		case 'croisade':
+			switchRoles(guild, user.id, 5, true);
 			break;
 		default:
-			message.channel.send(language.mobbotErrorStart);
 			break;
 	};
-};
+});
 
-async function sendLiveNotifEmbed(ax) {
-	let guidDot = await axios.get(`https://twitch.tv/${ax.data.data[0].user_login}`),
-		guid = '',
-		dot = '';
+dbClient.on(Events.MessageReactionRemove, (react, user) => {
+	var rChan = '1068559351570247741',
+		rMsg = '1071286935726854216',
+		emoji = react.emoji.name,
+		channel = dbClient.channels.cache.get(react.message.channelId),
+		messageId = react.message.id,
+		message = channel.messages.cache.get(messageId),
+		guild = dbClient.guilds.cache.get(channel.guildId);
 
-	try {
-		guid = guidDot.data.split(new RegExp(`(s\/[^.]*-p)`, 'giu'))[1];
-		guid = guid.split('s/')[1].split('-p')[0];
+	if (message.channelId != rChan && message.id != rMsg && emoji.includes(emojiRoles)) return;
 
-		dot = guidDot.data.split(new RegExp(`(ge-[.]*...........)`, 'giu'))[1];
-		dot = dot.split('.')[1].split(' ')[0];
-	} catch (err) {
-		console.log(`[${getCurrentDatetime('comm')}] Can't get guid and dot : `, err);
+	if (token == undefined) dbClient.destroy();
+
+	switch (emoji) {
+		case '💜':
+			switchRoles(guild, user.id, 0, false);
+			break;
+		case '❤️':
+			switchRoles(guild, user.id, 1, false);
+			break;
+		case 'looners':
+			switchRoles(guild, user.id, 2, false);
+			break;
+		case 'mandalorian':
+			switchRoles(guild, user.id, 3, false);
+			break;
+		case 'linkitem':
+			switchRoles(guild, user.id, 4, false);
+			break;
+		case 'croisade':
+			switchRoles(guild, user.id, 5, false);
+			break;
+		default:
+			break;
 	};
+});
 
-	for (chan in channelTwitch) {
-		var channelSend = dbClient.channels.cache.find(channel => channel.name == channelTwitch[chan]);
+function switchRoles(guild, userId, roleIndex, style) {
+	var role = guild.roles.cache.find(r => r.name == rolesNames[roleIndex]),
+		user = guild.members.cache.get(userId);
 
-		dbClient.channels.cache
-			.get(channelSend.id)
-			.send({
-				'channel_id': `${channelSend.id}`,
-				'content': '',
-				'tts': false,
-				'embeds': [{
-					'type': 'rich',
-					'title': `Live de ${ax.data.data[0].user_name}`,
-					'description': `${language.descLiveSt} ${ax.data.data[0].user_name} ${language.descLiveNd}`,
-					'color': 0x4d04bb,
-					'fields': [{
-						'name': `${ax.data.data[0].game_name}`,
-						'value': `${ax.data.data[0].title}`,
-					}],
-					'image': {
-						'url': `https://static-cdn.jtvnw.net/previews-ttv/live_user_${ax.data.data[0].user_login}-360x220.jpg`,
-						'proxy_url': `https://twitch.tv/${ax.data.data[0].user_login}`,
-						'height': 0,
-						'width': 0
-					},
-					'thumbnail': {
-						'url': `https://static-cdn.jtvnw.net/jtv_user_pictures/${guid}-profile_image-300x300.${dot}`,
-						'proxy_url': `https://twitch.tv/${ax.data.data[0].user_login}`,
-					},
-					'author': {
-						'name': `mobbot`,
-						'url': `https://twitch.tv/${ax.data.data[0].user_login}`,
-						'icon_url': `${dbClient.user.avatarURL({ format: 'png', dynamic: true, size: 1024 })}`
-					},
-					'footer': {
-						'text': `Viewers : ${ax.data.data[0].viewer_count}`,
-						'icon_url': `https://cdn-icons-png.flaticon.com/512/4299/4299106.png`,
-						'proxy_icon_url': `https://twitch.tv/${ax.data.data[0].user_login}`
-					},
-					'url': `https://twitch.tv/${ax.data.data[0].user_login}`
-				}]
-			});
+	switch (style) {
+		case true:
+			if (!(role.members.has(user.id))) {
+				try {
+					user.roles.add(role);
+					console.log(`[${getCurrentDatetime('comm')}] ${user.user.username} get ${role.name}`);
+				} catch (error) {
+					console.log(`[${getCurrentDatetime('comm')}] Error when assigning the role ${role.name} to ${user.user.username} : ${error}`);
+				}
+			} else {
+				user.send(language.addRole);
+				console.log(`[${getCurrentDatetime('comm')}] ${user.user.username} already have the role ${role.name}`);
+			};
+			break;
+		case false:
+			if (role.members.has(user.id)) {
+				try {
+					user.roles.remove(role);
+					console.log(`[${getCurrentDatetime('comm')}] ${user.user.username} remove ${role.name}`);
+				} catch (error) {
+					console.log(`[${getCurrentDatetime('comm')}] Error when unassigning the role ${role.name} to ${user.user.username} : ${error}`);
+				}
+			} else {
+				user.send(language.remRole);
+				console.log(`[${getCurrentDatetime('comm')}] ${user.user.username} have not the role ${role.name}`);
+			};
+			break;
 	};
-};
-
-function exportingDataSet(message) {
-	if (dataToExport.length === 0) {
-		message.author.send(language.mobbotNoData);
-		return;
-	};
-
-	fs.writeFile(`./mobbot/mobbot_analytics_${getCurrentDatetime('csv')}.csv`, parse(dataToExport), function (err) {
-		if (err) {
-			message.author.send(language.csvFail);
-			console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${message.author.username} : ${message.content.toLowerCase()} ${err}`);
-			throw err;
-		}
-		else {
-			message.author.send(language.csvSucceed);
-			console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${message.author.username} : ${message.content.toLowerCase()}`);
-		};
-	});
-};
-
-async function getHelp(message, desc) {
-	let twitch = 'https://twitch.tv/daftmob',
-		guidDot = await axios.get(twitch),
-		guid = '',
-		dot = '';
-
-	try {
-		guid = guidDot.data.split(new RegExp(`(s\/[^.]*-p)`, 'giu'))[1];
-		guid = guid.split('s/')[1].split('-p')[0];
-
-		dot = guidDot.data.split(new RegExp(`(ge-[.]*...........)`, 'giu'))[1];
-		dot = dot.split('.')[1].split(' ')[0];
-	} catch (err) {
-		message.channel.send(language.error);
-		console.log(`[${getCurrentDatetime('comm')}] Can't get guid and dot : `, err);
-	};
-
-	message.author.send({
-		'channel_id': `${message.channel.channel_id}`,
-		'content': '',
-		'tts': false,
-		'embeds': [{
-			'type': 'rich',
-			'title': `${language.helpTitle}`,
-			'description': `${desc}`,
-			'color': 0x0eb70b,
-			'timestamp': `2023-02-06T19:20:42.000Z`,
-			'author': {
-				'name': `${dbClient.user.username}`
-			},
-			'footer': {
-				'text': `${language.helpAuthor}`,
-				'icon_url': `https://static-cdn.jtvnw.net/jtv_user_pictures/${guid}-profile_image-300x300.${dot}`,
-				'proxy_icon_url': twitch
-			}
-		}]
-	});
-
-	if (desc == language.helpTopGg) console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${message.author.username} : ${message.content.toLowerCase()} trolled`);
-	else console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${message.author.username} : ${message.content.toLowerCase()}`);
 };
 
 async function setLanguage(message, author, msg, args) {
 	switch (args[0]) {
 		case 'fr':
 			language = fr;
-			message.channel.send(`Langue changée en Français`);
+			message.channel.send(`${language.changlang}`);
 
 			sleep(2);
 			dbClient.user.setPresence({
@@ -661,7 +448,7 @@ async function setLanguage(message, author, msg, args) {
 			return language;
 		case 'en':
 			language = en;
-			message.channel.send(`Language changed to English`);
+			message.channel.send(`${language.changlang}`);
 
 			sleep(2);
 			dbClient.user.setPresence({
@@ -676,7 +463,7 @@ async function setLanguage(message, author, msg, args) {
 			return language;
 		case 'uk':
 			language = uk;
-			message.channel.send(`Мову змінено на українську`);
+			message.channel.send(`${language.changlang}`);
 
 			sleep(2);
 			dbClient.user.setPresence({
@@ -694,119 +481,6 @@ async function setLanguage(message, author, msg, args) {
 			console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
 			return language;
 	};
-};
-
-function getUptime(message, client, author, msg) {
-	let totalSeconds = (client.uptime / 1000);
-	let days = Math.floor(totalSeconds / 86400);
-	totalSeconds %= 86400;
-	let hours = Math.floor(totalSeconds / 3600);
-	totalSeconds %= 3600;
-	let minutes = Math.floor(totalSeconds / 60);
-	let seconds = Math.floor(totalSeconds % 60);
-	let start = initDateTime;
-
-	message.channel.send(`${language.uptime} : ${start}\n${days}D:${hours}H:${minutes}M:${seconds}S`);
-	console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
-};
-
-function setStatus(message, client, author, msg, args) {
-	if (!(message.author.id === owner)) return message.channel.send(language.areYouOwner);
-
-	let typeThings = args[0],
-		stOnOff = args[1],
-		nameText = args[2],
-		urlLike = args[3],
-		urlBool,
-		argNb = 3;
-
-	for (it in args) {
-		if (String(args[it]).startsWith('http')) {
-			urlBool = true;
-			break;
-		} else { urlBool = false; }
-	};
-
-	if (urlBool) {
-		while (!String(urlLike).startsWith('http')) {
-			urlLike = args[argNb + 1];
-			nameText = nameText + ' ' + args[argNb];
-			argNb++;
-		};
-	} else {
-		while (!(urlLike == undefined)) {
-			urlLike = args[argNb + 1];
-			nameText = nameText + ' ' + args[argNb];
-			argNb++;
-		};
-	};
-
-	switch (stOnOff) {
-		case 'online':
-			break;
-		case 'idle':
-			break;
-		case 'dnd':
-			break;
-		default:
-			return message.reply(`${fr.wrongStatus}\n
-*e.g. ${prefix}status ${typeThings} online ${nameText} ${urlLike}*`);
-	};
-
-	switch (typeThings) {
-		case 'play':
-			typeThings = ActivityType.Playing;
-			break;
-		case 'watch':
-			typeThings = ActivityType.Watching;
-			break;
-		case 'listen':
-			typeThings = ActivityType.Listening;
-			break;
-		case 'stream':
-			typeThings = ActivityType.Streaming;
-			break;
-		case 'compet':
-			typeThings = ActivityType.Competing;
-			break;
-		default:
-			return message.reply(`${fr.wrongActivities}\n
-*e.g. ${prefix} stream ${stOnOff} ${nameText} ${urlLike}*`);
-	};
-
-	if (!urlBool) {
-		client.user.setPresence({
-			activities: [{
-				name: String(nameText)
-			}],
-			status: String(stOnOff)
-		});
-		client.user.setActivity(String(nameText), { type: typeThings });
-	} else {
-		client.user.setPresence({
-			activities: [{
-				name: String(nameText),
-				type: typeThings,
-				url: String(urlLike)
-			}],
-			status: String(stOnOff)
-		});
-	};
-
-	message.channel.send(language.changedActivites);
-	console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
-};
-
-async function killBot(message, client, author, msg) {
-	if (!(message.author.id === owner)) return message.channel.send(language.areYouOwner);
-
-	await message.channel.send(language.killBot)
-		.then(() => {
-			new Promise(resolve => setTimeout(resolve, 1000))
-			client.destroy()
-		});
-
-	console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
 };
 
 async function setMute(message, author, msg, args) {
@@ -838,37 +512,7 @@ async function setMute(message, author, msg, args) {
 	};
 };
 
-async function resetBot(message, client, author, msg) {
-	if (!(message.author.id === owner)) return message.channel.send(language.areYouOwner);
-
-	await message.channel.send(language.resetBot)
-		.then(() => {
-			new Promise(resolve => setTimeout(resolve, 1000));
-			client.destroy();
-		})
-		.then(() => {
-			new Promise(resolve => setTimeout(resolve, 1000));
-			client.login(token);
-			dbClient.user.setPresence({
-				activities: [{
-					name: language.activities,
-					type: ActivityType.Watching
-
-				}],
-				status: 'online'
-			});
-		});
-
-	console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
-};
-
-function randomIntFromInterval(min, max) {
-	return Math.floor(Math.random() * (max - min + 1) + min)
-};
-
-function onConnectedHandler(addr, port) {
-	console.log(`* Connected to ${addr}:${port} *`);
-};
+function randomIntFromInterval(min, max) { return Math.floor(Math.random() * (max - min + 1) + min) };
 
 dbClient
 	.login(token)
