@@ -93,7 +93,7 @@ var date = new Date(),
 	initDateTime = `${date.getHours()}:${date.getMinutes()} - ${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`,
 	isMuted = false,
 	language = language == undefined ? fr : language,
-	streamers = ['daftmob', 'dpl0', 'fantabobshow', 'mistermv', 'drfeelgood', 'laink', 'ponce', 'captainfracas'],
+	streamers = ['daftmob'],//, 'dpl0', 'fantabobshow', 'mistermv', 'drfeelgood', 'laink', 'ponce', 'captainfracas'],
 	emojiRoles = [
 		'💜',
 		'❤️',
@@ -127,10 +127,9 @@ function getCurrentDatetime(choice) {
 	};
 };
 
-async function sleep(sec) { return await new Promise(resolve => setTimeout(resolve, sec * 1000)); };
-
 dbClient.on(Events.ClientReady, async () => {
-	sleep(30);
+	await new Promise(resolve => setTimeout(resolve, 30 * 1000));
+	console.log(`[${getCurrentDatetime('comm')}] ${dbClient.user.username} present in : `, dbClient.guilds.cache.map(guild => guild.name));
 
 	dbClient.user.setPresence({
 		activities: [{
@@ -144,6 +143,7 @@ dbClient.on(Events.ClientReady, async () => {
 		.get('mobbot')
 		.execute();
 	console.log(`[${getCurrentDatetime('comm')}] ${language.mobbotSucceed}`);
+	await new Promise(resolve => setTimeout(resolve, 30 * 1000));
 
 	let descpMemory = [],
 		oldDescpMemory = [];
@@ -152,7 +152,7 @@ dbClient.on(Events.ClientReady, async () => {
 		descpMemory.push('');
 		oldDescpMemory.push('');
 	};
-
+	
 	while (true) {
 		for (streamId in streamers) {
 			let ax = await axios.get(`http://api.twitch.tv/helix/streams?user_login=${streamers[streamId]}`, params);
@@ -172,8 +172,10 @@ dbClient.on(Events.ClientReady, async () => {
 			};
 		};
 
-		oldDescpMemory = descpMemory;
-		sleep(300);
+		for (let xTime = 0; xTime < streamers.length; xTime++) {
+			oldDescpMemory[xTime] = descpMemory[xTime];
+		};
+		await new Promise(resolve => setTimeout(resolve, 300 * 1000));
 	};
 });
 
@@ -223,6 +225,7 @@ dbClient.on(Events.MessageCreate, async (message) => {
 	collectionClient.has(command) ? checkClientCollection = collectionClient.get(command).name : checkClientCollection = false;
 
 	if (message.author.bot) return;
+	if (token == undefined) dbClient.destroy();
 
 	if (message.content.startsWith(prefix)) {
 		switch (command) {
@@ -239,6 +242,7 @@ dbClient.on(Events.MessageCreate, async (message) => {
 				setLanguage(message, author, msg, args);
 				break;
 			case 'mute':
+				if (!(message.author.id === owner)) return message.channel.send(language.restricted);
 				setMute(message, author, msg, args);
 				break;
 			case checkClientCollection:
@@ -367,8 +371,6 @@ dbClient.on(Events.MessageReactionRemove, (react, user) => {
 
 	if (message.channelId != rChan && message.id != rMsg && emoji.includes(emojiRoles)) return;
 
-	if (token == undefined) dbClient.destroy();
-
 	switch (emoji) {
 		case '💜':
 			switchRoles(guild, user.id, 0, false);
@@ -433,7 +435,7 @@ async function setLanguage(message, author, msg, args) {
 			language = fr;
 			message.channel.send(`${language.changlang}`);
 
-			sleep(2);
+			await new Promise(resolve => setTimeout(resolve, 30 * 1000));
 			dbClient.user.setPresence({
 				activities: [{
 					name: language.activities,
@@ -448,7 +450,7 @@ async function setLanguage(message, author, msg, args) {
 			language = en;
 			message.channel.send(`${language.changlang}`);
 
-			sleep(2);
+			await new Promise(resolve => setTimeout(resolve, 30 * 1000));
 			dbClient.user.setPresence({
 				activities: [{
 					name: language.activities,
@@ -463,7 +465,7 @@ async function setLanguage(message, author, msg, args) {
 			language = uk;
 			message.channel.send(`${language.changlang}`);
 
-			sleep(2);
+			await new Promise(resolve => setTimeout(resolve, 30 * 1000));
 			dbClient.user.setPresence({
 				activities: [{
 					name: language.activities,
@@ -481,9 +483,7 @@ async function setLanguage(message, author, msg, args) {
 	};
 };
 
-async function setMute(message, author, msg, args) {
-	if (!(message.author.id === owner)) return message.channel.send(language.restricted);
-
+function setMute(message, author, msg, args) {
 	let action = args[0];
 	if (action != undefined) {
 		if ((action.toLowerCase()) === 'on') {

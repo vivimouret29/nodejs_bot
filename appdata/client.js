@@ -9,8 +9,6 @@ const { ActivityType } = require('discord.js'),
     } = require('../config.json'),
     date = new Date();
 
-async function sleep(sec) { return await new Promise(resolve => setTimeout(resolve, sec * 1000)); };
-
 function getCurrentDatetime() { return `${date.getHours()}:${date.getMinutes()} - ${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`; };
 
 module.exports = {
@@ -180,7 +178,7 @@ module.exports = {
             await message.channel
                 .send(language.killBot)
                 .then(() => {
-                    sleep(1);
+                    new Promise(resolve => setTimeout(resolve, 3 * 1000));
                     client.destroy();
                 });
         }
@@ -194,11 +192,11 @@ module.exports = {
             await message.channel
                 .send(language.resetBot)
                 .then(() => {
-                    sleep(2);
+                    new Promise(resolve => setTimeout(resolve, 3 * 1000));
                     client.destroy();
                 })
                 .then(() => {
-                    sleep(2);
+                    new Promise(resolve => setTimeout(resolve, 3 * 1000));
                     client.login(token);
                     client.user.setPresence({
                         activities: [{
