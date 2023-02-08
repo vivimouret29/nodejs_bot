@@ -94,7 +94,7 @@ var date = new Date(),
 	initDateTime = `${date.getHours()}:${date.getMinutes()} - ${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`,
 	isMuted = false,
 	language = language == undefined ? fr : language,
-	streamers = ['daftmob'],//, 'dpl0', 'fantabobshow', 'mistermv', 'drfeelgood', 'laink', 'ponce', 'captainfracas'],
+	streamers = ['daftmob', 'dpl0', 'fantabobshow', 'mistermv', 'drfeelgood', 'laink', 'ponce', 'captainfracas'],
 	emojiRoles = [
 		'💜',
 		'❤️',
@@ -129,8 +129,7 @@ function getCurrentDatetime(choice) {
 };
 
 dbClient.on(Events.ClientReady, async () => {
-	await new Promise(resolve => setTimeout(resolve, 30 * 1000));
-	console.log(`[${getCurrentDatetime('comm')}] ${dbClient.user.username} present in : `, dbClient.guilds.cache.map(guild => guild.name));
+	await new Promise(resolve => setTimeout(resolve, 5 * 1000));
 
 	dbClient.user.setPresence({
 		activities: [{
@@ -140,20 +139,23 @@ dbClient.on(Events.ClientReady, async () => {
 		status: 'online'
 	});
 
+	await new Promise(resolve => setTimeout(resolve, 5 * 1000));
+	console.log(`[${getCurrentDatetime('comm')}] ${dbClient.user.username} present in : `, dbClient.guilds.cache.map(guild => guild.name));
+
 	collectionMobbot
 		.get('mobbot')
 		.execute();
 	console.log(`[${getCurrentDatetime('comm')}] ${language.mobbotSucceed}`);
-	await new Promise(resolve => setTimeout(resolve, 30 * 1000));
+	await new Promise(resolve => setTimeout(resolve, 10 * 1000));
 
 	let descpMemory = [],
 		oldDescpMemory = [];
 
-	for (let xTime = 0; xTime < streamers.length; xTime++) {
+	for (let i = 0; i < streamers.length; i++) {
 		descpMemory.push('');
 		oldDescpMemory.push('');
 	};
-	
+
 	while (true) {
 		for (streamId in streamers) {
 			let ax = await axios.get(`http://api.twitch.tv/helix/streams?user_login=${streamers[streamId]}`, params);
@@ -173,9 +175,7 @@ dbClient.on(Events.ClientReady, async () => {
 			};
 		};
 
-		for (let xTime = 0; xTime < streamers.length; xTime++) {
-			oldDescpMemory[xTime] = descpMemory[xTime];
-		};
+		for (let i = 0; i < streamers.length; i++) { oldDescpMemory[i] = descpMemory[i]; };
 		await new Promise(resolve => setTimeout(resolve, 300 * 1000));
 	};
 });
