@@ -61,8 +61,7 @@ module.exports = {
                 }]
             });
 
-            if (desc == language.helpTopGg) console.log(`[${getCurrentDatetime()}] ${message.guild.name} / ${message.channel.name} # ${message.author.username} : ${message.content.toLowerCase()} trolled`);
-            else console.log(`[${getCurrentDatetime()}] ${message.guild.name} / ${message.channel.name} # ${message.author.username} : ${message.content.toLowerCase()}`);
+            if (desc == language.helpTopGg) console.log(`[${getCurrentDatetime()}] ${message.guild.name} / ${message.channel.name} # ${message.author.username} been trolled`);
         }
     },
     uptime: {
