@@ -108,6 +108,13 @@ module.exports = {
             if (desc == language.helpTopGg) console.log(`[${getCurrentDatetime()}] ${message.guild.name} / ${message.channel.name} # ${message.author.username} been trolled`);
         }
     },
+    guild: {
+        name: 'guild',
+        description: 'a dynamic guild',
+        execute(message, client, language) {
+            message.reply(`${client.user.username} ${language.guild}\n${client.guilds.cache.map(guild => guild.name).join(', ')}`);
+        }
+    },
     uptime: {
         name: 'uptime',
         description: 'a dynamic uptime',

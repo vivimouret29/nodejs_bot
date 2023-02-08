@@ -12,7 +12,8 @@
             "version": "-  version : permet de connaître la version du bot\r",
             "say": "-  say : permet de faire parler le bot (e.g.: !say Hello World !)\r",
             "ping": "-  ping : permet de connaître le ping du bot\r",
-            "invit": "-  invit : permet d'obtenir le lien d'invitation du bot\r"
+            "invit": "-  invit : permet d'obtenir le lien d'invitation du bot\r",
+            "guild": "-  guild : renvoie la liste de serveurs où le bot est\r"
         },
         "en": {
             "littleLine": "Here is the list of commands that can be used at this time\r",
@@ -26,7 +27,8 @@
             "version": "-  version : allows to know the version of the bot\r",
             "say": "-  say : allows to make the bot speak (e.g.: !say Hello World !)\r",
             "ping": "-  ping : allows to know the ping of the bot\r",
-            "invit": "-  invit : allows to get the invitation link of the bot"
+            "invit": "-  invit : allows to get the invitation link of the bot\r",
+            "guild": "-  guild : returns the list of guilds where the bot is located\r"
         },
         "uk": {
             "littleLine": "Ось список команд, які можна використовувати в цей час\r",
@@ -40,7 +42,8 @@
             "version": "-  версія : дозволяє дізнатися версію бота\r",
             "say": "-  say: дозволяє змусити бота говорити (наприклад: !say Hello World!)\r",
             "ping": "-  ping : дозволяє дізнатися пінг бота\r",
-            "invit": "-  invit : дозволяє отримати посилання запрошення бота"
+            "invit": "-  invit : дозволяє отримати посилання запрошення бота\r",
+            "guild": "-  guild : повертає список гільдій, де знаходиться бот\r"
         }
     },
     "user": {
@@ -52,7 +55,8 @@
             "version": "-  version : permet de connaître la version du bot\r",
             "say": "-  say : permet de faire parler le bot (e.g.: !say Hello World !)\r",
             "ping": "-  ping : permet de connaître le ping du bot\r",
-            "invit": "-  invit : permet d'obtenir le lien d'invitation du bot\r"
+            "invit": "-  invit : permet d'obtenir le lien d'invitation du bot\r",
+            "guild": "-  guild : renvoie la liste de serveurs où le bot est\r"
         },
         "en": {
             "littleLine": "Here is the list of commands that can be used to date\r",
@@ -62,7 +66,8 @@
             "version": "- version : allows to know the version of the bot\r",
             "say": "- say : allows to make the bot speak (e.g.: !say Hello World !)\r",
             "ping": "- ping : allows to know the ping of the bot\r",
-            "invit": "-  invit : allows to get the invitation link of the bot"
+            "invit": "-  invit : allows to get the invitation link of the bot\r",
+            "guild": "-  guild : returns the list of guilds where the bot is located\r"
         },
         "uk": {
             "littleLine": "Ось список команд, які можна використовувати на сьогоднішній день\r",
@@ -72,7 +77,8 @@
             "version": "-  версія : дозволяє дізнатися версію бота\r",
             "say": "-  say : дозволяє змусити бота говорити (наприклад: !say Hello World !)\r",
             "ping": "-  ping : дозволяє дізнатися пінг бота\r",
-            "invit": "-  invit : дозволяє отримати посилання запрошення бота"
+            "invit": "-  invit : дозволяє отримати посилання запрошення бота\r",
+            "guild": "-  guild : повертає список гільдій, де знаходиться бот\r"
         }
     },
     "topgg": {
@@ -85,7 +91,7 @@
         "en": {
             "littleLine": "Here is the list of commands that can be used to date\n\r",
             "lorem": "-  lorem: It is a long-established fact that a reader will be distracted by readability\r",
-            "ipsum": "-  ipsum: The content of a page when one looks at its layout. The interest in using Lorem Ipsum",
+            "ipsum": "-  ipsum: The content of a page when one looks at its layout. The interest in using Lorem Ipsum\n\n",
             "glhf": "You don't need help, have fun (° ͜ʖ͡°)╭∩╮\r"
         },
         "uk": {

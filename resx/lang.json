@@ -42,7 +42,8 @@
         "guildJoinDesc": "Sors de la bordure extérieur pour rejoindre nos rangs ...",
         "addRole": "Tu as déjà ce rôle !\nPas besoin de l'avoir deux fois !",
         "remRole": "Tu n'as pas ce rôle !\nIl faut l'avoir pour se l'enlever !",
-        "invitMsg": "Tu me connais et tu cherches à me rejoindre, c'est par ici : https://discord.gg/ucwnMKKxZe\rTu rejoindras le discord de mon maître et moi"
+        "invitMsg": "Tu me connais et tu cherches à me rejoindre, c'est par ici : https://discord.gg/ucwnMKKxZe\rTu rejoindras le discord de mon maître et moi",
+        "guild": "est présent dans les serveurs : "
     },
     "en": {
         "help": "List of orders",
@@ -87,7 +88,8 @@
         "guildJoinDesc": "Come out of the outer rim to join our ranks...",
         "addRole": "You already have that part !\nYou don't need to have it twice !",
         "remRole": "You don't have that part !\nYou have to have it to take it off !",
-        "invitMsg": "You know me and you want to join me, it's this way: https://discord.gg/ucwnMKKxZe\rYou will join the discord of my master and me"
+        "invitMsg": "You know me and you want to join me, it's this way: https://discord.gg/ucwnMKKxZe\rYou will join the discord of my master and me",
+        "guild": "is present in the : "
     },
     "uk": {
         "help": "Список замовлень",
@@ -132,6 +134,7 @@
         "guildJoinDesc": "Виходьте із зовнішнього кільця, щоб приєднатися до наших лав...",
         "addRole": "Ви вже маєте цю частину!\nВам не потрібно мати її двічі!",
         "remRole": "У вас немає цієї частини!\nВи повинні мати її, щоб зняти його!",
-        "invitMsg": "Ти знаєш мене і хочеш приєднатися до мене, це тут: https://discord.gg/ucwnMKKxZe\rТи приєднаєшся до розбрату між мною і моїм господарем"
+        "invitMsg": "Ти знаєш мене і хочеш приєднатися до мене, це тут: https://discord.gg/ucwnMKKxZe\rТи приєднаєшся до розбрату між мною і моїм господарем",
+        "guild": "присутній в : "
     }
 }

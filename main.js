@@ -7,14 +7,14 @@ const { Client, Collection, IntentsBitField, ActivityType, Events, Partials } = 
 	{ clientId, identity } = require('./mobbot/config.json'),
 	{ fr, en, uk } = require('./resx/lang.json'),
 	commandFile = require('./appdata/command.js'),
-	replyFile = require('./appdata/reply.js'),
+	responseFile = require('./appdata/response.js'),
 	mobbotFile = require('./mobbot/mobbot.js'),
 	clientFile = require('./appdata/client.js'),
 	reactionFile = require('./appdata/reaction.js'),
 	openaiFile = require('./appdata/openai.js');
 
 var collectionCommands = new Collection(),
-	collectionReply = new Collection(),
+	collectionResponse = new Collection(),
 	collectionMobbot = new Collection(),
 	collectionClient = new Collection(),
 	collectionReaction = new Collection(),
@@ -27,13 +27,6 @@ collectionCommands.set(commandFile.prune.name, commandFile.prune);
 collectionCommands.set(commandFile.ping.name, commandFile.ping);
 collectionCommands.set(commandFile.invit.name, commandFile.invit);
 
-// Reply Collection
-collectionReply.set(replyFile.daftbot.name, replyFile.daftbot);
-collectionReply.set(replyFile.laugh.name, replyFile.laugh);
-collectionReply.set(replyFile.yes.name, replyFile.yes);
-collectionReply.set(replyFile.no.name, replyFile.no);
-collectionReply.set(replyFile.tqt.name, replyFile.tqt);
-
 // Mobbot Collection
 collectionMobbot.set(mobbotFile.mobbot.name, mobbotFile.mobbot);
 collectionMobbot.set(mobbotFile.exportmobbot.name, mobbotFile.exportmobbot);
@@ -41,16 +34,24 @@ collectionMobbot.set(mobbotFile.livenotif.name, mobbotFile.livenotif);
 
 // Client Collection
 collectionClient.set(clientFile.help.name, clientFile.help);
+collectionClient.set(clientFile.guild.name, clientFile.guild);
 collectionClient.set(clientFile.uptime.name, clientFile.uptime);
 collectionClient.set(clientFile.status.name, clientFile.status);
 collectionClient.set(clientFile.kill.name, clientFile.kill);
 collectionClient.set(clientFile.reset.name, clientFile.reset);
 
-// Reaction Collection
-collectionReaction.set(reactionFile.trashtalk.name, reactionFile.trashtalk);
+// Reply Collection
+collectionResponse.set(responseFile.daftbot.name, responseFile.daftbot);
+collectionResponse.set(responseFile.laugh.name, responseFile.laugh);
+collectionResponse.set(responseFile.yes.name, responseFile.yes);
+collectionResponse.set(responseFile.no.name, responseFile.no);
+collectionResponse.set(responseFile.tqt.name, responseFile.tqt);
 
 // OpenAI Collection
 collectionOpenAI.set(openaiFile.openai.name, openaiFile.openai);
+
+// Reaction Collection
+collectionReaction.set(reactionFile.trashtalk.name, reactionFile.trashtalk);
 
 const intents = new IntentsBitField();
 intents.add(
@@ -290,10 +291,10 @@ dbClient.on(Events.MessageCreate, async (message) => {
 			};
 		};
 
-		if (!collectionReply.has(msg)) return;
+		if (!collectionResponse.has(msg)) return;
 
 		try {
-			collectionReply
+			collectionResponse
 				.get(msg)
 				.execute(message, { args, languageChoosen: language });
 			console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
