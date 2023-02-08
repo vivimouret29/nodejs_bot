@@ -242,12 +242,10 @@ dbClient.on(Events.MessageCreate, async (message) => {
 				setMute(message, author, msg, args);
 				break;
 			case checkClientCollection:
-				console.log(language == fr)
 				collectionClient
 					.get(command)
 					.execute(message, dbClient, language, initDateTime, args);
 				console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
-				console.log(language == fr)
 				break;
 			case checkCollection:
 				collectionCommands
