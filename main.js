@@ -148,13 +148,13 @@ dbClient.on(Events.ClientReady, async () => {
 	console.log(`[${getCurrentDatetime('comm')}] ${dbClient.user.username} present in : `, dbClient.guilds.cache.map(guild => guild.name));
 	await new Promise(resolve => setTimeout(resolve, 5 * 1000));
 
-	if (dbClient.user.id == badBot[1]) return;
-
 	collectionMobbot
 		.get('mobbot')
 		.execute();
 	console.log(`[${getCurrentDatetime('comm')}] ${dbClient.user.username} connect on irc-ws.chat.twitch.tv:443`);
 	await new Promise(resolve => setTimeout(resolve, 10 * 1000));
+	
+	if (dbClient.user.id == badBot[1]) return;
 
 	let descpMemory = [],
 		oldDescpMemory = [];

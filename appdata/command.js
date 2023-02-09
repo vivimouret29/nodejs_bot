@@ -86,7 +86,7 @@ module.exports = {
             
             if (response.status != 200) {
                 console.log(`[ERROR] ${message.guild.name} / ${message.channel.name} # ${message.author.username} : ${message.content.toLowerCase()} // ${response.status} ${response.statusText}`);
-                sendEmbed(message, `${response.status} : ${language.imagineError}`);
+                sendEmbed(message, `${response.status} : ${language.imagineError}\n${language.error}`);
                 return;
             };
 
