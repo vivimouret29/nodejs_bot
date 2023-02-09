@@ -13,7 +13,8 @@
             "say": "-  say : permet de faire parler le bot (e.g.: !say Hello World !)\r",
             "ping": "-  ping : permet de connaître le ping du bot\r",
             "invit": "-  invit : permet d'obtenir le lien d'invitation du bot\r",
-            "guild": "-  guild : renvoie la liste de serveurs où le bot est\r"
+            "guild": "-  guild : renvoie la liste de serveurs où le bot est\r",
+            "imagine": "-  imagine : permet de faire imaginer une image via le bot avec ([**pepe diffuser**](https://huggingface.co/Dipl0/pepe-diffuser))\r"
         },
         "en": {
             "littleLine": "Here is the list of commands that can be used at this time\r",
@@ -28,7 +29,8 @@
             "say": "-  say : allows to make the bot speak (e.g.: !say Hello World !)\r",
             "ping": "-  ping : allows to know the ping of the bot\r",
             "invit": "-  invit : allows to get the invitation link of the bot\r",
-            "guild": "-  guild : returns the list of guilds where the bot is located\r"
+            "guild": "-  guild : returns the list of guilds where the bot is located\r",
+            "imagine": "-  imagine : allows you to imagine an image via the bot with ([**pepe diffuser**](https://huggingface.co/Dipl0/pepe-diffuser))\r"
         },
         "uk": {
             "littleLine": "Ось список команд, які можна використовувати в цей час\r",
@@ -43,7 +45,8 @@
             "say": "-  say: дозволяє змусити бота говорити (наприклад: !say Hello World!)\r",
             "ping": "-  ping : дозволяє дізнатися пінг бота\r",
             "invit": "-  invit : дозволяє отримати посилання запрошення бота\r",
-            "guild": "-  guild : повертає список гільдій, де знаходиться бот\r"
+            "guild": "-  guild : повертає список гільдій, де знаходиться бот\r",
+            "imagine": "-  imagine : дозволяє уявити зображення через бота за допомогою ([**pepe diffuser**](https://huggingface.co/Dipl0/pepe-diffuser))\r"
         }
     },
     "user": {
@@ -56,7 +59,8 @@
             "say": "-  say : permet de faire parler le bot (e.g.: !say Hello World !)\r",
             "ping": "-  ping : permet de connaître le ping du bot\r",
             "invit": "-  invit : permet d'obtenir le lien d'invitation du bot\r",
-            "guild": "-  guild : renvoie la liste de serveurs où le bot est\r"
+            "guild": "-  guild : renvoie la liste de serveurs où le bot est\r",
+            "imagine": "-  imagine : permet de faire imaginer une image via le bot avec ([**pepe diffuser**](https://huggingface.co/Dipl0/pepe-diffuser))\r"
         },
         "en": {
             "littleLine": "Here is the list of commands that can be used to date\r",
@@ -67,7 +71,8 @@
             "say": "- say : allows to make the bot speak (e.g.: !say Hello World !)\r",
             "ping": "- ping : allows to know the ping of the bot\r",
             "invit": "-  invit : allows to get the invitation link of the bot\r",
-            "guild": "-  guild : returns the list of guilds where the bot is located\r"
+            "guild": "-  guild : returns the list of guilds where the bot is located\r",
+            "imagine": "-  imagine : allows you to imagine an image via the bot with ([**pepe diffuser**](https://huggingface.co/Dipl0/pepe-diffuser))\r"
         },
         "uk": {
             "littleLine": "Ось список команд, які можна використовувати на сьогоднішній день\r",
@@ -78,7 +83,8 @@
             "say": "-  say : дозволяє змусити бота говорити (наприклад: !say Hello World !)\r",
             "ping": "-  ping : дозволяє дізнатися пінг бота\r",
             "invit": "-  invit : дозволяє отримати посилання запрошення бота\r",
-            "guild": "-  guild : повертає список гільдій, де знаходиться бот\r"
+            "guild": "-  guild : повертає список гільдій, де знаходиться бот\r",
+            "imagine": "-  imagine : дозволяє уявити зображення через бота за допомогою ([**pepe diffuser**](https://huggingface.co/Dipl0/pepe-diffuser))\r"
         }
     },
     "topgg": {

@@ -38,7 +38,8 @@
         "addRole": "Tu as déjà ce rôle !\nPas besoin de l'avoir deux fois !",
         "remRole": "Tu n'as pas ce rôle !\nIl faut l'avoir pour se l'enlever !",
         "invitMsg": "Tu me connais et tu cherches à me rejoindre, c'est par ici !\rTu rejoindras le discord de mon maître et moi",
-        "guild": "est présent dans les serveurs : "
+        "guild": "est présent dans les serveurs : ",
+        "argsUndefined": "Arguments non définis"
     },
     "en": {
         "help": "List of orders",
@@ -78,7 +79,8 @@
         "addRole": "You already have that part !\nYou don't need to have it twice !",
         "remRole": "You don't have that part !\nYou have to have it to take it off !",
         "invitMsg": "You know me and you want to join me, it's this way!\rYou will join the discord of my master and me",
-        "guild": "is present in the : "
+        "guild": "is present in the : ",
+        "argsUndefined": "Undefined arguments"
     },
     "uk": {
         "help": "Список замовлень",
@@ -118,6 +120,7 @@
         "addRole": "Ви вже маєте цю частину!\nВам не потрібно мати її двічі!",
         "remRole": "У вас немає цієї частини!\nВи повинні мати її, щоб зняти його!",
         "invitMsg": "Ти знаєш мене і хочеш приєднатися до мене, це тут!\rТи приєднаєшся до розбрату між мною і моїм господарем",
-        "guild": "присутній в : "
+        "guild": "присутній в : ",
+        "argsUndefined": "Невизначені аргументи"
     }
 }
