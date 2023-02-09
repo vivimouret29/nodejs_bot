@@ -39,7 +39,8 @@
         "remRole": "Tu n'as pas ce rôle !\nIl faut l'avoir pour se l'enlever !",
         "invitMsg": "Tu me connais et tu cherches à me rejoindre, c'est par ici !\rTu rejoindras le discord de mon maître et moi",
         "guild": "est présent dans les serveurs : ",
-        "argsUndefined": "Arguments non définis"
+        "argsUndefined": "Arguments non définis",
+        "imagineError": "Erreur lors de la création de l'image via HugginFace"
     },
     "en": {
         "help": "List of orders",
@@ -80,7 +81,8 @@
         "remRole": "You don't have that part !\nYou have to have it to take it off !",
         "invitMsg": "You know me and you want to join me, it's this way!\rYou will join the discord of my master and me",
         "guild": "is present in the : ",
-        "argsUndefined": "Undefined arguments"
+        "argsUndefined": "Undefined arguments",
+        "imagineError": "Error while creating the image via HugginFace"
     },
     "uk": {
         "help": "Список замовлень",
@@ -121,6 +123,7 @@
         "remRole": "У вас немає цієї частини!\nВи повинні мати її, щоб зняти його!",
         "invitMsg": "Ти знаєш мене і хочеш приєднатися до мене, це тут!\rТи приєднаєшся до розбрату між мною і моїм господарем",
         "guild": "присутній в : ",
-        "argsUndefined": "Невизначені аргументи"
+        "argsUndefined": "Невизначені аргументи",
+        "imagineError": "Помилка при створенні зображення через HugginFace"
     }
 }

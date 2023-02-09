@@ -263,7 +263,7 @@ dbClient.on(Events.MessageCreate, async (message) => {
 			case checkCollection:
 				collectionCommands
 					.get(command)
-					.execute(message, { args, language: language });
+					.execute(message, args, language);
 				console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
 				break;
 			default:
