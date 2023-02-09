@@ -4,7 +4,7 @@ const package = require("../package.json"),
     { owner } = require("../config.json"),
     fetch = require('node-fetch'),
     fs = require('fs'),
-    { sendEmbed, randomColor } = require('../embed.js');
+    { sendEmbed, randomColor } = require('../function.js');
 
 module.exports = {
     invit: {

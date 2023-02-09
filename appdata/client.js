@@ -5,7 +5,7 @@ const { ActivityType } = require('discord.js'),
     { prefix, token, owner } = require('../config.json'),
     { fr, en, uk } = require('../resx/lang.json'),
     { master, user, topgg } = require('../resx/help.json'),
-    { sendEmbed } = require('../embed.js'),
+    { sendEmbed } = require('../function.js'),
     date = new Date();
 
 function getCurrentDatetime() { return `${date.getHours()}:${date.getMinutes()} - ${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`; };
