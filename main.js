@@ -303,7 +303,7 @@ dbClient.on(Events.MessageCreate, async (message) => {
 		try {
 			collectionResponse
 				.get(msg)
-				.execute(message, { args, languageChoosen: language });
+				.execute(message, args, language);
 			console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
 		} catch (err) {
 			console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # Error output reply() : `, err);
