@@ -189,7 +189,10 @@ dbClient.on(Events.ClientReady, async () => {
 });
 
 dbClient.on(Events.GuildMemberAdd, async (guild) => {
-	dbClient.channels.cache
+	console.log(`[${getCurrentDatetime('comm')}] New member \'${guild.user.username}\' join server : ${guild.guild.name}`);
+
+	try {
+		dbClient.channels.cache
 		.get(guild.guild.systemChannelId)
 		.send({
 			'channel_id': guild.guild.systemChannelId,
@@ -212,8 +215,9 @@ dbClient.on(Events.GuildMemberAdd, async (guild) => {
 				}
 			}]
 		});
-
-	console.log(`[${getCurrentDatetime('comm')}] New member \'${guild.user.username}\' join server : ${guild.guild.name}`);
+	} catch (err) {
+		console.log(`[${getCurrentDatetime('comm')}] Error for (New member \'${guild.user.username}\' join server : ${guild.guild.name}) : ${err}`);
+	};
 
 	function randomIntFromInterval(min, max) { return Math.floor(Math.random() * (max - min + 1) + min) };
 });
