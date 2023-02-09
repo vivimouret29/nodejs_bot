@@ -1,7 +1,8 @@
 'use.strict'
 
 const package = require("../package.json"),
-    owner = require("../config.json");
+    { owner } = require("../config.json"),
+    { sendEmbed } = require('../embed.js');
 
 module.exports = {
     invit: {
@@ -9,14 +10,14 @@ module.exports = {
         description: 'a dynamic invit',
         args: true,
         execute(message, args) {
-            message.reply(args.language.invitMsg);
+            sendEmbed(message, args.language.invitMsg, true);
         }
     },
     version: {
         name: 'version',
         description: 'a dynamic view version',
         execute(message) {
-            message.channel.send(`daftbot ${package.version}`);
+            sendEmbed(message, `daftbot ${package.version}`);
         }
     },
     say: {
@@ -35,19 +36,19 @@ module.exports = {
         description: 'a dynamic prune',
         args: true,
         execute(message, args) {
-            if (message.author.id === owner) return message.channel.send(args.language.restricted); // TODO: check this out
+            if (!(message.author.id == owner)) return sendEmbed(message, args.language.restricted);
 
             var amount = parseInt(args.args[0]);
 
             if (isNaN(amount)) {
-                message.reply(args.language.pruneInvalid);
+                sendEmbed(message, args.language.pruneInvalid);
             } else if (amount > 0 && amount < 101) {
                 message.channel.bulkDelete(amount, true).catch(err => {
                     console.error(err);
-                    message.channel.send(args.language.pruneError);
+                    sendEmbed(message, args.language.pruneError);
                 });
             } else {
-                message.reply(args.language.pruneOut);
+                sendEmbed(message, args.language.pruneOut);
             };
         }
     },
@@ -55,7 +56,7 @@ module.exports = {
         name: 'ping',
         description: 'a dynamic ping',
         async execute(message, args) {
-            const wait = await message.channel.send(args.language.pingWait);
+            var wait = await message.channel.send(args.language.pingWait);
             wait.edit(`Bip. ${args.language.pingEdit} ${wait.createdTimestamp - message.createdTimestamp}ms.. Bip Boup..`);
         }
     }

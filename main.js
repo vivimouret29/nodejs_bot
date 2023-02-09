@@ -6,6 +6,7 @@ const { Client, Collection, IntentsBitField, ActivityType, Events, Partials } = 
 	{ prefix, token, owner } = require('./config.json'),
 	{ clientId, identity } = require('./mobbot/config.json'),
 	{ fr, en, uk } = require('./resx/lang.json'),
+	{ sendEmbed } = require('./embed.js'),
 	commandFile = require('./appdata/command.js'),
 	responseFile = require('./appdata/response.js'),
 	mobbotFile = require('./mobbot/mobbot.js'),
@@ -116,7 +117,10 @@ var date = new Date(),
 		'https://media3.giphy.com/media/3o84sCIUu49AtNYkDK/giphy.gif',
 		'https://media1.giphy.com/media/3ohuPwwRuluP6GiZoI/giphy.gif',
 		'https://media2.giphy.com/media/3ohuPePwzcG9sA3VSw/giphy.gif'
-	];
+	],
+	badBot = ['757970907992948826', '758393470024155186', '758319298325905428'],
+	badChannels = [],
+	badBoy = [];
 
 function getCurrentDatetime(choice) {
 	switch (choice) {
@@ -140,13 +144,15 @@ dbClient.on(Events.ClientReady, async () => {
 		status: 'online'
 	});
 
-	await new Promise(resolve => setTimeout(resolve, 5 * 1000));
 	console.log(`[${getCurrentDatetime('comm')}] ${dbClient.user.username} present in : `, dbClient.guilds.cache.map(guild => guild.name));
+	await new Promise(resolve => setTimeout(resolve, 5 * 1000));
+
+	if (dbClient.user.id == badBot[1]) return;
 
 	collectionMobbot
 		.get('mobbot')
 		.execute();
-	console.log(`[${getCurrentDatetime('comm')}] ${language.mobbotSucceed}`);
+	console.log(`[${getCurrentDatetime('comm')}] ${dbClient.user.username} connect on irc-ws.chat.twitch.tv:443`);
 	await new Promise(resolve => setTimeout(resolve, 10 * 1000));
 
 	let descpMemory = [],
@@ -185,31 +191,30 @@ dbClient.on(Events.GuildMemberAdd, async (guild) => {
 	dbClient.channels.cache
 		.get(guild.guild.systemChannelId)
 		.send({
-			'channel_id': `${guild.guild.systemChannelId}`,
+			'channel_id': guild.guild.systemChannelId,
 			'content': '',
 			'tts': false,
 			'embeds': [{
 				'type': 'rich',
 				'title': `${guild.user.username} ${language.guildJoin}`,
-				'description': `${language.guildJoinDesc}`,
+				'description': language.guildJoinDesc,
 				'color': 0x890b0b,
 				'image': {
-					'url': `${memes[randomIntFromInterval(0, (memes.length - 1))]}`,
-					'height': 0,
-					'width': 0
+					'url': memes[randomIntFromInterval(0, (memes.length - 1))]
 				},
 				'thumbnail': {
-					'url': `${dbClient.users.cache.get(guild.user.id).avatarURL({ format: 'png', dynamic: true, size: 1024 })}`,
-					'height': 0,
-					'width': 0
+					'url': dbClient.users.cache.get(guild.user.id).avatarURL({ format: 'png', dynamic: true, size: 1024 })
 				},
 				'author': {
-					'name': `daftbot`,
-					'icon_url': `${dbClient.user.avatarURL({ format: 'png', dynamic: true, size: 1024 })}`
+					'name': dbClient.user.username,
+					'icon_url': dbClient.user.avatarURL({ format: 'png', dynamic: true, size: 1024 })
 				}
 			}]
 		});
+
 	console.log(`[${getCurrentDatetime('comm')}] New member \'${guild.user.username}\' join server : ${guild.guild.name}`);
+
+	function randomIntFromInterval(min, max) { return Math.floor(Math.random() * (max - min + 1) + min) };
 });
 
 dbClient.on(Events.MessageCreate, async (message) => {
@@ -217,9 +222,6 @@ dbClient.on(Events.MessageCreate, async (message) => {
 		command = args.shift().toLowerCase(),
 		msg = message.content.toLowerCase(),
 		author = message.author.username,
-		badBot = ['757970907992948826', '758393470024155186'],
-		badChannels = [],
-		badBoy = [],
 		checkCollection,
 		checkClientCollection;
 
@@ -232,7 +234,7 @@ dbClient.on(Events.MessageCreate, async (message) => {
 	if (message.content.startsWith(prefix)) {
 		switch (command) {
 			case 'mobbot':
-				if (!(message.author.id === owner)) return message.channel.send(language.restricted);
+				if (!(message.author.id === owner)) return sendEmbed(message, language.restricted);
 				collectionMobbot
 					.get('exportmobbot')
 					.execute(message, dbClient.emojis);
@@ -244,7 +246,7 @@ dbClient.on(Events.MessageCreate, async (message) => {
 				setLanguage(message, author, msg, args);
 				break;
 			case 'mute':
-				if (!(message.author.id === owner)) return message.channel.send(language.restricted);
+				if (!(message.author.id === owner)) return sendEmbed(message, language.restricted);
 				setMute(message, author, msg, args);
 				break;
 			case checkClientCollection:
@@ -261,7 +263,7 @@ dbClient.on(Events.MessageCreate, async (message) => {
 				break;
 			default:
 				console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${language.commandAttempt} : (${msg}) / (${author})`);
-				message.channel.send(language.commandNotFound);
+				sendEmbed(message, language.commandNotFound);
 				break;
 		};
 	};
@@ -435,7 +437,7 @@ async function setLanguage(message, author, msg, args) {
 	switch (args[0]) {
 		case 'fr':
 			language = fr;
-			message.channel.send(`${language.changlang}`);
+			sendEmbed(message, language.changLang);
 
 			await new Promise(resolve => setTimeout(resolve, 30 * 1000));
 			dbClient.user.setPresence({
@@ -450,7 +452,7 @@ async function setLanguage(message, author, msg, args) {
 			return language;
 		case 'en':
 			language = en;
-			message.channel.send(`${language.changlang}`);
+			sendEmbed(message, language.changLang);
 
 			await new Promise(resolve => setTimeout(resolve, 30 * 1000));
 			dbClient.user.setPresence({
@@ -465,7 +467,7 @@ async function setLanguage(message, author, msg, args) {
 			return language;
 		case 'uk':
 			language = uk;
-			message.channel.send(`${language.changlang}`);
+			sendEmbed(message, language.changLang);
 
 			await new Promise(resolve => setTimeout(resolve, 30 * 1000));
 			dbClient.user.setPresence({
@@ -479,7 +481,7 @@ async function setLanguage(message, author, msg, args) {
 			console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
 			return language;
 		default:
-			message.channel.send(language.languageNtReco);
+			sendEmbed(message, language.languageNtReco);
 			console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
 			return language;
 	};
@@ -490,29 +492,28 @@ function setMute(message, author, msg, args) {
 	if (action != undefined) {
 		if ((action.toLowerCase()) === 'on') {
 			console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
-			message.channel.send(language.botMuted);
+			sendEmbed(message, language.botMuted);
 			isMuted = true;
 			return isMuted;
 		} else if ((action.toLowerCase()) === 'off') {
 			console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
-			message.channel.send(language.botUnmuted);
+			sendEmbed(message, language.botUnmuted);
 			isMuted = false;
 			return isMuted;
 		} else {
 			console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
-			message.channel.send(`${language.howMute}\n\r*e.g. : ${prefix}mute on*`);
+			sendEmbed(message, `${language.howMute}\n\r*e.g. : ${prefix}mute on*`);
 			isMuted = false;
 			return isMuted;
 		};
 	} else {
 		console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
-		message.channel.send(`${language.howMute}\n\r*e.g. : ${prefix}mute on*`);
+		sendEmbed(message, `${language.howMute}\n\r*e.g. : ${prefix}mute on*`);
 		isMuted = false;
 		return isMuted;
 	};
 };
 
-function randomIntFromInterval(min, max) { return Math.floor(Math.random() * (max - min + 1) + min) };
 
 dbClient
 	.login(token)

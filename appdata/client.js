@@ -5,6 +5,7 @@ const { ActivityType } = require('discord.js'),
     { prefix, token, owner } = require('../config.json'),
     { fr, en, uk } = require('../resx/lang.json'),
     { master, user, topgg } = require('../resx/help.json'),
+    { sendEmbed } = require('../embed.js'),
     date = new Date();
 
 function getCurrentDatetime() { return `${date.getHours()}:${date.getMinutes()} - ${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`; };
@@ -112,7 +113,7 @@ module.exports = {
         name: 'guild',
         description: 'a dynamic guild',
         execute(message, client, language) {
-            message.reply(`${client.user.username} ${language.guild}\n${client.guilds.cache.map(guild => guild.name).join(', ')}`);
+            sendEmbed(message, `${client.user.username} ${language.guild}\n${client.guilds.cache.map(guild => guild.name).join(', ')}`);
         }
     },
     uptime: {
@@ -128,7 +129,7 @@ module.exports = {
             let seconds = Math.floor(totalSeconds % 60);
             let start = initDateTime;
 
-            message.channel.send(`${language.uptime} : ${start}\n${days}D:${hours}H:${minutes}M:${seconds}S`);
+            sendEmbed(message, `${language.uptime} : ${start}\n${days}D:${hours}H:${minutes}M:${seconds}S`);
         }
     },
     status: {
@@ -136,7 +137,7 @@ module.exports = {
         description: 'a dynamic status',
         args: true,
         execute(message, client, language, initDateTime, args) {
-            if (!(message.author.id === owner)) return message.channel.send(language.areYouOwner);
+            if (!(message.author.id === owner)) return sendEmbed(message, language.areYouOwner);
 
             let typeThings = args[0],
                 stOnOff = args[1],
@@ -174,7 +175,7 @@ module.exports = {
                 case 'dnd':
                     break;
                 default:
-                    return message.reply(`${fr.wrongStatus}\n
+                    return sendEmbed(message, `${fr.wrongStatus}\n
 *e.g. ${prefix}status ${typeThings} online ${nameText} ${urlLike}*`);
             };
 
@@ -195,7 +196,7 @@ module.exports = {
                     typeThings = ActivityType.Competing;
                     break;
                 default:
-                    return message.reply(`${fr.wrongActivities}\n
+                    return sendEmbed(message, `${fr.wrongActivities}\n
 *e.g. ${prefix} stream ${stOnOff} ${nameText} ${urlLike}*`);
             };
 
@@ -218,47 +219,41 @@ module.exports = {
                 });
             };
 
-            message.channel.send(language.changedActivites);
+            sendEmbed(message, language.changedActivites);
         }
     },
     kill: {
         name: 'kill',
         description: 'a dynamic kill',
         async execute(message, client, language) {
-            if (!(message.author.id === owner)) return message.channel.send(language.areYouOwner);
+            if (!(message.author.id === owner)) return sendEmbed(message, language.areYouOwner);
 
-            await message.channel
-                .send(language.killBot)
-                .then(() => {
-                    new Promise(resolve => setTimeout(resolve, 3 * 1000));
-                    client.destroy();
-                });
+            await sendEmbed(message, language.killBot);
+            new Promise(resolve => setTimeout(resolve, 3 * 1000));
+            client.destroy();
         }
     },
     reset: {
         name: 'reset',
         description: 'a dynamic reset',
         async execute(message, client, language) {
-            if (!(message.author.id === owner)) return message.channel.send(language.areYouOwner);
+            if (!(message.author.id === owner)) return sendEmbed(message, language.areYouOwner);
 
-            await message.channel
-                .send(language.resetBot)
-                .then(() => {
-                    new Promise(resolve => setTimeout(resolve, 3 * 1000));
-                    client.destroy();
-                })
-                .then(() => {
-                    new Promise(resolve => setTimeout(resolve, 3 * 1000));
-                    client.login(token);
-                    client.user.setPresence({
-                        activities: [{
-                            name: language.activities,
-                            type: ActivityType.Watching
+            await sendEmbed(message, language.resetBot);
+            new Promise(resolve => setTimeout(resolve, 3 * 1000));
+            client.destroy();
 
-                        }],
-                        status: 'online'
-                    });
-                });
+            new Promise(resolve => setTimeout(resolve, 3 * 1000));
+            client.login(token);
+
+            client.user.setPresence({
+                activities: [{
+                    name: language.activities,
+                    type: ActivityType.Watching
+
+                }],
+                status: 'online'
+            });
         }
     }
 };

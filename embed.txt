@@ -1,0 +1,40 @@
+({
+  "channel_id": `${context.params.event.channel_id}`,
+  "content": "",
+  "tts": false,
+  "embeds": [
+    {
+      "type": "rich",
+      "title": ` `,
+      "description": ` `,
+      "color": "0xfffffff",
+      "fields": [
+        {
+          "name": ` `,
+          "value": ` `,
+          "inline": true
+        }
+      ],
+      "timestamp": `2023-01-01T00:00:00.000Z`,
+      "image": {
+        "url": ` `,
+        "proxy_url": ` `,
+      },
+      "thumbnail": {
+        "url": ` `,
+        "proxy_url": ` `,
+      },
+      "author": {
+        "name": ` `,
+        "url": ` `,
+        "icon_url": ` `,
+        "proxy_icon_url": ` `
+      },
+      "footer": {
+        "text": ` `,
+        "icon_url": ` `
+      },
+      "url": ` `
+    }
+  ]
+})

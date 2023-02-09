@@ -124,22 +124,20 @@ module.exports = {
                             'color': 0x4d04bb,
                             'fields': [{
                                 'name': axios.data.data[0].game_name,
-                                'value': axios.data.data[0].title,
+                                'value': axios.data.data[0].title
                             }],
                             'image': {
                                 'url': `https://static-cdn.jtvnw.net/previews-ttv/live_user_${axios.data.data[0].user_login}-360x220.jpg`,
-                                'proxy_url': `https://twitch.tv/${axios.data.data[0].user_login}`,
-                                'height': 0,
-                                'width': 0
+                                'proxy_url': `https://twitch.tv/${axios.data.data[0].user_login}`
                             },
                             'thumbnail': {
                                 'url': `https://static-cdn.jtvnw.net/jtv_user_pictures/${guid}-profile_image-300x300.${dot}`,
-                                'proxy_url': `https://twitch.tv/${axios.data.data[0].user_login}`,
+                                'proxy_url': `https://twitch.tv/${axios.data.data[0].user_login}`
                             },
                             'author': {
-                                'name': `mobbot`,
+                                'name': oauth.identity.username,
                                 'url': `https://twitch.tv/${axios.data.data[0].user_login}`,
-                                'icon_url': `${client.user.avatarURL({ format: 'png', dynamic: true, size: 1024 })}`
+                                'icon_url': client.user.avatarURL({ format: 'png', dynamic: true, size: 1024 })
                             },
                             'footer': {
                                 'text': `Viewers : ${axios.data.data[0].viewer_count}`,
