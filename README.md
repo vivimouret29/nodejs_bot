@@ -1,7 +1,7 @@
 # DaftBot
 
 
-![db](https://img.shields.io/badge/daftbot-v1.4.3-red)
+![db](https://img.shields.io/badge/daftbot-v1.4.4-red)
 ![npm](https://img.shields.io/npm/v/npm/latest)
 ![discord.js](https://img.shields.io/badge/discord.js-v14.7.0-green)
 ![tmi.js](https://img.shields.io/badge/tmi.js-v1.8.5-blue)
@@ -12,6 +12,7 @@
 
 - Token de votre bot Discord
 - Token de votre bot Twitch (optionnel)
+- Token de OpenAI (optionnel)
 - Nodejs et npm
 
 ## Utilisation
@@ -37,6 +38,7 @@ Voici un petit lien [trello](https://trello.com/b/kdy25wXP/daftbot-mobbot) afin 
 
 - Token of your Discord bot
 - Token of your Twitch bot (optional)
+- Token of OpenAI (optionnal)
 - Nodejs and npm
 
 ## Usage

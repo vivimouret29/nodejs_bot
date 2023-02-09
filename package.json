@@ -1,6 +1,6 @@
 {
   "name": "daftbot",
-  "version": "1.4.3",
+  "version": "1.4.4",
   "description": "it's a discord's bot",
   "main": "main.js",
   "scripts": {
