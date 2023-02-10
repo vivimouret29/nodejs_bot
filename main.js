@@ -112,7 +112,8 @@ var date = new Date(),
 		'/D/STALKERS',
 		'/D/CHASSEURS',
 		'/D/HÉROS',
-		'/D/GUERRIERS'
+		'/D/GUERRIERS',
+		'/D/RECRUES'
 	],
 	memes = [
 		'https://media3.giphy.com/media/3o84sCIUu49AtNYkDK/giphy.gif',
@@ -215,6 +216,8 @@ dbClient.on(Events.GuildMemberAdd, async (guild) => {
 				}
 			}]
 		});
+
+		switchRoles(guild, guild.user.id, 6, true);
 	} catch (err) {
 		console.log(`[${getCurrentDatetime('comm')}] Error for (New member \'${guild.user.username}\' join server : ${guild.guild.name}) : ${err}`);
 	};
@@ -405,8 +408,8 @@ dbClient.on(Events.MessageReactionRemove, (react, user) => {
 });
 
 function switchRoles(guild, userId, roleIndex, style) {
-	var role = guild.roles.cache.find(r => r.name == rolesNames[roleIndex]),
-		user = guild.members.cache.get(userId);
+	var role = dbClient.guilds.cache.find(s => s.name == guild.guild.name).roles.cache.find(r => r.name == rolesNames[roleIndex]),
+		user = dbClient.guilds.cache.find(s => s.name == guild.guild.name).members.cache.get(userId);
 
 	switch (style) {
 		case true:
