@@ -97,7 +97,7 @@ var date = new Date(),
 	initDateTime = `${date.getHours()}:${date.getMinutes()} - ${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`,
 	isMuted = false,
 	language = language == undefined ? fr : language,
-	streamers = ['daftmob', 'dpl0', 'fantabobshow', 'mistermv', 'drfeelgood', 'laink', 'ponce', 'captainfracas'],
+	streamers = ['daftmob'],
 	emojiRoles = [
 		'💜',
 		'❤️',

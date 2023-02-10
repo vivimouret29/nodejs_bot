@@ -94,7 +94,7 @@ module.exports = {
         description: 'a dynamic live notification',
         execute(client, language, gD, axios) {
             let guidDot = gD,
-                channelTwitch = ['twitch'],
+                channelTwitch = ['twitch', ':cinema: -fox-stream- :cinema:'],
                 guid = '',
                 dot = '';
 

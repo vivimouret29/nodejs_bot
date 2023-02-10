@@ -2,8 +2,8 @@
 
 const package = require("../package.json"),
     { owner } = require("../config.json"),
-    fetch = require('node-fetch'),
     fs = require('fs'),
+    axios = require('axios'),
     { sendEmbed, randomColor } = require('../function.js');
 
 module.exports = {
@@ -63,7 +63,7 @@ module.exports = {
         }
     },
     imagine: {
-        name: 'imagine',
+        name: 'pepe',
         description: 'a dynamic pepe',
         args: true,
         async execute(message, args, language) {
@@ -71,26 +71,30 @@ module.exports = {
 
             var msg = await message.channel.send({
                 'channel_id': message.channel.channel_id,
-                'content': `${args.join(' ')}, *Waiting to display...*`
+                'content': `pepe ${args.join(' ')} / *Waiting to display...*`
             });
 
-            const response = await fetch('https://dipl0-dipl0-pepe-diffuser.hf.space/run/predict', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
+            const urI = `https://dipl0-dipl0-pepe-diffuser-bot.hf.space/run/predict`,
+                headers = {
+                    'Content-Type': 'application/json',
+                    'Connection': 'Keep-Alive'
+                },
+                dt = JSON.stringify({
                     data: [
-                        args.join(' ')
+                        'pepe ' + args.join(' ')
                     ]
-                })
-            });
-            
-            if (response.status != 200) {
-                console.log(`[ERROR] ${message.guild.name} / ${message.channel.name} # ${message.author.username} : ${message.content.toLowerCase()} // ${response.status} ${response.statusText}`);
-                sendEmbed(message, `${response.status} : ${language.imagineError}\n${language.error}`);
-                return;
-            };
+                });
 
-            const data = await response.json(),
+            let response = await axios
+                .post(urI, dt, { headers: headers, timeout: 300000 }) // timeout not really working
+                .catch(error => {
+                    console.log(`[APIERROR] ${message.guild.name} / ${message.channel.name} # ${message.author.username} : ${message.content.toLowerCase()} // ${error.response.status} ${error.response.statusText}`);
+                    sendEmbed(message, `${language.imagineError}\n${error.response.status} ${error.response.statusText}`);
+                    return error.response;
+                });
+
+            if (response.status != 200) return;
+            const data = await response.data,
                 splitted = data.data[0].split(',')[1],
                 buffer = Buffer.from(splitted, 'base64');
             let saveDiffuser = false;
@@ -112,7 +116,7 @@ module.exports = {
                         'icon_url': message.author.avatarURL({ format: 'png', dynamic: true, size: 1024 })
                     },
                     'footer': {
-                        'text': args.join(' '),
+                        'text': 'pepe ' + args.join(' '),
                         'icon_url': 'https://aeiljuispo.cloudimg.io/v7/https://s3.amazonaws.com/moonup/production/uploads/1611668769240-noauth.png?w=200&h=200&f=face',
                         'proxy_icon_url': 'https://huggingface.co/Dipl0/pepe-diffuser'
                     }
