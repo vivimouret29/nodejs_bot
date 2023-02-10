@@ -115,7 +115,7 @@ module.exports = {
                     .get(channelSend.id)
                     .send({
                         'channel_id': channelSend.id,
-                        'content': '<&1071286935726854216>', // /D/TWITCH
+                        'content': '<@&1071286935726854216>', // /D/TWITCH
                         'tts': false,
                         'embeds': [{
                             'type': 'rich',
