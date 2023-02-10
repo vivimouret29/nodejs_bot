@@ -4,3 +4,4 @@ node_modules
 /mobbot/config.json
 /mobbot/oauth.txt
 /styles/ai/pepe-diffuser.jpg
+/id_rsa

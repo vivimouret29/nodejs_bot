@@ -346,7 +346,7 @@ dbClient.on(Events.MessageReactionAdd, (react, user) => {
 		message = channel.messages.cache.get(messageId),
 		guild = dbClient.guilds.cache.get(channel.guildId);
 
-	if (message.channelId != rChan && message.id != rMsg && emoji.includes(emojiRoles)) return;
+	if (message.channelId != rChan && message.id != rMsg && emojiRoles.includes(emoji)) return;
 
 	switch (emoji) {
 		case '💜':
