@@ -1,6 +1,7 @@
 'use.strict'
 
-const { EmbedBuilder } = require('discord.js');
+const { EmbedBuilder } = require('discord.js'),
+    { sendEmbed } = require('../function.js');
 
 module.exports = {
     daftbot: {
@@ -18,7 +19,7 @@ module.exports = {
         name: 'hahaha',
         description: 'a dynamic reply',
         execute(message, args, language) {
-            message.channel.send(language.replyAgg);
+            sendEmbed(message, language.replyAgg);
         }
     },
     no: {
@@ -47,7 +48,7 @@ module.exports = {
         name: 'tqt',
         description: 'a dynamic reply',
         execute(message, args, language) {
-            message.reply(language.replyWorried);
+            sendEmbed(message, language.replyWorried);
         }
     }
 };
