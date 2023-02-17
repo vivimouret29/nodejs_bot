@@ -127,7 +127,7 @@ module.exports = {
             let seconds = Math.floor(totalSeconds % 60);
             let start = initDateTime;
 
-            sendEmbed(message, `${language.uptime} : ${start}\n${days}D:${hours}H:${minutes}M:${seconds}S`);
+            sendEmbed(message, `${language.uptime} ${start}\n${days}D:${hours}H:${minutes}M:${seconds}S`);
         }
     },
     status: {
