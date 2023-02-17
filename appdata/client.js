@@ -139,7 +139,7 @@ module.exports = {
 
             let typeThings = args[0],
                 stOnOff = args[1],
-                nameText = args[2],
+                contenText = args[2],
                 urlLike = args[3],
                 urlBool,
                 argNb = 3;
@@ -148,19 +148,25 @@ module.exports = {
                 if (String(args[it]).startsWith('http')) {
                     urlBool = true;
                     break;
-                } else { urlBool = false; }
+                } else { urlBool = false; };
+            };
+
+            if (String(contenText).startsWith('http') || contenText == undefined) {
+                sendEmbed(message, `${language.wrongContent}\n
+*e.g. ${prefix}status ${typeThings != undefined ? typeThings : 'watch'} ${stOnOff != undefined ? stOnOff : 'dnd'} hello world ! ${urlLike != undefined ? urlLike : ''}*`);
+                return;
             };
 
             if (urlBool) {
                 while (!String(urlLike).startsWith('http')) {
                     urlLike = args[argNb + 1];
-                    nameText = nameText + ' ' + args[argNb];
+                    contenText = contenText + ' ' + args[argNb];
                     argNb++;
                 };
             } else {
                 while (!(urlLike == undefined)) {
                     urlLike = args[argNb + 1];
-                    nameText = nameText + ' ' + args[argNb];
+                    contenText = contenText + ' ' + args[argNb];
                     argNb++;
                 };
             };
@@ -173,8 +179,9 @@ module.exports = {
                 case 'dnd':
                     break;
                 default:
-                    return sendEmbed(message, `${fr.wrongStatus}\n
-*e.g. ${prefix}status ${typeThings} online ${nameText} ${urlLike}*`);
+                    sendEmbed(message, `${language.wrongStatus}\n
+*e.g. ${prefix}status ${typeThings != undefined ? typeThings : 'watch'} online ${contenText != undefined ? contenText : 'hello world !'} ${urlLike != undefined ? urlLike : ''}*`);
+                    return;
             };
 
             switch (typeThings) {
@@ -194,22 +201,23 @@ module.exports = {
                     typeThings = ActivityType.Competing;
                     break;
                 default:
-                    return sendEmbed(message, `${fr.wrongActivities}\n
-*e.g. ${prefix} stream ${stOnOff} ${nameText} ${urlLike}*`);
+                    sendEmbed(message, `${language.wrongActivities}\n
+*e.g. ${prefix}status stream ${stOnOff != undefined ? stOnOff : 'idle'} ${contenText != undefined ? contenText : 'hello world !'} ${urlLike != undefined ? urlLike : ''}*`);
+                    return;
             };
 
             if (!urlBool) {
                 client.user.setPresence({
                     activities: [{
-                        name: String(nameText)
+                        name: String(contenText)
                     }],
                     status: String(stOnOff)
                 });
-                client.user.setActivity(String(nameText), { type: typeThings });
+                client.user.setActivity(String(contenText), { type: typeThings });
             } else {
                 client.user.setPresence({
                     activities: [{
-                        name: String(nameText),
+                        name: String(contenText),
                         type: typeThings,
                         url: String(urlLike)
                     }],
@@ -238,12 +246,12 @@ module.exports = {
             if (!(message.author.id === owner)) return sendEmbed(message, language.areYouOwner);
 
             await sendEmbed(message, language.resetBot);
-            new Promise(resolve => setTimeout(resolve, 3 * 1000));
+            new Promise(resolve => setTimeout(resolve, 1 * 1000));
             client.destroy();
-
-            new Promise(resolve => setTimeout(resolve, 3 * 1000));
+            
+            new Promise(resolve => setTimeout(resolve, 1 * 1000));
             client.login(token);
-
+            
             client.user.setPresence({
                 activities: [{
                     name: language.activities,
