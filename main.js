@@ -6,7 +6,8 @@ const { Client, Collection, IntentsBitField, ActivityType, Events, Partials } = 
 	{ prefix, token, owner } = require('./config.json'),
 	{ clientId, identity } = require('./mobbot/config.json'),
 	{ fr, en, uk } = require('./resx/lang.json'),
-	{ sendEmbed } = require('./function.js'),
+	{ memes } = require('./resx/memes.json'),
+	{ sendEmbed, getCurrentDatetime } = require('./function.js'),
 	commandFile = require('./appdata/command.js'),
 	responseFile = require('./appdata/response.js'),
 	mobbotFile = require('./mobbot/mobbot.js'),
@@ -98,46 +99,13 @@ var date = new Date(),
 	isMuted = false,
 	language = language == undefined ? fr : language,
 	streamers = ['daftmob'],
-	emojiRoles = [
-		'💜',
-		'❤️',
-		'looners',
-		'mandalorian',
-		'linkitem',
-		'croisade'
-	],
-	rolesNames = [
-		'/D/TWITCH',
-		'/D/YOUTUBE',
-		'/D/STALKERS',
-		'/D/CHASSEURS',
-		'/D/HÉROS',
-		'/D/GUERRIERS',
-		'/D/RECRUES'
-	],
-	memes = [
-		'https://media3.giphy.com/media/3o84sCIUu49AtNYkDK/giphy.gif',
-		'https://media1.giphy.com/media/3ohuPwwRuluP6GiZoI/giphy.gif',
-		'https://media2.giphy.com/media/3ohuPePwzcG9sA3VSw/giphy.gif'
-	],
-	badBot = ['757970907992948826', '758393470024155186', '758319298325905428'],
-	badChannels = [],
-	badBoy = [];
-
-function getCurrentDatetime(choice) {
-	switch (choice) {
-		case 'csv':
-			return `${date.getDate()}${date.getMonth()}${date.getFullYear()}`;
-		case 'date':
-			return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}`;
-		case 'comm':
-			return `${date.getHours()}:${date.getMinutes()} - ${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`;
-	};
-};
+	emojiRoles = ['💜', '❤️', 'looners', 'mandalorian', 'linkitem', 'croisade'],
+	rolesNames = ['/D/TWITCH', '/D/YOUTUBE', '/D/STALKERS', '/D/CHASSEURS', '/D/HÉROS', '/D/GUERRIERS', '/D/RECRUES'],
+	otherBot = ['757970907992948826', '758393470024155186', '758319298325905428'],
+	channelToAvoid = ['948894919878123573'],
+	userToCheck = ['491907126701064193'];
 
 dbClient.on(Events.ClientReady, async () => {
-	await new Promise(resolve => setTimeout(resolve, 5 * 1000));
-
 	dbClient.user.setPresence({
 		activities: [{
 			name: language.activities,
@@ -145,17 +113,14 @@ dbClient.on(Events.ClientReady, async () => {
 		}],
 		status: 'online'
 	});
-
 	console.log(`[${getCurrentDatetime('comm')}] ${dbClient.user.username} present in : `, dbClient.guilds.cache.map(guild => guild.name));
-	await new Promise(resolve => setTimeout(resolve, 5 * 1000));
 
 	collectionMobbot
 		.get('mobbot')
 		.execute();
 	console.log(`[${getCurrentDatetime('comm')}] ${dbClient.user.username} connect on irc-ws.chat.twitch.tv:443`);
-	await new Promise(resolve => setTimeout(resolve, 10 * 1000));
-	
-	if (dbClient.user.id == badBot[1]) return;
+
+	if (dbClient.user.id == otherBot[1]) return;
 
 	let descpMemory = [],
 		oldDescpMemory = [];
@@ -191,31 +156,30 @@ dbClient.on(Events.ClientReady, async () => {
 
 dbClient.on(Events.GuildMemberAdd, async (guild) => {
 	console.log(`[${getCurrentDatetime('comm')}] New member \'${guild.user.username}\' join server : ${guild.guild.name}`);
-
 	try {
 		dbClient.channels.cache
-		.get(guild.guild.systemChannelId)
-		.send({
-			'channel_id': guild.guild.systemChannelId,
-			'content': '',
-			'tts': false,
-			'embeds': [{
-				'type': 'rich',
-				'title': `${guild.user.username} ${language.guildJoin}`,
-				'description': language.guildJoinDesc,
-				'color': 0x890b0b,
-				'image': {
-					'url': memes[randomIntFromInterval(0, (memes.length - 1))]
-				},
-				'thumbnail': {
-					'url': dbClient.users.cache.get(guild.user.id).avatarURL({ format: 'png', dynamic: true, size: 1024 })
-				},
-				'author': {
-					'name': dbClient.user.username,
-					'icon_url': dbClient.user.avatarURL({ format: 'png', dynamic: true, size: 1024 })
-				}
-			}]
-		});
+			.get(guild.guild.systemChannelId)
+			.send({
+				'channel_id': guild.guild.systemChannelId,
+				'content': '',
+				'tts': false,
+				'embeds': [{
+					'type': 'rich',
+					'title': `${guild.user.username} ${language.guildJoin}`,
+					'description': language.guildJoinDesc,
+					'color': 0x890b0b,
+					'image': {
+						'url': memes[randomIntFromInterval(0, (memes.length - 1))]
+					},
+					'thumbnail': {
+						'url': dbClient.users.cache.get(guild.user.id).avatarURL({ format: 'png', dynamic: true, size: 1024 })
+					},
+					'author': {
+						'name': dbClient.user.username,
+						'icon_url': dbClient.user.avatarURL({ format: 'png', dynamic: true, size: 1024 })
+					}
+				}]
+			});
 
 		switchRoles(guild, guild.user.id, 6, true);
 	} catch (err) {
@@ -312,7 +276,7 @@ dbClient.on(Events.MessageCreate, async (message) => {
 			console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # Error output reply() : `, err);
 		};
 
-		if (badBot.includes(message.author.id) && !(badChannels.includes(message.channel.name))) {
+		if (otherBot.includes(message.author.id) && !(channelToAvoid.includes(message.channel.id))) {
 			if (Math.random() <= .005) {
 				try {
 					collectionReaction
@@ -325,11 +289,11 @@ dbClient.on(Events.MessageCreate, async (message) => {
 			};
 		};
 
-		if (badBoy.includes(message.author.id)) {
+		if (userToCheck.includes(message.author.id)) {
 			if (Math.random() > .005) return;
 			try {
 				message.delete().catch(O_o => { })
-				console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # Message deleted`);
+				console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${message.author.user}'s message deleted`);
 			} catch (err) {
 				console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # Can't delete badBoy's message : `, err);
 			};
@@ -408,8 +372,8 @@ dbClient.on(Events.MessageReactionRemove, (react, user) => {
 });
 
 function switchRoles(guild, userId, roleIndex, style) {
-	var role = dbClient.guilds.cache.find(s => s.name == guild.guild.name).roles.cache.find(r => r.name == rolesNames[roleIndex]),
-		user = dbClient.guilds.cache.find(s => s.name == guild.guild.name).members.cache.get(userId);
+	var role = dbClient.guilds.cache.find(s => s.name == guild.name).roles.cache.find(r => r.name == rolesNames[roleIndex]),
+		user = dbClient.guilds.cache.find(s => s.name == guild.name).members.cache.get(userId);
 
 	switch (style) {
 		case true:

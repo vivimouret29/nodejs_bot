@@ -3,6 +3,7 @@
 const { Client } = require('tmi.js'),
     { parse } = require('json2csv'),
     fs = require('fs'),
+    { getCurrentDatetime } = require('../function.js'),
     {
         clientId,
         identity,
@@ -20,22 +21,9 @@ const oauth = {
 };
 
 const mbClient = new Client(oauth);
-
-var dataToExport = [],
-    date = new Date();
+var dataToExport = [];
 
 function onConnectedHandler(addr, port) { console.log(`* Connected to ${addr}:${port} *`); };
-
-function getCurrentDatetime(choice) {
-    switch (choice) {
-        case 'csv':
-            return `${date.getDate()}${date.getMonth()}${date.getFullYear()}`;
-        case 'date':
-            return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}`;
-        case 'comm':
-            return `${date.getHours()}:${date.getMinutes()} - ${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`;
-    };
-};
 
 module.exports = {
     mobbot: {
@@ -51,7 +39,7 @@ module.exports = {
 
                     let data = {
                         'id': Number(tags['user-id']),
-                        'date': getCurrentDatetime(),
+                        'date': getCurrentDatetime('date'),
                         'badges': tags['badges'],
                         'color': String(tags['color']),
                         'username': String(tags['username']),
@@ -110,6 +98,7 @@ module.exports = {
 
             for (chan in channelTwitch) {
                 var channelSend = client.channels.cache.find(channel => channel.name == channelTwitch[chan]);
+                if (channelSend.id == undefined) break;
 
                 client.channels.cache
                     .get(channelSend.id)

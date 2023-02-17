@@ -6,6 +6,8 @@ const package = require("../package.json"),
     axios = require('axios'),
     { sendEmbed, randomColor } = require('../function.js');
 
+var duration_average = 0;
+
 module.exports = {
     invit: {
         name: 'invit',
@@ -71,7 +73,7 @@ module.exports = {
 
             var msg = await message.channel.send({
                 'channel_id': message.channel.channel_id,
-                'content': `pepe ${args.join(' ')} / *Waiting to display...*`
+                'content': `pepe ${args.join(' ')} / *Waiting to display...*\nAverage: ${duration_average} seconds`
             });
 
             const urI = `https://dipl0-dipl0-pepe-diffuser-bot.hf.space/run/predict`,
@@ -81,50 +83,51 @@ module.exports = {
                 },
                 dt = JSON.stringify({
                     data: [
-                        'pepe ' + args.join(' ')
+                        'pepe ' + args.join(' ').toLowerCase()
                     ]
                 });
 
-            let response = await axios
-                .post(urI, dt, { headers: headers, timeout: 300000 }) // timeout not really working
-                .catch(error => {
-                    console.log(`[APIERROR] ${message.guild.name} / ${message.channel.name} # ${message.author.username} : ${message.content.toLowerCase()} // ${error.response.status} ${error.response.statusText}`);
-                    sendEmbed(message, `${language.imagineError}\n${error.response.status} ${error.response.statusText}`);
-                    return error.response;
-                });
+            let response = { status: 100 },
+                countResponse = -1;
 
-            if (response.status != 200) return;
+            while (response.status != 200) {
+                countResponse++;
+                response = await axios
+                    .post(urI, dt, { headers: headers, timeout: 300000 }) // timeout not really working so while loop
+                    .catch(error => {
+                        console.log(`[APIERROR] ${message.guild.name} / ${message.channel.name} # ${message.author.username} : ${message.content.toLowerCase()} // ${error.response.status} ${error.response.statusText}`);
+                        return response = error.response;
+                    });
+            };
+
             const data = await response.data,
                 splitted = data.data[0].split(',')[1],
                 buffer = Buffer.from(splitted, 'base64');
-            let saveDiffuser = false;
 
-            if (message.author.id == owner) { saveDiffuser = true; };
-
-            fs.writeFileSync(`./styles/ai/${saveDiffuser ? args.join('') : 'pepe-diffuser'}.jpg`, buffer);
+            fs.writeFileSync(`./styles/ai/pepe-diffuser.jpg`, buffer);
             msg.edit({
                 'channel_id': message.channel.channel_id,
-                'content': '',
+                'content': `<@${message.author.id}>`,
                 'tts': false,
                 'embeds': [{
                     'type': 'rich',
-                    'title': 'Imagine',
-                    'description': `**${args.join(' ')}**\nDuration : ${data.duration} seconds\nAverage duration : ${data.average_duration} seconds\n\n[**Pepe Diffuser**](https://huggingface.co/Dipl0/pepe-diffuser)`,
+                    'title': 'Pepe',
+                    'description': `**${args.join(' ')}**\nDuration : ${(60*countResponse)+ data.duration} seconds
+Average duration : ${data.average_duration} seconds\n\n[**Pepe Diffuser**](https://huggingface.co/Dipl0/pepe-diffuser)`,
                     'color': randomColor(),
                     'author': {
                         'name': message.author.username,
                         'icon_url': message.author.avatarURL({ format: 'png', dynamic: true, size: 1024 })
                     },
-                    'footer': {
-                        'text': 'pepe ' + args.join(' '),
-                        'icon_url': 'https://aeiljuispo.cloudimg.io/v7/https://s3.amazonaws.com/moonup/production/uploads/1611668769240-noauth.png?w=200&h=200&f=face',
-                        'proxy_icon_url': 'https://huggingface.co/Dipl0/pepe-diffuser'
+                    'thumbnail': {
+                        'url': 'https://aeiljuispo.cloudimg.io/v7/https://s3.amazonaws.com/moonup/production/uploads/1611668769240-noauth.png?w=200&h=200&f=face',
+                        'proxy_url': 'https://huggingface.co/Dipl0/pepe-diffuser'
                     }
                 }],
-                files: [
-                    `./styles/ai/${saveDiffuser ? args.join('') : 'pepe-diffuser'}.jpg`
-                ]
+                files: [`./styles/ai/pepe-diffuser.jpg`]
             });
+
+            duration_average = data.average_duration;
         }
     }
 };

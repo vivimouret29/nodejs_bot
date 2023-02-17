@@ -29,6 +29,18 @@ async function sendEmbed(message, content, descp) {
 	return messageToSend;
 };
 
+function getCurrentDatetime(choice) {
+	let date = new Date();
+	switch (choice) {
+		case 'csv':
+			return `${date.getDate()}${date.getMonth()}${date.getFullYear()}`;
+		case 'date':
+			return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}`;
+		case 'comm':
+			return `${date.getHours()}:${date.getMinutes()} - ${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`;
+	};
+};
+
 function randomColor() {
 	let chars = '0123456789abcdef'.split(''),
 		hex = '0x';
@@ -39,4 +51,5 @@ function randomColor() {
 };
 
 exports.sendEmbed = sendEmbed;
+exports.getCurrentDatetime = getCurrentDatetime;
 exports.randomColor = randomColor;

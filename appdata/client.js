@@ -5,10 +5,8 @@ const { ActivityType } = require('discord.js'),
     { prefix, token, owner } = require('../config.json'),
     { fr, en, uk } = require('../resx/lang.json'),
     { master, user, topgg } = require('../resx/help.json'),
-    { sendEmbed } = require('../function.js'),
+    { sendEmbed, getCurrentDatetime } = require('../function.js'),
     date = new Date();
-
-function getCurrentDatetime() { return `${date.getHours()}:${date.getMinutes()} - ${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`; };
 
 module.exports = {
     help: {
@@ -80,7 +78,7 @@ module.exports = {
                 dot = guidDot.data.split(new RegExp(`(ge-[.]*...........)`, 'giu'))[1];
                 dot = dot.split('.')[1].split(' ')[0];
             } catch (err) {
-                console.log(`[${getCurrentDatetime()}] Can't get guid or dot`);
+                console.log(`[${getCurrentDatetime('comm')}] Can't get guid or dot`);
             };
 
             for (i in descSplit) { desc += descSplit[i]; };
@@ -106,7 +104,7 @@ module.exports = {
                 }]
             });
 
-            if (desc == language.helpTopGg) console.log(`[${getCurrentDatetime()}] ${message.guild.name} / ${message.channel.name} # ${message.author.username} been trolled`);
+            if (desc == language.helpTopGg) console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${message.author.username} been trolled`);
         }
     },
     guild: {
