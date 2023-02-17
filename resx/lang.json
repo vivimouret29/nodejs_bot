@@ -41,8 +41,8 @@
         "guild": "est présent dans les serveurs : ",
         "argsUndefined": "Arguments non définis",
         "imagineError": "Erreur lors de la création de l'image via HugginFace",
-        "timeDiffuse": "Temps de diffusion : ",
-        "timeAverage": "Temps moyen de diffusion : "
+        "timeDiffuse": "Temps de création de l'image : ",
+        "timeAverage": "Temps moyen de création de l'image : "
     },
     "en": {
         "help": "List of orders",
@@ -85,8 +85,8 @@
         "guild": "is present in the : ",
         "argsUndefined": "Undefined arguments",
         "imagineError": "Error while creating the image via HugginFace",
-        "timeDiffuse": "Broadcasting time : ",
-        "timeAverage": "Average broadcast time : "
+        "timeDiffuse": "Time to create the image : ",
+        "timeAverage": "Average time to create the image : "
     },
     "uk": {
         "help": "Список замовлень",
@@ -129,7 +129,7 @@
         "guild": "присутній в : ",
         "argsUndefined": "Невизначені аргументи",
         "imagineError": "Помилка при створенні зображення через HugginFace",
-        "timeDiffuse": "Час трансляції : ",
-        "timeAverage": "Середній час трансляції : "
+        "timeDiffuse": "Час для створення образу : ",
+        "timeAverage": "Середній час створення зображення : "
     }
 }
