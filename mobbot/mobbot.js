@@ -110,7 +110,7 @@ module.exports = {
                     .get(channelSend.id)
                     .send({
                         'channel_id': channelSend.id,
-                        'content': '<@&1071286935726854216>',
+                        'content': channelTwitch[chan] == 'twitch' ? '<@&1071286935726854216>' : '',
                         'tts': false,
                         'embeds': [{
                             'type': 'rich',
