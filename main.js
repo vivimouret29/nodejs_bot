@@ -25,7 +25,7 @@ var collectionCommands = new Collection(),
 // Command Collection
 collectionCommands.set(commandFile.version.name, commandFile.version);
 collectionCommands.set(commandFile.say.name, commandFile.say);
-collectionCommands.set(commandFile.prune.name, commandFile.prune);
+collectionCommands.set(commandFile.purge.name, commandFile.purge);
 collectionCommands.set(commandFile.imagine.name, commandFile.imagine);
 collectionCommands.set(commandFile.ping.name, commandFile.ping);
 collectionCommands.set(commandFile.invit.name, commandFile.invit);

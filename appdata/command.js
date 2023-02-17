@@ -35,32 +35,32 @@ module.exports = {
             message.channel.send(sayMessage);
         }
     },
-    prune: {
-        name: 'prune',
-        description: 'a dynamic prune',
+    purge: {
+        name: 'purge',
+        description: 'a dynamic purge',
         args: true,
         execute(message, args, language) {
             if (!(message.author.id == owner)) return sendEmbed(message, language.restricted);
 
             var amount = parseInt(args[0]);
 
-            if (isNaN(amount)) {
+            if (isNaN(amount)) { 
                 sendEmbed(message, language.pruneInvalid);
             } else if (amount > 0 && amount < 101) {
-                message.channel.bulkDelete(amount, true).catch(err => {
-                    console.error(err);
-                    sendEmbed(message, language.pruneError);
-                });
-            } else {
-                sendEmbed(message, language.pruneOut);
-            };
+                message.channel
+                    .bulkDelete(amount, true)
+                    .catch(err => {
+                        console.error(err);
+                        sendEmbed(message, language.pruneError);
+                    });
+            } else { sendEmbed(message, language.pruneOut); };
         }
     },
     ping: {
         name: 'ping',
         description: 'a dynamic ping',
         async execute(message, args, language) {
-            var wait = await message.channel.send(language.pingWait);
+            message.channel.send(language.pingWait);
             wait.edit(`Bip. ${language.pingEdit} ${wait.createdTimestamp - message.createdTimestamp}ms.. Bip Boup..`);
         }
     },
@@ -95,7 +95,7 @@ module.exports = {
                 response = await axios
                     .post(urI, dt, { headers: headers, timeout: 300000 }) // timeout not really working so while loop
                     .catch(error => {
-                        console.log(`[APIERROR] ${message.guild.name} / ${message.channel.name} # ${message.author.username} : ${message.content.toLowerCase()} // ${error.response.status} ${error.response.statusText}`);
+                        console.log(`[APIERROR] ${message.guild.name} / ${message.channel.name} # ${message.author.username} : ${message.content.toLowerCase()} // ${error.response.status} ${error.response.statusText} // RETRY`);
                         return response = error.response;
                     });
             };
@@ -112,7 +112,7 @@ module.exports = {
                 'embeds': [{
                     'type': 'rich',
                     'title': 'Pepe',
-                    'description': `**${args.join(' ')}**\n${language.timeDiffuse}${(60*countResponse)+ data.duration} seconds
+                    'description': `**${args.join(' ')}**\n${language.timeDiffuse}${(60 * countResponse) + data.duration} seconds
 ${language.timeAverage}${data.average_duration} seconds\n\n[**Pepe Diffuser**](https://huggingface.co/Dipl0/pepe-diffuser)`,
                     'color': randomColor(),
                     'author': {
