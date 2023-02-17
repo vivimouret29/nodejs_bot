@@ -413,7 +413,6 @@ async function setLanguage(message, author, msg, args) {
 			language = fr;
 			sendEmbed(message, language.changLang);
 
-			await new Promise(resolve => setTimeout(resolve, 30 * 1000));
 			dbClient.user.setPresence({
 				activities: [{
 					name: language.activities,
@@ -428,7 +427,6 @@ async function setLanguage(message, author, msg, args) {
 			language = en;
 			sendEmbed(message, language.changLang);
 
-			await new Promise(resolve => setTimeout(resolve, 30 * 1000));
 			dbClient.user.setPresence({
 				activities: [{
 					name: language.activities,
@@ -443,7 +441,6 @@ async function setLanguage(message, author, msg, args) {
 			language = uk;
 			sendEmbed(message, language.changLang);
 
-			await new Promise(resolve => setTimeout(resolve, 30 * 1000));
 			dbClient.user.setPresence({
 				activities: [{
 					name: language.activities,
