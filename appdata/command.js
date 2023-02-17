@@ -4,7 +4,7 @@ const package = require("../package.json"),
     { owner } = require("../config.json"),
     fs = require('fs'),
     axios = require('axios'),
-    { sendEmbed, randomColor } = require('../function.js');
+    { sendEmbed, randomColor, getCurrentDatetime } = require('../function.js');
 
 var duration_average = 0;
 
@@ -94,11 +94,9 @@ module.exports = {
                 countResponse++;
                 response = await axios
                     .post(urI, dt, { headers: headers, timeout: 300000 }) // timeout not really working so while loop
-                    .catch(error => {
-                        console.log(`[APIERROR] ${message.guild.name} / ${message.channel.name} # ${message.author.username} : ${message.content.toLowerCase()} // ${error.response.status} ${error.response.statusText} // RETRY`);
-                        return response = error.response;
-                    });
+                    .catch(error => { return response = error.response; });
             };
+            console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # After ${countResponse} APIERROR - ${message.author.username} diffuse \'pepe ${args.join(' ').toLowerCase()}\'`)
 
             const data = await response.data,
                 splitted = data.data[0].split(',')[1],
