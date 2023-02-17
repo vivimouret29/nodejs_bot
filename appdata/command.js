@@ -73,7 +73,7 @@ module.exports = {
 
             var msg = await message.channel.send({
                 'channel_id': message.channel.channel_id,
-                'content': `pepe ${args.join(' ')} / *Waiting to display...*\nAverage: ${duration_average} seconds`
+                'content': `pepe ${args.join(' ')} / *Waiting to display...*\n${language.timeAverage}${duration_average} seconds`
             });
 
             const urI = `https://dipl0-dipl0-pepe-diffuser-bot.hf.space/run/predict`,
