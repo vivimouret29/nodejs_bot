@@ -27,7 +27,7 @@ function onConnectedHandler(addr, port) { console.log(`* Connected to ${addr}:${
 
 module.exports = {
     mobbot: {
-        name: 'mobbot',
+        name: 'mobbotConnection',
         description: 'a dynamic tchat twitch bot',
         execute() {
             mbClient.on('connected', onConnectedHandler);
@@ -53,7 +53,7 @@ module.exports = {
         }
     },
     exportmobbot: {
-        name: 'exportmobbot',
+        name: 'export',
         description: 'a dynamic export of mobbot dataset',
         execute(message, client) {
             if (dataToExport.length === 0) {
@@ -62,7 +62,7 @@ module.exports = {
                 return;
             };
 
-            fs.writeFile(`./mobbot/mobbot_analytics_${getCurrentDatetime('csv')}.csv`, parse(dataToExport), function (err) {
+            fs.writeFile(`./mobbot/mobbot_analytics.csv`, parse(dataToExport), function (err) {
                 if (err) {
                     let emoji = client.cache.find(emoji => emoji.name === 'fufufu');
                     message.react(emoji);
@@ -75,6 +75,12 @@ module.exports = {
                     console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${message.author.username} : ${message.content.toLowerCase()}`);
                 };
             });
+
+            message.author
+                .send({ 'content': 'csv being transferred' })
+                .then((msg) => {
+                    msg.edit({ 'content': 'csv transferred', 'files': ['./mobbot/mobbot_analytics.csv'] });
+                });
         }
     },
     livenotif: {
@@ -104,7 +110,7 @@ module.exports = {
                     .get(channelSend.id)
                     .send({
                         'channel_id': channelSend.id,
-                        'content': '<@&1071286935726854216>', // /D/TWITCH
+                        'content': '<@&1071286935726854216>',
                         'tts': false,
                         'embeds': [{
                             'type': 'rich',

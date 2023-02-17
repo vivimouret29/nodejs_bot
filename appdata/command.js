@@ -112,8 +112,8 @@ module.exports = {
                 'embeds': [{
                     'type': 'rich',
                     'title': 'Pepe',
-                    'description': `**${args.join(' ')}**\nDuration : ${(60*countResponse)+ data.duration} seconds
-Average duration : ${data.average_duration} seconds\n\n[**Pepe Diffuser**](https://huggingface.co/Dipl0/pepe-diffuser)`,
+                    'description': `**${args.join(' ')}**\n${language.timeDiffuse}${(60*countResponse)+ data.duration} seconds
+${language.timeAverage}${data.average_duration} seconds\n\n[**Pepe Diffuser**](https://huggingface.co/Dipl0/pepe-diffuser)`,
                     'color': randomColor(),
                     'author': {
                         'name': message.author.username,
@@ -124,7 +124,7 @@ Average duration : ${data.average_duration} seconds\n\n[**Pepe Diffuser**](https
                         'proxy_url': 'https://huggingface.co/Dipl0/pepe-diffuser'
                     }
                 }],
-                files: [`./styles/ai/pepe-diffuser.jpg`]
+                'files': [`./styles/ai/pepe-diffuser.jpg`]
             });
 
             duration_average = data.average_duration;

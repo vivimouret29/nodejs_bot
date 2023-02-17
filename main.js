@@ -116,7 +116,7 @@ dbClient.on(Events.ClientReady, async () => {
 	console.log(`[${getCurrentDatetime('comm')}] ${dbClient.user.username} present in : `, dbClient.guilds.cache.map(guild => guild.name));
 
 	collectionMobbot
-		.get('mobbot')
+		.get('mobbotConnection')
 		.execute();
 	console.log(`[${getCurrentDatetime('comm')}] ${dbClient.user.username} connect on irc-ws.chat.twitch.tv:443`);
 
@@ -194,9 +194,11 @@ dbClient.on(Events.MessageCreate, async (message) => {
 		command = args.shift().toLowerCase(),
 		msg = message.content.toLowerCase(),
 		author = message.author.username,
+		checkMobbotCollection,
 		checkCollection,
 		checkClientCollection;
 
+	collectionMobbot.has(command) ? checkMobbotCollection = collectionMobbot.get(command).name : checkMobbotCollection = false;
 	collectionCommands.has(command) ? checkCollection = collectionCommands.get(command).name : checkCollection = false;
 	collectionClient.has(command) ? checkClientCollection = collectionClient.get(command).name : checkClientCollection = false;
 
@@ -205,12 +207,6 @@ dbClient.on(Events.MessageCreate, async (message) => {
 
 	if (message.content.startsWith(prefix)) {
 		switch (command) {
-			case 'mobbot':
-				if (!(message.author.id === owner)) return sendEmbed(message, language.restricted);
-				collectionMobbot
-					.get('exportmobbot')
-					.execute(message, dbClient.emojis);
-				break;
 			case 'lang':
 				setLanguage(message, author, msg, args);
 				break;
@@ -220,6 +216,12 @@ dbClient.on(Events.MessageCreate, async (message) => {
 			case 'mute':
 				if (!(message.author.id === owner)) return sendEmbed(message, language.restricted);
 				setMute(message, author, msg, args);
+				break;
+			case checkMobbotCollection:
+				if (!(message.author.id === owner)) return sendEmbed(message, language.restricted);
+				collectionMobbot
+					.get(command)
+					.execute(message, dbClient.emojis);
 				break;
 			case checkClientCollection:
 				collectionClient
@@ -485,7 +487,6 @@ function setMute(message, author, msg, args) {
 		return isMuted;
 	};
 };
-
 
 dbClient
 	.login(token)
