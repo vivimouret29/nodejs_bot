@@ -118,16 +118,21 @@ module.exports = {
         name: 'uptime',
         description: 'a dynamic uptime',
         execute(message, client, language, initDateTime) {
-            let totalSeconds = (client.uptime / 1000);
-            let days = Math.floor(totalSeconds / 86400);
-            totalSeconds %= 86400;
-            let hours = Math.floor(totalSeconds / 3600);
-            totalSeconds %= 3600;
-            let minutes = Math.floor(totalSeconds / 60);
-            let seconds = Math.floor(totalSeconds % 60);
-            let start = initDateTime;
-
-            sendEmbed(message, `${language.uptime} ${start}\n${days}D:${hours}H:${minutes}M:${seconds}S`);
+            try {
+                let totalSeconds = (client.uptime / 1000);
+                let days = Math.floor(totalSeconds / 86400);
+                totalSeconds %= 86400;
+                let hours = Math.floor(totalSeconds / 3600);
+                totalSeconds %= 3600;
+                let minutes = Math.floor(totalSeconds / 60);
+                let seconds = Math.floor(totalSeconds % 60);
+                let start = initDateTime;
+    
+                sendEmbed(message, `${language.uptime} ${start}\n${days}D:${hours}H:${minutes}M:${seconds}S`);
+            } catch (err) {
+                sendEmbed(message, language.error);
+                console.log(`[${getCurrentDatetime('comm')}] Error function uptime() ${err}`);
+            };
         }
     },
     status: {
