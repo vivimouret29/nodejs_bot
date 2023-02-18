@@ -110,7 +110,7 @@ module.exports = {
                     .get(channelSend.id)
                     .send({
                         'channel_id': channelSend.id,
-                        'content': channelTwitch[chan] == 'twitch' ? '<@&1071286935726854216>' : '',
+                        'content': channelTwitch[chan] == 'twitch' ? '<@&1071048787738497084>' : '',
                         'tts': false,
                         'embeds': [{
                             'type': 'rich',
@@ -143,6 +143,8 @@ module.exports = {
                         }]
                     });
             };
+
+            console.log(`[${getCurrentDatetime('comm')}] Notif Twitch ${ax.data.data[0].user_name} sent in ${channelTwitch}`);
         }
     }
 };

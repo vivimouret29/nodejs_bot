@@ -76,7 +76,7 @@ module.exports = {
                 'content': `pepe ${args.join(' ')} / *Waiting to display...*\n${language.timeAverage}${duration_average} seconds`
             });
 
-            const urI = `https://dipl0-dipl0-pepe-diffuser-bot.hf.space/run/predict`,
+            const urI = `https://vivsmouret-dipl0-pepe-diffuser-bot.hf.space/run/predict`,
                 headers = {
                     'Content-Type': 'application/json',
                     'Connection': 'Keep-Alive'

@@ -35,9 +35,9 @@ function getCurrentDatetime(choice) {
 		case 'csv':
 			return `${date.getDate()}${date.getMonth()}${date.getFullYear()}`;
 		case 'date':
-			return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}`;
+			return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()} ${date.getHours()+1}:${date.getMinutes()}`;
 		case 'comm':
-			return `${date.getHours()}:${date.getMinutes()} - ${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`;
+			return `${date.getHours()+1}:${date.getMinutes()} - ${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`;
 	};
 };
 
