@@ -5,8 +5,11 @@ const { ActivityType } = require('discord.js'),
     { prefix, token, owner } = require('../config.json'),
     { fr, en, uk } = require('../resx/lang.json'),
     { master, user, topgg } = require('../resx/help.json'),
-    { sendEmbed, getCurrentDatetime } = require('../function.js'),
-    date = new Date();
+    { emojis: dctmj } = require('../resx/emojis.json'),
+    { sendEmbed, getCurrentDatetime, randomColor } = require('../function.js');
+    
+Array.prototype.max = function () { return Math.max.apply(null, this); };
+Array.prototype.min = function () { return Math.min.apply(null, this); };
 
 module.exports = {
     help: {
@@ -127,7 +130,7 @@ module.exports = {
                 let minutes = Math.floor(totalSeconds / 60);
                 let seconds = Math.floor(totalSeconds % 60);
                 let start = initDateTime;
-    
+
                 sendEmbed(message, `${language.uptime} ${start}\n${days}D:${hours}H:${minutes}M:${seconds}S`);
             } catch (err) {
                 sendEmbed(message, language.error);
@@ -253,10 +256,10 @@ module.exports = {
             await sendEmbed(message, language.resetBot);
             new Promise(resolve => setTimeout(resolve, 1 * 1000));
             client.destroy();
-            
+
             new Promise(resolve => setTimeout(resolve, 1 * 1000));
             client.login(token);
-            
+
             client.user.setPresence({
                 activities: [{
                     name: language.activities,
@@ -265,6 +268,61 @@ module.exports = {
                 }],
                 status: 'online'
             });
+        }
+    },
+    poll: {
+        name: 'poll',
+        description: 'a dynamic poll',
+        args: true,
+        async execute(message, client, language, initDateTime, args) {
+            var survey = args.join(' ').split('-');
+            if (survey == undefined) { return sendEmbed(message, language.error); };
+
+            var dictMojis = [],
+                maxCount = [],
+                fields = [],
+                reactions,
+                highReact,
+                postSurvey;
+
+            for (i = 0; i < survey.length; i++) {
+                let jis = client.emojis.cache.find(emoji => emoji.name === dctmj[i]);
+                dictMojis.push(jis);
+                fields.push({
+                    'name': `${dictMojis[i]}`,
+                    'value': survey[i],
+                    'inline': false
+                });
+            };
+
+            await message.channel
+                .send({
+                    'channel_id': message.channel.channel_id,
+                    'content': '',
+                    'tts': false,
+                    'embeds': [{
+                        'type': 'rich',
+                        'title': 'Poll',
+                        'description': '',
+                        'color': randomColor(),
+                        'author': {
+                            'name': message.author.username,
+                            'icon_url': message.author.avatarURL({ format: 'png', dynamic: true, size: 1024 })
+                        },
+                        'fields': fields
+                    }]
+                })
+                .then(async (msg) => {
+                    for (i = 0; i < dictMojis.length; i++) { await msg.react(dictMojis[i]) };
+                    await new Promise(resolve => setTimeout(resolve, 5 * 1000));
+                    return reactions = msg.reactions.cache.map(reaction => reaction);
+                });
+
+            for (i = 0; i < reactions.length; i++) { maxCount.push(reactions[i].count); };
+            highReact = maxCount.max();
+            dictMojis.forEach((emoji, index) => { reactions[index].count == highReact ? postSurvey = index : postSurvey; });
+
+            message.channel.send(`The higher choice was ${survey[postSurvey]}`);
         }
     }
 };

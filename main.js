@@ -23,7 +23,7 @@ var collectionCommands = new Collection(),
 	collectionOpenAI = new Collection();
 
 // Command Collection
-collectionCommands.set(commandFile.version.name, commandFile.version);
+collectionCommands.set(commandFile.version.name, commandFile.version); // TODO: refracto all of this shitty code
 collectionCommands.set(commandFile.say.name, commandFile.say);
 collectionCommands.set(commandFile.purge.name, commandFile.purge);
 collectionCommands.set(commandFile.imagine.name, commandFile.imagine);
@@ -40,6 +40,7 @@ collectionClient.set(clientFile.help.name, clientFile.help);
 collectionClient.set(clientFile.guild.name, clientFile.guild);
 collectionClient.set(clientFile.uptime.name, clientFile.uptime);
 collectionClient.set(clientFile.status.name, clientFile.status);
+collectionClient.set(clientFile.poll.name, clientFile.poll);
 collectionClient.set(clientFile.kill.name, clientFile.kill);
 collectionClient.set(clientFile.reset.name, clientFile.reset);
 
@@ -95,7 +96,7 @@ const partials = [
 const dbClient = new Client({ intents: intents, partials: partials });
 
 var date = new Date(),
-	initDateTime = `${(date.getUTCHours()+1)  < 10 ? `0${date.getUTCHours()}` : date.getUTCHours()}:${date.getUTCMinutes() < 10 ? `0${date.getUTCMinutes()}` : date.getUTCMinutes()} - ${date.getUTCDate() < 10 ? `0${date.getUTCDate()}` : date.getUTCDate()}/${date.getUTCMonth() < 10 ? `0${date.getUTCMonth()}` : date.getUTCMonth()}/${date.getUTCFullYear()}`,
+	initDateTime = `${(date.getUTCHours() + 1) < 10 ? `0${date.getUTCHours()}` : date.getUTCHours()}:${date.getUTCMinutes() < 10 ? `0${date.getUTCMinutes()}` : date.getUTCMinutes()} - ${date.getUTCDate() < 10 ? `0${date.getUTCDate()}` : date.getUTCDate()}/${date.getUTCMonth() < 10 ? `0${date.getUTCMonth()}` : date.getUTCMonth()}/${date.getUTCFullYear()}`,
 	isMuted = false,
 	language = language == undefined ? fr : language,
 	streamers = ['daftmob'],
@@ -155,6 +156,7 @@ dbClient.on(Events.ClientReady, async () => {
 });
 
 dbClient.on(Events.GuildMemberAdd, async (guild) => {
+	if (dbClient.user.id == avoidBot[1]) return;
 	console.log(`[${getCurrentDatetime('comm')}] New member \'${guild.user.username}\' join server : ${guild.guild.name}`);
 	try {
 		dbClient.channels.cache
@@ -207,6 +209,9 @@ dbClient.on(Events.MessageCreate, async (message) => {
 
 	if (message.content.startsWith(prefix)) {
 		switch (command) {
+			case 'feature':			// switch case created for next features
+				if (!(message.author.id === owner)) return sendEmbed(message, language.restricted);
+				break;
 			case 'lang':
 				setLanguage(message, author, msg, args);
 				break;
