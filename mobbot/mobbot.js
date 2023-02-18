@@ -144,7 +144,7 @@ module.exports = {
                     });
             };
 
-            console.log(`[${getCurrentDatetime('comm')}] Notif Twitch ${ax.data.data[0].user_name} sent in ${channelTwitch}`);
+            console.log(`[${getCurrentDatetime('comm')}] Notif Twitch ${axios.data.data[0].user_name} sent in ${channelTwitch}`);
         }
     }
 };
