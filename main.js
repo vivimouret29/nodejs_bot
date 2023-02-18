@@ -95,13 +95,13 @@ const partials = [
 const dbClient = new Client({ intents: intents, partials: partials });
 
 var date = new Date(),
-	initDateTime = `${date.getHours()}:${date.getMinutes()} - ${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`,
+	initDateTime = `${(date.getUTCHours()+1)  < 10 ? `0${date.getUTCHours()}` : date.getUTCHours()}:${date.getUTCMinutes() < 10 ? `0${date.getUTCMinutes()}` : date.getUTCMinutes()} - ${date.getUTCDate() < 10 ? `0${date.getUTCDate()}` : date.getUTCDate()}/${date.getUTCMonth() < 10 ? `0${date.getUTCMonth()}` : date.getUTCMonth()}/${date.getUTCFullYear()}`,
 	isMuted = false,
 	language = language == undefined ? fr : language,
 	streamers = ['daftmob'],
 	emojiRoles = ['💜', '❤️', 'looners', 'mandalorian', 'linkitem', 'croisade'],
 	rolesNames = ['/D/TWITCH', '/D/YOUTUBE', '/D/STALKERS', '/D/CHASSEURS', '/D/HÉROS', '/D/GUERRIERS', '/D/RECRUES'],
-	otherBot = ['757970907992948826', '758393470024155186', '758319298325905428'],
+	avoidBot = ['757970907992948826', '758393470024155186', '758319298325905428'],
 	channelToAvoid = ['948894919878123573'],
 	userToCheck = ['491907126701064193'];
 
@@ -120,7 +120,7 @@ dbClient.on(Events.ClientReady, async () => {
 		.execute();
 	console.log(`[${getCurrentDatetime('comm')}] ${dbClient.user.username} connect on irc-ws.chat.twitch.tv:443`);
 
-	if (dbClient.user.id == otherBot[1]) return;
+	if (dbClient.user.id == avoidBot[1]) return;
 
 	let descpMemory = [],
 		oldDescpMemory = [];
@@ -278,7 +278,7 @@ dbClient.on(Events.MessageCreate, async (message) => {
 			console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # Error output reply() : `, err);
 		};
 
-		if (otherBot.includes(message.author.id) && !(channelToAvoid.includes(message.channel.id))) {
+		if (avoidBot.includes(message.author.id) && !(channelToAvoid.includes(message.channel.id))) {
 			if (Math.random() <= .005) {
 				try {
 					collectionReaction
