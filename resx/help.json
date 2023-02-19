@@ -2,7 +2,7 @@
     "master": {
         "fr": {
             "littleLine": "Voici la liste des commandes utilisables à ce jour :\n\r",
-            "mobbot": "-  mobbot : permet d'enregistrer les données agglomérées par mobbot\r",
+            "export": "-  export : permet d'exporter les données agglomérées par le bot sur twitch\r",
             "reset": "-  reset : redémarre le bot\r",
             "kill": "-  kill : tue le bot\r",
             "status": "-  status : mets à jour le status afficher sur le bot\r",
@@ -19,7 +19,7 @@
         },
         "en": {
             "littleLine": "Here is the list of commands that can be used at this time\r",
-            "mobbot": "-  mobbot : allows to record the data agglomerated by mobbot\r",
+            "export": "-  export : allows to export the data agglomerated by the bot on twitch\r",
             "reset": "-  reset : restarts the bot\r",
             "kill": "-  kill : kill the bot\r",
             "status": "-  status : update the status displayed on the bot\r",
@@ -36,7 +36,7 @@
         },
         "uk": {
             "littleLine": "Ось список команд, які можна використовувати в цей час\r",
-            "mobbot": "-  mobbot : дозволяє записувати дані, агломеровані mobbot\r",
+            "export": "-  export : дозволяє експортувати дані, агломеровані ботом на twitch\r",
             "reset": "-  reset : перезапускає бота\r",
             "kill": "-  kill : вбити бота\r",
             "status": "-  status : оновити статус, що відображається у бота\r",
