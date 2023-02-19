@@ -89,25 +89,5 @@
             "guild": "-  guild : повертає список гільдій, де знаходиться бот\r",
             "pepe": "-  pepe : дозволяє уявити зображення через бота за допомогою ([**pepe diffuser**](https://huggingface.co/Dipl0/pepe-diffuser))\r"
         }
-    },
-    "topgg": {
-        "fr": {
-            "littleLine": "Voici la liste des commandes utilisables à ce jour :\n\r",
-            "lorem": "-  lorem : It is a long established fact that a reader will be distracted by the readable\r",
-            "ipsum": "-  ipsum : Content of a page when looking at its layout. The point of using Lorem Ipsum\n\n",
-            "glhf": "T'as pas besoin de help, amuse toi bien  (° ͜ʖ͡°)╭∩╮\r"
-        },
-        "en": {
-            "littleLine": "Here is the list of commands that can be used to date\n\r",
-            "lorem": "-  lorem: It is a long-established fact that a reader will be distracted by readability\r",
-            "ipsum": "-  ipsum: The content of a page when one looks at its layout. The interest in using Lorem Ipsum\n\n",
-            "glhf": "You don't need help, have fun (° ͜ʖ͡°)╭∩╮\r"
-        },
-        "uk": {
-            "littleLine": "Ось список команд, які можна використовувати на сьогоднішній день\n\r",
-            "lorem": "-  lorem: Давно встановлений факт, що читач буде відволікатися на читабельність\r",
-            "ipsum": "-  ipsum: Вміст сторінки, коли дивишся на її макет. Інтерес до використання Lorem Ipsum\n\n",
-            "glhf": "Вам не потрібна допомога, розважайтеся (° ͜ʖ͡°)╭∩╮\r"
-        }
     }
 }

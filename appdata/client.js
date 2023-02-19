@@ -4,7 +4,7 @@ const { ActivityType } = require('discord.js'),
     axios = require('axios'),
     { prefix, token, owner } = require('../config.json'),
     { fr, en, uk } = require('../resx/lang.json'),
-    { master, user, topgg } = require('../resx/help.json'),
+    { master, user } = require('../resx/help.json'),
     { emojis: dctmj } = require('../resx/emojis.json'),
     { sendEmbed, getCurrentDatetime, randomColor } = require('../function.js');
     
@@ -46,18 +46,6 @@ module.exports = {
                         break;
                     case 'uk':
                         descSplit = master.uk;
-                        break;
-                };
-            } else if (message.guild.name == 'Top.gg Verification Center') {
-                switch (lang) {
-                    case 'fr':
-                        descSplit = topgg.fr;
-                        break;
-                    case 'en':
-                        descSplit = topgg.en;
-                        break;
-                    case 'uk':
-                        descSplit = topgg.uk;
                         break;
                 };
             } else {
@@ -106,8 +94,6 @@ module.exports = {
                     }
                 }]
             });
-
-            if (desc == language.helpTopGg) console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${message.author.username} been trolled`);
         }
     },
     guild: {
