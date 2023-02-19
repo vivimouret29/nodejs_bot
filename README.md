@@ -17,6 +17,9 @@
 
 ## Utilisation
 
+**CONSEIL**   
+Pour ajouter directement le bot à votre serveur discord, cliquez sur ce [lien](https://discord.com/api/oauth2/authorize?client_id=757955750164430980&permissions=4398046511095&scope=bot)
+
 Après avoir cloné le repo, rendez vous simplement à la racine du projet puis copiez le fichier `config.json.example` en `config.json` et mettez y votre token secret de bot discord ainsi que le préfixe que vous utiliserez. 
   
 Vous pouvez ensuite exécuter les commandes suivantes :
@@ -31,78 +34,5 @@ node main.js
 
 ### Petit plus
   
-Voici un petit lien [trello](https://trello.com/b/kdy25wXP/daftbot-mobbot) afin de suivre l'avancée des bots
+Voici un petit lien [trello](https://trello.com/b/kdy25wXP/daftbot-mobbot) afin de suivre l'avancée des bots, bientôt dans le projet GitHub directement !
 
-  
-## Prerequisites
-
-- Token of your Discord bot
-- Token of your Twitch bot (optional)
-- Token of OpenAI (optionnal)
-- Nodejs and npm
-
-## Usage
-
-After cloning the repo, simply go to the root of the project and copy the `config.json.example` file to `config.json` and put in your secret discord bot token and the prefix you will use. 
-  
-You can then run the following commands:
-  
-```bash
-# To install the necessary packages
-npm install
-
-# To launch the bot
-node main.js
-```
-
-### Little extra
-  
-Here is a small link [trello](https://trello.com/b/kdy25wXP/daftbot-mobbot) to follow the progress of the bots
-
-### Petit plus
-  
-Voici un petit lien [trello](https://trello.com/b/kdy25wXP/daftbot-mobbot) afin de suivre l'avancée des bots
-
-  
-## Prerequisites
-
-- Token of your Discord bot
-- Token of your Twitch bot (optional)
-- Nodejs and npm
-
-## Usage
-
-After cloning the repo, simply go to the root of the project and copy the `config.json.example` file to `config.json` and put in your secret discord bot token and the prefix you will use. 
-  
-You can then run the following commands:
-  
-```bash
-# To install the necessary packages
-npm install
-
-# To launch the bot
-node main.js
-```
-
-### Little extra
-  
-Here is a small link [trello](https://trello.com/b/kdy25wXP/daftbot-mobbot) to follow the progress of the bots
-## Prerequisites
-
-- Token of your Discord bot
-- Token of your Twitch bot (optional)
-- Nodejs and npm
-
-## Usage
-
-After cloning the repo, simply go to the root of the project and copy the `config.json.example` file to `config.json` and put in your secret discord bot token and the prefix you will use. 
-  
-You can then run the following commands:
-  
-```bash
-# To install the necessary packages
-npm install
-
-# To launch the bot
-node main.js
-```
