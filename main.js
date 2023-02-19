@@ -133,7 +133,7 @@ dbClient.on(Events.ClientReady, async () => {
 
 	while (true) {
 		for (strm in streamers) {
-			let ax = await axios.get(`http://api.twitch.tv/helix/streams?user_login=${streamers[strm]}`, params) // error in production for parsing streamers[strm] ????
+			let ax = await axios.get(`http://api.twitch.tv/helix/streams?user_login=` + streamers[strm], params)
 				.catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error GET AXIOS ${err}`); });
 
 			if (ax.data.data.length == 0) {

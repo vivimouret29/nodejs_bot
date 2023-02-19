@@ -8,9 +8,6 @@ const { ActivityType } = require('discord.js'),
     { emojis: dctmj } = require('../resx/emojis.json'),
     { sendEmbed, getCurrentDatetime, randomColor } = require('../function.js');
 
-Array.prototype.max = function () { return Math.max.apply(null, this); };
-Array.prototype.min = function () { return Math.min.apply(null, this); };
-
 module.exports = {
     help: {
         name: 'help',
@@ -267,6 +264,9 @@ module.exports = {
         description: 'a dynamic poll',
         args: true,
         async execute(message, client, language, initDateTime, args) {
+            Array.prototype.max = function () { return Math.max.apply(null, this); };
+            Array.prototype.min = function () { return Math.min.apply(null, this); };
+
             var survey = args.join(' ').split('-');
             if (survey == undefined) { return sendEmbed(message, language.error); };
 
