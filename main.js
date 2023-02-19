@@ -187,6 +187,7 @@ dbClient.on(Events.GuildMemberAdd, async (guild) => {
 		})
 		.catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error GuildMemberAdd send() ${err}`); });
 
+	if (guild.id != '948894919878123570') return;
 	try { switchRoles(guild, guild.user.id, 6, true); }
 	catch (err) { console.log(`[${getCurrentDatetime('comm')}] Error for \'${guild.user.username}\' to add role : ${err}`); };
 
