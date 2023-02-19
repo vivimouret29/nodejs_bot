@@ -155,6 +155,10 @@ dbClient.on(Events.ClientReady, async () => {
 	};
 });
 
+dbClient.on(Events.GuildCreate, async (guild) => { console.log(`[${getCurrentDatetime('comm')}] ${dbClient.user.username} added in :`, guild.name); });
+
+dbClient.on(Events.GuildDelete, async (guild) => { console.log(`[${getCurrentDatetime('comm')}] ${dbClient.user.username} removed in :`, guild.name); });
+
 dbClient.on(Events.GuildMemberAdd, async (guild) => {
 	if (dbClient.user.id == avoidBot[1]) return;
 	console.log(`[${getCurrentDatetime('comm')}] New member \'${guild.user.username}\' join server : ${guild.guild.name}`);
