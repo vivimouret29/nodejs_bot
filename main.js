@@ -132,20 +132,19 @@ dbClient.on(Events.ClientReady, async () => {
 	};
 
 	while (true) {
-		for (streamId in streamers) {
-			let ax = await axios.get(`http://api.twitch.tv/helix/streams?user_login=${streamers[streamId]}`, params);
+		for (strm in streamers) {
+			let ax = await axios.get(`http://api.twitch.tv/helix/streams?user_login=${streamers[strm]}`, params);
 
 			if (ax.data.data.length == 0) {
-				descpMemory[streamId] = '';
+				descpMemory[strm] = '';
 			} else {
-				descpMemory[streamId] = ax.data.data[0].title;
+				descpMemory[strm] = ax.data.data[0].title;
 
-				if (descpMemory[streamId] != oldDescpMemory[streamId] && ax.data.data.length == 1) {
+				if (descpMemory[strm] != oldDescpMemory[strm] && ax.data.data.length == 1) {
 					let guiDot = await axios.get(`https://twitch.tv/${ax.data.data[0].user_login}`);
 					collectionMobbot
 						.get('livenotif')
 						.execute(dbClient, language, guiDot, ax);
-					console.log(`[${getCurrentDatetime('comm')}] Notif Twitch ${ax.data.data[0].user_name}`);
 				};
 			};
 		};
