@@ -32,7 +32,9 @@ module.exports = {
             var sayMessage = args.join(' ');
 
             message.delete().catch(O_o => { });
-            message.channel.send(sayMessage);
+            message.channel
+                .send(sayMessage)
+                .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error command say ${err}`); });
         }
     },
     purge: {
@@ -44,7 +46,7 @@ module.exports = {
 
             var amount = parseInt(args[0]);
 
-            if (isNaN(amount)) { 
+            if (isNaN(amount)) {
                 sendEmbed(message, language.pruneInvalid);
             } else if (amount > 0 && amount < 101) {
                 message.channel
@@ -60,8 +62,12 @@ module.exports = {
         name: 'ping',
         description: 'a dynamic ping',
         async execute(message, args, language) {
-            message.channel.send(language.pingWait);
-            wait.edit(`Bip. ${language.pingEdit} ${wait.createdTimestamp - message.createdTimestamp}ms.. Bip Boup..`);
+            var wait = await message.channel
+                .send(language.pingWait)
+                .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error send command ping ${err}`); });
+
+            wait.edit(`Bip. ${language.pingEdit} ${wait.createdTimestamp - message.createdTimestamp}ms.. Bip Boup..`)
+                .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error edit command ping ${err}`); });
         }
     },
     imagine: {
@@ -71,10 +77,12 @@ module.exports = {
         async execute(message, args, language) {
             if (args.length == 0) { return sendEmbed(message, language.argsUndefined); };
 
-            var msg = await message.channel.send({
-                'channel_id': message.channel.channel_id,
-                'content': `pepe ${args.join(' ')} / *Waiting to display...*\n${language.timeAverage}${duration_average} seconds`
-            });
+            var msg = await message.channel
+                .send({
+                    'channel_id': message.channel.channel_id,
+                    'content': `pepe ${args.join(' ')} / *Waiting to display...*\n${language.timeAverage}${duration_average} seconds`
+                })
+                .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error command pepe send ${err}`); });
 
             const urI = `https://vivsmouret-dipl0-pepe-diffuser-bot.hf.space/run/predict`,
                 headers = {
@@ -123,7 +131,8 @@ ${language.timeAverage}${data.average_duration} seconds\n\n[**Pepe Diffuser**](h
                     }
                 }],
                 'files': [`./styles/ai/pepe-diffuser.jpg`]
-            });
+            })
+                .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error command pepe edit ${err}`); });
 
             duration_average = data.average_duration;
         }

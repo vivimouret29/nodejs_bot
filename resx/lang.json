@@ -43,7 +43,9 @@
         "argsUndefined": "Arguments non définis",
         "imagineError": "Erreur lors de la création de l'image via HugginFace",
         "timeDiffuse": "Temps de création de l'image : ",
-        "timeAverage": "Temps moyen de création de l'image : "
+        "timeAverage": "Temps moyen de création de l'image : ",
+        "helpError": "Erreur lors de l\\'envoi de l\\'aide, débloques tes DM ou réessaie plus tard",
+        "embedError": "Erreur lors de l'envoie d'un message personnalisé"
     },
     "en": {
         "help": "List of orders",
@@ -88,7 +90,9 @@
         "argsUndefined": "Undefined arguments",
         "imagineError": "Error while creating the image via HugginFace",
         "timeDiffuse": "Time to create the image : ",
-        "timeAverage": "Average time to create the image : "
+        "timeAverage": "Average time to create the image : ",
+        "helpError": "Error when sending help, unblock your DMs or try again later",
+        "embedError": "Error while sending a custom message"
     },
     "uk": {
         "help": "Список замовлень",
@@ -133,6 +137,8 @@
         "argsUndefined": "Невизначені аргументи",
         "imagineError": "Помилка при створенні зображення через HugginFace",
         "timeDiffuse": "Час для створення образу : ",
-        "timeAverage": "Середній час створення зображення : "
+        "timeAverage": "Середній час створення зображення : ",
+        "helpError": "Помилка при відправці допомоги, розблокуйте свої DM або спробуйте пізніше",
+        "embedError": "Помилка під час надсилання користувацького повідомлення"
     }
 }

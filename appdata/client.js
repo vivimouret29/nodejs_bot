@@ -7,7 +7,7 @@ const { ActivityType } = require('discord.js'),
     { master, user } = require('../resx/help.json'),
     { emojis: dctmj } = require('../resx/emojis.json'),
     { sendEmbed, getCurrentDatetime, randomColor } = require('../function.js');
-    
+
 Array.prototype.max = function () { return Math.max.apply(null, this); };
 Array.prototype.min = function () { return Math.min.apply(null, this); };
 
@@ -74,26 +74,32 @@ module.exports = {
 
             for (i in descSplit) { desc += descSplit[i]; };
 
-            message.author.send({
-                'channel_id': message.channel.channel_id,
-                'content': '',
-                'tts': false,
-                'embeds': [{
-                    'type': 'rich',
-                    'title': language.help,
-                    'description': desc,
-                    'color': 0x0eb70b,
-                    'timestamp': `2023-02-06T19:20:42.000Z`,
-                    'author': {
-                        'name': client.user.username
-                    },
-                    'footer': {
-                        'text': language.helpAuthor,
-                        'icon_url': `https://static-cdn.jtvnw.net/jtv_user_pictures/${guid}-profile_image-300x300.${dot}`,
-                        'proxy_icon_url': twitch
-                    }
-                }]
-            });
+            message.author
+                .send({
+                    'channel_id': message.channel.channel_id,
+                    'content': '',
+                    'tts': false,
+                    'embeds': [{
+                        'type': 'rich',
+                        'title': language.help,
+                        'description': desc,
+                        'color': 0x0eb70b,
+                        'timestamp': `2023-02-06T19:20:42.000Z`,
+                        'author': {
+                            'name': client.user.username
+                        },
+                        'footer': {
+                            'text': language.helpAuthor,
+                            'icon_url': `https://static-cdn.jtvnw.net/jtv_user_pictures/${guid}-profile_image-300x300.${dot}`,
+                            'proxy_icon_url': twitch
+                        }
+                    }]
+                })
+                .catch(err => {
+                    message.channel.send(language.helpError);
+                    console.log(`[${getCurrentDatetime('comm')}] Error function help() ${err}`);
+                    return;
+                });
         }
     },
     guild: {
@@ -302,13 +308,16 @@ module.exports = {
                     for (i = 0; i < dictMojis.length; i++) { await msg.react(dictMojis[i]) };
                     await new Promise(resolve => setTimeout(resolve, 5 * 1000));
                     return reactions = msg.reactions.cache.map(reaction => reaction);
-                });
+                })
+                .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error command send poll ${err}`); });
 
             for (i = 0; i < reactions.length; i++) { maxCount.push(reactions[i].count); };
             highReact = maxCount.max();
             dictMojis.forEach((emoji, index) => { reactions[index].count == highReact ? postSurvey = index : postSurvey; });
 
-            message.channel.send(`The higher choice was ${survey[postSurvey]}`);
+            message.channel
+                .send(`The higher choice was ${survey[postSurvey]}`)
+                .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error command poll result ${err}`); });
         }
     }
 };

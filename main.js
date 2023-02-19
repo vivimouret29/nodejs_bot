@@ -23,7 +23,7 @@ var collectionCommands = new Collection(),
 	collectionOpenAI = new Collection();
 
 // Command Collection
-collectionCommands.set(commandFile.version.name, commandFile.version); // TODO: refracto all of this shitty code
+collectionCommands.set(commandFile.version.name, commandFile.version);
 collectionCommands.set(commandFile.say.name, commandFile.say);
 collectionCommands.set(commandFile.purge.name, commandFile.purge);
 collectionCommands.set(commandFile.imagine.name, commandFile.imagine);
@@ -133,7 +133,8 @@ dbClient.on(Events.ClientReady, async () => {
 
 	while (true) {
 		for (strm in streamers) {
-			let ax = await axios.get(`http://api.twitch.tv/helix/streams?user_login=${streamers[strm]}`, params);
+			let ax = await axios.get(`http://api.twitch.tv/helix/streams?user_login=${streamers[strm]}`, params) // error in production for parsing streamers[strm] ????
+				.catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error GET AXIOS ${err}`); });
 
 			if (ax.data.data.length == 0) {
 				descpMemory[strm] = '';
@@ -157,35 +158,33 @@ dbClient.on(Events.ClientReady, async () => {
 dbClient.on(Events.GuildMemberAdd, async (guild) => {
 	if (dbClient.user.id == avoidBot[1]) return;
 	console.log(`[${getCurrentDatetime('comm')}] New member \'${guild.user.username}\' join server : ${guild.guild.name}`);
-	try {
-		dbClient.channels.cache
-			.get(guild.guild.systemChannelId)
-			.send({
-				'channel_id': guild.guild.systemChannelId,
-				'content': '',
-				'tts': false,
-				'embeds': [{
-					'type': 'rich',
-					'title': `${guild.user.username} ${language.guildJoin}`,
-					'description': language.guildJoinDesc,
-					'color': 0x890b0b,
-					'image': {
-						'url': memes[randomIntFromInterval(0, (memes.length - 1))]
-					},
-					'thumbnail': {
-						'url': dbClient.users.cache.get(guild.user.id).avatarURL({ format: 'png', dynamic: true, size: 1024 })
-					},
-					'author': {
-						'name': dbClient.user.username,
-						'icon_url': dbClient.user.avatarURL({ format: 'png', dynamic: true, size: 1024 })
-					}
-				}]
-			});
+	dbClient.channels.cache
+		.get(guild.guild.systemChannelId)
+		.send({
+			'channel_id': guild.guild.systemChannelId,
+			'content': '',
+			'tts': false,
+			'embeds': [{
+				'type': 'rich',
+				'title': `${guild.user.username} ${language.guildJoin}`,
+				'description': language.guildJoinDesc,
+				'color': 0x890b0b,
+				'image': {
+					'url': memes[randomIntFromInterval(0, (memes.length - 1))]
+				},
+				'thumbnail': {
+					'url': dbClient.users.cache.get(guild.user.id).avatarURL({ format: 'png', dynamic: true, size: 1024 })
+				},
+				'author': {
+					'name': dbClient.user.username,
+					'icon_url': dbClient.user.avatarURL({ format: 'png', dynamic: true, size: 1024 })
+				}
+			}]
+		})
+		.catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error GuildMemberAdd send() ${err}`); });
 
-		switchRoles(guild, guild.user.id, 6, true);
-	} catch (err) {
-		console.log(`[${getCurrentDatetime('comm')}] Error for (New member \'${guild.user.username}\' join server : ${guild.guild.name}) : ${err}`);
-	};
+	try { switchRoles(guild, guild.user.id, 6, true); }
+	catch (err) { console.log(`[${getCurrentDatetime('comm')}] Error for \'${guild.user.username}\' to add role : ${err}`); };
 
 	function randomIntFromInterval(min, max) { return Math.floor(Math.random() * (max - min + 1) + min) };
 });
@@ -298,7 +297,7 @@ dbClient.on(Events.MessageCreate, async (message) => {
 		if (userToCheck.includes(message.author.id)) {
 			if (Math.random() > .005) return;
 			try {
-				message.delete().catch(O_o => { })
+				message.delete().catch(O_o => { });
 				console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${message.author.user}'s message deleted`);
 			} catch (err) {
 				console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # Can't delete badBoy's message : `, err);
@@ -389,9 +388,10 @@ function switchRoles(guild, userId, roleIndex, style) {
 					console.log(`[${getCurrentDatetime('comm')}] ${user.user.username} get ${role.name}`);
 				} catch (error) {
 					console.log(`[${getCurrentDatetime('comm')}] Error when assigning the role ${role.name} to ${user.user.username} : ${error}`);
-				}
+				};
 			} else {
-				user.send(language.addRole);
+				user.send(language.addRole)
+					.catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error author.send() ${err}`); });
 				console.log(`[${getCurrentDatetime('comm')}] ${user.user.username} already have the role ${role.name}`);
 			};
 			break;
@@ -402,9 +402,10 @@ function switchRoles(guild, userId, roleIndex, style) {
 					console.log(`[${getCurrentDatetime('comm')}] ${user.user.username} remove ${role.name}`);
 				} catch (error) {
 					console.log(`[${getCurrentDatetime('comm')}] Error when unassigning the role ${role.name} to ${user.user.username} : ${error}`);
-				}
+				};
 			} else {
-				user.send(language.remRole);
+				user.send(language.remRole)
+					.catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error author.send() ${err}`); });
 				console.log(`[${getCurrentDatetime('comm')}] ${user.user.username} have not the role ${role.name}`);
 			};
 			break;

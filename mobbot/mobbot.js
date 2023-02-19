@@ -58,29 +58,34 @@ module.exports = {
         execute(message, client) {
             if (dataToExport.length === 0) {
                 let emoji = client.cache.find(emoji => emoji.name === 'sadpepe');
-                message.react(emoji);
+                message
+                    .react(emoji)
+                    .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error react ${err}`); });
                 return;
             };
 
             fs.writeFile(`./mobbot/mobbot_analytics.csv`, parse(dataToExport), function (err) {
                 if (err) {
                     let emoji = client.cache.find(emoji => emoji.name === 'fufufu');
-                    message.react(emoji);
+                    message
+                        .react(emoji)
+                        .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error react ${err}`); });
                     console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${message.author.username} : ${message.content.toLowerCase()} ${err}`);
                     throw err;
                 }
                 else {
                     let emoji = client.cache.find(emoji => emoji.name === 'linkbadass');
-                    message.react(emoji);
+                    message
+                        .react(emoji)
+                        .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error react ${err}`); });
                     console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${message.author.username} : ${message.content.toLowerCase()}`);
                 };
             });
 
             message.author
                 .send({ 'content': 'csv being transferred' })
-                .then((msg) => {
-                    msg.edit({ 'content': 'csv transferred', 'files': ['./mobbot/mobbot_analytics.csv'] });
-                });
+                .then((msg) => { msg.edit({ 'content': 'csv transferred', 'files': ['./mobbot/mobbot_analytics.csv'] }); })
+                .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error during file send ${err}`); });
         }
     },
     livenotif: {
@@ -141,7 +146,8 @@ module.exports = {
                             },
                             'url': `https://twitch.tv/${axios.data.data[0].user_login}`
                         }]
-                    });
+                    })
+                    .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error livenotif ${err}`); });
             };
 
             console.log(`[${getCurrentDatetime('comm')}] Notif Twitch ${axios.data.data[0].user_name} sent in ${channelTwitch}`);
