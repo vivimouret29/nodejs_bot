@@ -3,12 +3,8 @@
 const { Client } = require('tmi.js'),
     { parse } = require('json2csv'),
     fs = require('fs'),
-    { getCurrentDatetime } = require('./function.js'),
-    {
-        clientId,
-        identity,
-        channels
-    } = require('./config.json');
+    { clientId, identity, channels } = require('./config.json'),
+    { getCurrentDatetime } = require('./function.js');
 
 const oauth = {
     options: {

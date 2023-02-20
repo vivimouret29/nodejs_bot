@@ -55,20 +55,20 @@
     "user": {
         "fr": {
             "littleLine": "Voici la liste des commandes utilisables à ce jour :\n\r",
+            "invit": "-  invit : permet d'obtenir le lien d'invitation du bot\r",
+            "poll": "-  poll : de cette manière => !poll [question] / [choix] - [choix]\rrenvoie une palette de choix puis la réponse choisie\r(e.g.: !poll quoi de prévue ? **/** une douche **-** un ciné\r",
             "uptime": "-  uptime : permet de connaître le temps de diffusion en direct\r",
-            "mute": "-  mute [on | **off**] : permet de couper ou de remettre les répliques du bot\r",
             "lang": "-  language [**fr** | en | uk] : permet de changer la langue du bot\r",
             "version": "-  version : permet de connaître la version du bot\r",
             "say": "-  say : permet de faire parler le bot (e.g.: !say Hello World !)\r",
             "ping": "-  ping : permet de connaître le ping du bot\r",
-            "invit": "-  invit : permet d'obtenir le lien d'invitation du bot\r",
             "guild": "-  guild : renvoie la liste de serveurs où le bot est\r",
             "pepe": "-  pepe : permet de faire imaginer une image via le bot avec ([**pepe diffuser**](https://huggingface.co/Dipl0/pepe-diffuser))\r"
         },
         "en": {
             "littleLine": "Here is the list of commands that can be used to date\r",
             "uptime": "- uptime : allows you to know the time of the live broadcast\r",
-            "mute": "- mute [on | **off**] : allows you to mute or unmute the bot's replicas\r",
+            "poll": "- poll : in this way => !poll [question] / [choice] - [choice]\rresults in a range of choices and then the chosen answer\r(e.g.: !poll what's on? **/** a shower **-** a movie\r",
             "lang": "- language [**fr** | en | uk] : allows to change the language of the bot\r",
             "version": "- version : allows to know the version of the bot\r",
             "say": "- say : allows to make the bot speak (e.g.: !say Hello World !)\r",
@@ -80,7 +80,7 @@
         "uk": {
             "littleLine": "Ось список команд, які можна використовувати на сьогоднішній день\r",
             "uptime": "-  uptime : дозволяє дізнатися час прямої трансляції\r",
-            "mute": "-  mute [on | **off**] : дозволяє увімкнути або вимкнути звук реплік бота\r",
+            "poll": "-  poll : таким чином => !poll [питання] / [вибір] - [вибір]\rповертає діапазон варіантів, а потім обрану відповідь (наприклад: !poll what's on? **/** душ **-** фільм\r",
             "lang": "-  language [**fr** | en | uk] : дозволяє змінити мову бота\r",
             "version": "-  версія : дозволяє дізнатися версію бота\r",
             "say": "-  say : дозволяє змусити бота говорити (наприклад: !say Hello World !)\r",

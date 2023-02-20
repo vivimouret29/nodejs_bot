@@ -2,6 +2,7 @@
 
 const package = require("../package.json"),
     { owner } = require("../config.json"),
+    { clientId, identity } = require('../core/config.json'),
     fs = require('fs'),
     axios = require('axios'),
     { sendEmbed, randomColor, getCurrentDatetime } = require('../core/function.js');
@@ -96,19 +97,34 @@ module.exports = {
                 });
 
             let response = { status: 100 },
-                countResponse = -1;
+                countResponse = -1,
+                link = '';
 
             while (response.status != 200) {
                 countResponse++;
                 response = await axios
-                    .post(urI, dt, { headers: headers, timeout: 300000 }) // timeout not really working so while loop
+                    .post(urI, dt, { headers: headers, timeout: 300000 }) // timeout not really working so infinite loop
                     .catch(error => { return response = error.response; });
             };
-            console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # After ${countResponse} APIERROR - ${message.author.username} diffuse \'pepe ${args.join(' ').toLowerCase()}\'`)
 
             const data = await response.data,
                 splitted = data.data[0].split(',')[1],
                 buffer = Buffer.from(splitted, 'base64');
+            console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # Success after ${(60 * countResponse) + data.duration} seconds - ${message.author.username} diffuse \'pepe ${args.join(' ').toLowerCase()}\'`)
+
+            var fetchPdp = await axios.get('https://huggingface.co/Dipl0', {
+                headers: {
+                    Authorization: `Bearer ${identity.password}`,
+                    'Client-ID': clientId
+                }
+            });
+
+            try {
+                link = fetchPdp.data.split(new RegExp(`(s\/[^.]..........................................)`, 'giu'))[3];
+                link.endsWith('?') ? link = link.slice(2, -1) : link = link.split('s/')[1]
+            } catch (err) {
+                console.log(`[${getCurrentDatetime('comm')}] Can't get guid : `, err);
+            };
 
             fs.writeFileSync(`./styles/ai/pepe-diffuser.jpg`, buffer);
             msg.edit({
@@ -126,7 +142,7 @@ ${language.timeAverage}${data.average_duration} seconds\n\n[**Pepe Diffuser**](h
                         'icon_url': message.author.avatarURL({ format: 'png', dynamic: true, size: 1024 })
                     },
                     'thumbnail': {
-                        'url': 'https://aeiljuispo.cloudimg.io/v7/https://s3.amazonaws.com/moonup/production/uploads/1611668769240-noauth.png?w=200&h=200&f=face',
+                        'url': `https://aeiljuispo.cloudimg.io/v7/https://s3.amazonaws.com/moonup/production/uploads/${link}?w=200&h=200&f=face`,
                         'proxy_url': 'https://huggingface.co/Dipl0/pepe-diffuser'
                     }
                 }],

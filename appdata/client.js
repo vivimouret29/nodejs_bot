@@ -266,8 +266,11 @@ module.exports = {
             Array.prototype.max = function () { return Math.max.apply(null, this); };
             Array.prototype.min = function () { return Math.min.apply(null, this); };
 
-            var survey = args.join(' ').split('-');
-            if (survey == undefined) { return sendEmbed(message, language.error); };
+            var survey = args.join(' '),
+                wt = survey.split('/')[0],
+                ctm = survey.split('/')[1].split('-');
+
+            if (ctm == undefined) { return sendEmbed(message, language.error); };
 
             var dictMojis = [],
                 maxCount = [],
@@ -276,12 +279,12 @@ module.exports = {
                 highReact,
                 postSurvey;
 
-            for (i = 0; i < survey.length; i++) {
+            for (i = 0; i < ctm.length; i++) {
                 let jis = client.emojis.cache.find(emoji => emoji.name === dctmj[i]);
                 dictMojis.push(jis);
                 fields.push({
-                    'name': `${dictMojis[i]}`,
-                    'value': survey[i],
+                    'name': ctm[i],
+                    'value': `${dictMojis[i]}`,
                     'inline': false
                 });
             };
@@ -293,7 +296,7 @@ module.exports = {
                     'tts': false,
                     'embeds': [{
                         'type': 'rich',
-                        'title': 'Poll',
+                        'title': wt,
                         'description': '',
                         'color': randomColor(),
                         'author': {
@@ -305,7 +308,7 @@ module.exports = {
                 })
                 .then(async (msg) => {
                     for (i = 0; i < dictMojis.length; i++) { await msg.react(dictMojis[i]) };
-                    await new Promise(resolve => setTimeout(resolve, 5 * 1000));
+                    await new Promise(resolve => setTimeout(resolve, 30 * 1000));
                     return reactions = msg.reactions.cache.map(reaction => reaction);
                 })
                 .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error command send poll ${err}`); });
@@ -315,7 +318,7 @@ module.exports = {
             dictMojis.forEach((emoji, index) => { reactions[index].count == highReact ? postSurvey = index : postSurvey; });
 
             message.channel
-                .send(`The higher choice was ${survey[postSurvey]}`)
+                .send(`${wt}${ctm[postSurvey]}`)
                 .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error command poll result ${err}`); });
         }
     }

@@ -367,8 +367,10 @@ class DaftBot {
                 messageIdReg = react.message.id,
                 messageReg = channel.messages.cache.get(messageIdReg);
 
-            if (messageReg.channelId == reChan && reMsg.includes(message.id)) switchRoles(this.dbClient, guild, user.id, 6, true);
-            console.log(`[${getCurrentDatetime('comm')}] ${guild.name} / ${channel.name} # ${user.username} read the reglement`);
+            if (messageReg.channelId == reChan && reMsg.includes(message.id)) {
+                switchRoles(this.dbClient, guild, user.id, 6, true);
+                console.log(`[${getCurrentDatetime('comm')}] ${guild.name} / ${channel.name} # ${user.username} read the reglement`);
+            };
         });
 
         this.dbClient.on(Events.MessageReactionRemove, (react, user) => {
@@ -402,14 +404,6 @@ class DaftBot {
                         break;
                 };
             };
-
-            var reChan = '1068557736306024519',
-                reMsg = ['1077008507724890122', '1077008635865088110'],
-                messageIdReg = react.message.id,
-                messageReg = channel.messages.cache.get(messageIdReg);
-
-            if (messageReg.channelId == reChan && reMsg.includes(message.id)) switchRoles(this.dbClient, guild, user.id, 6, false);
-            console.log(`[${getCurrentDatetime('comm')}] ${guild.name} / ${channel.name} # ${user.username} unread the reglement`);
         });
     };
 
