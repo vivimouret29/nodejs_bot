@@ -67,7 +67,7 @@ class DaftBot {
         this.isMuted = false;
         this.language = this.language == undefined ? fr : this.language;
 
-        this.streamers = ['daftmob'];
+        this.streamers = 'daftmob';
         this.emojiRoles = ['💜', '❤️', 'looners', 'mandalorian', 'linkitem', 'croisade'];
         this.rolesNames = ['/D/TWITCH', '/D/YOUTUBE', '/D/STALKERS', '/D/CHASSEURS', '/D/HÉROS', '/D/GUERRIERS', '/D/RECRUES'];
         this.avoidBot = ['757970907992948826', '758393470024155186', '758319298325905428'];
@@ -144,34 +144,27 @@ class DaftBot {
 
             if (this.dbClient.user.id == this.avoidBot[1]) return;
 
-            let descpMemory = [],
-                oldDescpMemory = [];
-
-            for (let i = 0; i < this.streamers.length; i++) {
-                descpMemory.push('');
-                oldDescpMemory.push('');
-            };
+            let descpMemory = '',
+                oldDescpMemory = '';
 
             while (true) {
-                for (strm in this.streamers) {
-                    let ax = await axios.get(`http://api.twitch.tv/helix/streams?user_login=` + this.streamers[strm], params)
-                        .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error GET AXIOS ${err}`); });
+                let ax = await axios.get(`http://api.twitch.tv/helix/streams?user_login=` + this.streamers, params)
+                    .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error GET AXIOS ${err}`); });
 
-                    if (ax.data.data.length == 0) {
-                        descpMemory[strm] = '';
-                    } else {
-                        descpMemory[strm] = ax.data.data[0].title;
+                if (ax.data.data.length == 0) {
+                    descpMemory = '';
+                } else {
+                    descpMemory = ax.data.data[0].title;
 
-                        if (descpMemory[strm] != oldDescpMemory[strm] && ax.data.data.length == 1) {
-                            let guiDot = await axios.get(`https://twitch.tv/${ax.data.data[0].user_login}`);
-                            this.collectionMobbot
-                                .get('livenotif')
-                                .execute(this.dbClient, this.language, guiDot, ax);
-                        };
+                    if (descpMemory != oldDescpMemory && ax.data.data.length == 1) {
+                        let guiDot = await axios.get(`https://twitch.tv/${ax.data.data[0].user_login}`);
+                        this.collectionMobbot
+                            .get('livenotif')
+                            .execute(this.dbClient, this.language, guiDot, ax);
                     };
                 };
 
-                for (let i = 0; i < streamers.length; i++) { oldDescpMemory[i] = descpMemory[i]; };
+                oldDescpMemory = descpMemory;
                 await new Promise(resolve => setTimeout(resolve, 300 * 1000));
             };
         });
