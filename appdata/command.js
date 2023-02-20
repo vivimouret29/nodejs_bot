@@ -4,7 +4,7 @@ const package = require("../package.json"),
     { owner } = require("../config.json"),
     fs = require('fs'),
     axios = require('axios'),
-    { sendEmbed, randomColor, getCurrentDatetime } = require('../function.js');
+    { sendEmbed, randomColor, getCurrentDatetime } = require('../core/function.js');
 
 var duration_average = 0;
 

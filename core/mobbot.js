@@ -3,7 +3,7 @@
 const { Client } = require('tmi.js'),
     { parse } = require('json2csv'),
     fs = require('fs'),
-    { getCurrentDatetime } = require('../function.js'),
+    { getCurrentDatetime } = require('./function.js'),
     {
         clientId,
         identity,
@@ -64,7 +64,7 @@ module.exports = {
                 return;
             };
 
-            fs.writeFile(`./mobbot/mobbot_analytics.csv`, parse(dataToExport), function (err) {
+            fs.writeFile(`./core/data/mobbot_analytics.csv`, parse(dataToExport), function (err) {
                 if (err) {
                     let emoji = client.cache.find(emoji => emoji.name === 'fufufu');
                     message
@@ -84,7 +84,7 @@ module.exports = {
 
             message.author
                 .send({ 'content': 'csv being transferred' })
-                .then((msg) => { msg.edit({ 'content': 'csv transferred', 'files': ['./mobbot/mobbot_analytics.csv'] }); })
+                .then((msg) => { msg.edit({ 'content': 'csv transferred', 'files': ['./core/data/mobbot_analytics.csv'] }); })
                 .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error during file send ${err}`); });
         }
     },

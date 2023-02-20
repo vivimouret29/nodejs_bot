@@ -6,7 +6,7 @@ const { ActivityType } = require('discord.js'),
     { fr, en, uk } = require('../resx/lang.json'),
     { master, user } = require('../resx/help.json'),
     { emojis: dctmj } = require('../resx/emojis.json'),
-    { sendEmbed, getCurrentDatetime, randomColor } = require('../function.js');
+    { sendEmbed, getCurrentDatetime, randomColor } = require('../core/function.js');
 
 module.exports = {
     help: {

@@ -1,7 +1,8 @@
 node_modules
 .vscode
 /config.json
-/mobbot/config.json
-/mobbot/oauth.txt
-/mobbot/mobbot_analytics.csv
+/core/config.json
+/core/oauth.txt
+/core/data/mobbot_analytics.csv
 /styles/ai/pepe-diffuser.jpg
+/main.js.old
