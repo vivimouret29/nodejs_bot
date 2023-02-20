@@ -60,14 +60,12 @@ module.exports = {
             };
 
             try {
-                guid = guidDot.data.split(new RegExp(`(s\/[^.]*-p)`, 'giu'))[1];
+                guid = await guidDot.data.split(new RegExp(`(s\/[^.]*-p)`, 'giu'))[1];
                 guid = guid.split('s/')[1].split('-p')[0];
 
-                dot = guidDot.data.split(new RegExp(`(ge-[.]*...........)`, 'giu'))[1];
+                dot = await guidDot.data.split(new RegExp(`(ge-[.]*...........)`, 'giu'))[1];
                 dot = dot.split('.')[1].split(' ')[0];
-            } catch (err) {
-                console.log(`[${getCurrentDatetime('comm')}] Can't get guid or dot`);
-            };
+            } catch (err) { console.log(`[${getCurrentDatetime('comm')}] Can't get guid or dot`); };
 
             for (i in descSplit) { desc += descSplit[i]; };
 
@@ -104,6 +102,7 @@ module.exports = {
         description: 'a dynamic guild',
         execute(message, client, language) {
             sendEmbed(message, `${client.user.username} ${language.guild}\n${client.guilds.cache.map(guild => guild.name).join(', ')}`);
+            console.log(`[${getCurrentDatetime('comm')}] ${client.user.username} present in : `, client.guilds.cache.map(guild => guild.name));
         }
     },
     uptime: {

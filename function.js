@@ -35,6 +35,8 @@ async function sendEmbed(message, content, descp) {
 	return messageToSend;
 };
 
+function randomIntFromInterval(min, max) { return Math.floor(Math.random() * (max - min + 1) + min) };
+
 function getCurrentDatetime(choice) {
 	let date = new Date();
 	switch (choice) {
@@ -59,3 +61,4 @@ function randomColor() {
 exports.sendEmbed = sendEmbed;
 exports.getCurrentDatetime = getCurrentDatetime;
 exports.randomColor = randomColor;
+exports.randomIntFromInterval = randomIntFromInterval;

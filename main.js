@@ -7,7 +7,7 @@ const { Client, Collection, IntentsBitField, ActivityType, Events, Partials } = 
 	{ clientId, identity } = require('./mobbot/config.json'),
 	{ fr, en, uk } = require('./resx/lang.json'),
 	{ memes } = require('./resx/memes.json'),
-	{ sendEmbed, getCurrentDatetime } = require('./function.js'),
+	{ sendEmbed, getCurrentDatetime, randomIntFromInterval } = require('./function.js'),
 	commandFile = require('./appdata/command.js'),
 	responseFile = require('./appdata/response.js'),
 	mobbotFile = require('./mobbot/mobbot.js'),
@@ -160,7 +160,7 @@ dbClient.on(Events.GuildCreate, async (guild) => { console.log(`[${getCurrentDat
 dbClient.on(Events.GuildDelete, async (guild) => { console.log(`[${getCurrentDatetime('comm')}] ${dbClient.user.username} removed in :`, guild.name); });
 
 dbClient.on(Events.GuildMemberAdd, async (guild) => {
-	if (dbClient.user.id == avoidBot[1]) return;
+	if (dbClient.user.id == avoidBot[1] || guild.id != '948894919878123570') return;
 	console.log(`[${getCurrentDatetime('comm')}] New member \'${guild.user.username}\' join server : ${guild.guild.name}`);
 	dbClient.channels.cache
 		.get(guild.guild.systemChannelId)
@@ -186,12 +186,6 @@ dbClient.on(Events.GuildMemberAdd, async (guild) => {
 			}]
 		})
 		.catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error GuildMemberAdd send() ${err}`); });
-
-	if (guild.id != '948894919878123570') return;
-	try { switchRoles(guild, guild.user.id, 6, true); }
-	catch (err) { console.log(`[${getCurrentDatetime('comm')}] Error for \'${guild.user.username}\' to add role : ${err}`); };
-
-	function randomIntFromInterval(min, max) { return Math.floor(Math.random() * (max - min + 1) + min) };
 });
 
 dbClient.on(Events.MessageCreate, async (message) => {
@@ -212,7 +206,7 @@ dbClient.on(Events.MessageCreate, async (message) => {
 
 	if (message.content.startsWith(prefix)) {
 		switch (command) {
-			case 'feature':			// switch case created for next features
+			case 'feature':
 				if (!(message.author.id === owner)) return sendEmbed(message, language.restricted);
 				break;
 			case 'lang':
@@ -263,15 +257,14 @@ dbClient.on(Events.MessageCreate, async (message) => {
 	if (isMuted) return;
 
 	if (!message.content.startsWith(prefix)) {
-		if ((message.mentions.has(dbClient.user.id)) ||
-			((message.reference != undefined) && (message.channel.messages.fetch(message.reference.messageId).user == dbClient.user))) {
+		if ((message.mentions.has(dbClient.user.id)) && !(message.channel.messages.cache.get(message.id).mentions.everyone)) {
 			try {
 				collectionOpenAI
 					.get('openai')
 					.execute(message);
 				console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
 			} catch (err) {
-				console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # Error output openai() : `, err);
+				console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # Error output openai() : ${err}`);
 			};
 		};
 
@@ -283,67 +276,75 @@ dbClient.on(Events.MessageCreate, async (message) => {
 				.execute(message, args, language);
 			console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
 		} catch (err) {
-			console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # Error output reply() : `, err);
+			console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # Error output reply() : ${err}`);
 		};
 
 		if (avoidBot.includes(message.author.id) && !(channelToAvoid.includes(message.channel.id))) {
-			if (Math.random() <= .005) {
+			if (Math.random() < .005) {
 				try {
 					collectionReaction
 						.get('trashtalk')
 						.execute(message);
 					console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}\n[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${dbClient.user.username} used (or not) a trashtalk`);
 				} catch (err) {
-					console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # Error output randomCollection() : `, err);
+					console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # Error output randomCollection() : ${err}`);
 				};
 			};
 		};
 
 		if (userToCheck.includes(message.author.id)) {
-			if (Math.random() > .005) return;
+			if (Math.random() < .025) return;
 			try {
 				message.delete().catch(O_o => { });
 				console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${message.author.user}'s message deleted`);
 			} catch (err) {
-				console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # Can't delete badBoy's message : `, err);
+				console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # Can't delete ${message.author.user}'s message : ${err}`);
 			};
 		};
 	};
 });
 
 dbClient.on(Events.MessageReactionAdd, (react, user) => {
-	var rChan = '1068559351570247741',
-		rMsg = '1071286935726854216',
+	var roChan = '1068559351570247741',
+		roMsg = '1071286935726854216',
 		emoji = react.emoji.name,
 		channel = dbClient.channels.cache.get(react.message.channelId),
 		messageId = react.message.id,
 		message = channel.messages.cache.get(messageId),
 		guild = dbClient.guilds.cache.get(channel.guildId);
 
-	if (message.channelId != rChan && message.id != rMsg && emojiRoles.includes(emoji)) return;
-
-	switch (emoji) {
-		case '💜':
-			switchRoles(guild, user.id, 0, true);
-			break;
-		case '❤️':
-			switchRoles(guild, user.id, 1, true);
-			break;
-		case 'looners':
-			switchRoles(guild, user.id, 2, true);
-			break;
-		case 'mandalorian':
-			switchRoles(guild, user.id, 3, true);
-			break;
-		case 'linkitem':
-			switchRoles(guild, user.id, 4, true);
-			break;
-		case 'croisade':
-			switchRoles(guild, user.id, 5, true);
-			break;
-		default:
-			break;
+	if (message.channelId == roChan && message.id == roMsg && emojiRoles.includes(emoji)) {
+		switch (emoji) {
+			case '💜':
+				switchRoles(guild, user.id, 0, true);
+				break;
+			case '❤️':
+				switchRoles(guild, user.id, 1, true);
+				break;
+			case 'looners':
+				switchRoles(guild, user.id, 2, true);
+				break;
+			case 'mandalorian':
+				switchRoles(guild, user.id, 3, true);
+				break;
+			case 'linkitem':
+				switchRoles(guild, user.id, 4, true);
+				break;
+			case 'croisade':
+				switchRoles(guild, user.id, 5, true);
+				break;
+			default:
+				break;
+		};
 	};
+
+	var reChan = '1068557736306024519',
+		reMsg = ['1077008507724890122', '1077008635865088110'],
+		messageIdReg = react.message.id,
+		messageReg = channel.messages.cache.get(messageIdReg);
+
+	if (messageReg.channelId == reChan && reMsg.includes(message.id)) switchRoles(guild, user.id, 6, true);
+	console.log(`[${getCurrentDatetime('comm')}] ${guild.name} / ${channel.name} # ${user.username} read the reglement`);
 });
 
 dbClient.on(Events.MessageReactionRemove, (react, user) => {
@@ -355,30 +356,39 @@ dbClient.on(Events.MessageReactionRemove, (react, user) => {
 		message = channel.messages.cache.get(messageId),
 		guild = dbClient.guilds.cache.get(channel.guildId);
 
-	if (message.channelId != rChan && message.id != rMsg && emojiRoles.includes(emoji)) return;
+	if (message.channelId == rChan && message.id == rMsg && emojiRoles.includes(emoji)) {
 
-	switch (emoji) {
-		case '💜':
-			switchRoles(guild, user.id, 0, false);
-			break;
-		case '❤️':
-			switchRoles(guild, user.id, 1, false);
-			break;
-		case 'looners':
-			switchRoles(guild, user.id, 2, false);
-			break;
-		case 'mandalorian':
-			switchRoles(guild, user.id, 3, false);
-			break;
-		case 'linkitem':
-			switchRoles(guild, user.id, 4, false);
-			break;
-		case 'croisade':
-			switchRoles(guild, user.id, 5, false);
-			break;
-		default:
-			break;
+		switch (emoji) {
+			case '💜':
+				switchRoles(guild, user.id, 0, false);
+				break;
+			case '❤️':
+				switchRoles(guild, user.id, 1, false);
+				break;
+			case 'looners':
+				switchRoles(guild, user.id, 2, false);
+				break;
+			case 'mandalorian':
+				switchRoles(guild, user.id, 3, false);
+				break;
+			case 'linkitem':
+				switchRoles(guild, user.id, 4, false);
+				break;
+			case 'croisade':
+				switchRoles(guild, user.id, 5, false);
+				break;
+			default:
+				break;
+		};
 	};
+
+	var reChan = '1068557736306024519',
+		reMsg = ['1077008507724890122', '1077008635865088110'],
+		messageIdReg = react.message.id,
+		messageReg = channel.messages.cache.get(messageIdReg);
+
+	if (messageReg.channelId == reChan && reMsg.includes(message.id)) switchRoles(guild, user.id, 6, false);
+	console.log(`[${getCurrentDatetime('comm')}] ${guild.name} / ${channel.name} # ${user.username} unread the reglement`);
 });
 
 function switchRoles(guild, userId, roleIndex, style) {
