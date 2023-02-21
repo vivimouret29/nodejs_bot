@@ -335,22 +335,22 @@ class DaftBot {
             if (message.channelId == roChan && message.id == roMsg && this.emojiRoles.includes(emoji)) {
                 switch (emoji) {
                     case '💜':
-                        switchRoles(this.dbClient, guild, user.id, 0, true);
+                        this.switchRoles(this.dbClient, guild, user.id, 0, true);
                         break;
                     case '❤️':
-                        switchRoles(this.dbClient, guild, user.id, 1, true);
+                        this.switchRoles(this.dbClient, guild, user.id, 1, true);
                         break;
                     case 'looners':
-                        switchRoles(this.dbClient, guild, user.id, 2, true);
+                        this.switchRoles(this.dbClient, guild, user.id, 2, true);
                         break;
                     case 'mandalorian':
-                        switchRoles(this.dbClient, guild, user.id, 3, true);
+                        this.switchRoles(this.dbClient, guild, user.id, 3, true);
                         break;
                     case 'linkitem':
-                        switchRoles(this.dbClient, guild, user.id, 4, true);
+                        this.switchRoles(this.dbClient, guild, user.id, 4, true);
                         break;
                     case 'croisade':
-                        switchRoles(this.dbClient, guild, user.id, 5, true);
+                        this.switchRoles(this.dbClient, guild, user.id, 5, true);
                         break;
                 };
             };
@@ -361,7 +361,7 @@ class DaftBot {
                 messageReg = channel.messages.cache.get(messageIdReg);
 
             if (messageReg.channelId == reChan && reMsg.includes(message.id)) {
-                switchRoles(this.dbClient, guild, user.id, 6, true);
+                this.switchRoles(this.dbClient, guild, user.id, 6, true);
                 console.log(`[${getCurrentDatetime('comm')}] ${guild.name} / ${channel.name} # ${user.username} read the reglement`);
             };
         });
@@ -378,22 +378,22 @@ class DaftBot {
             if (message.channelId == rChan && message.id == rMsg && this.emojiRoles.includes(emoji)) {
                 switch (emoji) {
                     case '💜':
-                        switchRoles(this.dbClient, guild, user.id, 0, false);
+                        this.switchRoles(this.dbClient, guild, user.id, 0, false);
                         break;
                     case '❤️':
-                        switchRoles(this.dbClient, guild, user.id, 1, false);
+                        this.switchRoles(this.dbClient, guild, user.id, 1, false);
                         break;
                     case 'looners':
-                        switchRoles(this.dbClient, guild, user.id, 2, false);
+                        this.switchRoles(this.dbClient, guild, user.id, 2, false);
                         break;
                     case 'mandalorian':
-                        switchRoles(this.dbClient, guild, user.id, 3, false);
+                        this.switchRoles(this.dbClient, guild, user.id, 3, false);
                         break;
                     case 'linkitem':
-                        switchRoles(this.dbClient, guild, user.id, 4, false);
+                        this.switchRoles(this.dbClient, guild, user.id, 4, false);
                         break;
                     case 'croisade':
-                        switchRoles(this.dbClient, guild, user.id, 5, false);
+                        this.switchRoles(this.dbClient, guild, user.id, 5, false);
                         break;
                 };
             };
