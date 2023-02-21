@@ -14,6 +14,11 @@ module.exports = {
             message.channel.send({ embeds: [reply] });
         }
     },
+    mais: {
+        name: 'mais',
+        description: 'a dynamic reply',
+        async execute(message, args, language) { await message.channel.send(language.replyMais); }
+    },
     laugh: {
         name: 'hahaha',
         description: 'a dynamic reply',

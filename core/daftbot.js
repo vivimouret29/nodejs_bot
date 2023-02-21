@@ -111,6 +111,7 @@ class DaftBot {
         this.collectionResponse.set(responseFile.laugh.name, responseFile.laugh);
         this.collectionResponse.set(responseFile.yes.name, responseFile.yes);
         this.collectionResponse.set(responseFile.no.name, responseFile.no);
+        this.collectionResponse.set(responseFile.mais.name, responseFile.mais);
         this.collectionResponse.set(responseFile.tqt.name, responseFile.tqt);
 
         // OpenAI Collection
@@ -213,6 +214,7 @@ class DaftBot {
                 command = args.shift().toLowerCase(),
                 msg = message.content.toLowerCase(),
                 author = message.author.username,
+                msgSplit = msg.split(' '),
                 checkMobbotCollection,
                 checkCollection,
                 checkClientCollection;
@@ -277,7 +279,7 @@ class DaftBot {
                     try {
                         this.collectionOpenAI
                             .get('openai')
-                            .execute(message);
+                            .execute(this.dbClient, message, this.language);
                         console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
                     } catch (err) {
                         console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # Error output openai() : ${err}`);
@@ -316,6 +318,21 @@ class DaftBot {
                         console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${message.author.user}'s message deleted`);
                     } catch (err) {
                         console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # Can't delete ${message.author.user}'s message : ${err}`);
+                    };
+                };
+
+                for (let word in msgSplit) {
+                    if (this.collectionResponse.has(msgSplit[word])) {
+                        if (Math.random() > .15) return;
+                        try {
+                            this.collectionResponse
+                                .get(msgSplit[word])
+                                .execute(message, args, this.language);
+                            console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
+                        } catch (err) {
+                            console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # Error output reply() : ${err}`);
+                        };
+                        return;
                     };
                 };
             };

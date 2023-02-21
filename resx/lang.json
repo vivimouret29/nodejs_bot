@@ -30,8 +30,9 @@
         "pingWait": "AAAAAAAATTTEEEEEEENNNNNNNNNNNNNDDDDDDDDDSSSSSSSSSSSSS!!!!",
         "pingEdit": "Latence de",
         "replyAgg": "ta gueule",
-        "replyBot": "Je suis un petit être dans une fiole",
-        "replyWorried": "Oui je m\\'inquiète pour toi...",
+        "replyBot": "...",
+        "replyMais": "chant",
+        "replyWorried": "oui je m\\'inquiète pour toi...",
         "descLiveSt": "À l'instant présent, le live du petit",
         "descLiveNd": "vient de se lancer !",
         "guildJoin": "vient de rejoindre la galaxie !",
@@ -45,7 +46,8 @@
         "timeDiffuse": "Temps de création de l'image : ",
         "timeAverage": "Temps moyen de création de l'image : ",
         "helpError": "Erreur lors de l\\'envoi de l\\'aide, débloques tes DM ou réessaie plus tard",
-        "embedError": "Erreur lors de l'envoie d'un message personnalisé"
+        "embedError": "Erreur lors de l'envoie d'un message personnalisé",
+        "openAiCrash": "je suis un peu surchargé, réessaie de me parler plus tard..."
     },
     "en": {
         "help": "List of orders",
@@ -76,9 +78,10 @@
         "pruneOut": "Give me a number between 1 and 100",
         "pingWait": "WWWWWWWWWWWAAAAAAAAAAAAAIIIIIIIIIIIIIIIIIIITTTTTTTTTTTTTTTTTTTTT!!!!",
         "pingEdit": "Latency of",
-        "replyAgg": "Shut up",
-        "replyBot": "I am a little being in a vial",
-        "replyWorried": "Yes, I worry about you...",
+        "replyAgg": "shut up",
+        "replyBot": "...",
+        "replyMais": "ter",
+        "replyWorried": "yes, I worry about you...",
         "descLiveSt": "At the moment, the little one's live",
         "descLiveNd": "has just been launched!",
         "guildJoin": "has just joined the galaxy!",
@@ -92,7 +95,8 @@
         "timeDiffuse": "Time to create the image : ",
         "timeAverage": "Average time to create the image : ",
         "helpError": "Error when sending help, unblock your DMs or try again later",
-        "embedError": "Error while sending a custom message"
+        "embedError": "Error while sending a custom message",
+        "openAiCrash": "I'm a bit overloaded, try to talk to me again later..."
     },
     "uk": {
         "help": "Список замовлень",
@@ -124,7 +128,8 @@
         "pingWait": "ввввввііііііддддддвввввііііііддддддддуууууууууєєєєєєєєєєєєєєєє!!!!",
         "pingEdit": "Латентність",
         "replyAgg": "Замовкни!",
-        "replyBot": "Я маленька істота у флаконі",
+        "replyBot": "...",
+        "replyMais": "ми",
         "replyWorried": "Так, я хвилююся за тебе...",
         "descLiveSt": "У теперішньому часі життя маленького",
         "descLiveNd": "щойно запущено!",
@@ -139,6 +144,7 @@
         "timeDiffuse": "Час для створення образу : ",
         "timeAverage": "Середній час створення зображення : ",
         "helpError": "Помилка при відправці допомоги, розблокуйте свої DM або спробуйте пізніше",
-        "embedError": "Помилка під час надсилання користувацького повідомлення"
+        "embedError": "Помилка під час надсилання користувацького повідомлення",
+        "openAiCrash": "Я трохи перевантажений, спробуйте поговорити зі мною пізніше..."
     }
 }

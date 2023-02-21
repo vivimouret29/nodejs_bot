@@ -9,19 +9,34 @@ module.exports = {
     openai: {
         name: 'openai',
         description: 'a dynamic tchat bot from openai',
-        execute(message) {
-            const completion = openaiAPI.createCompletion({
-                model: "text-davinci-003",
-                prompt: message.content,
-                max_tokens: 1024,
-                n: 1,
-                stop: undefined,
-                temperature: 0.9
-            });
+        args: true,
+        async execute(client, message, language) {
+            var content = message.content.split(' ');
+            for (let word in content) { if (content[word].includes(`<@${client.user.id}>`)) { content.splice(word, 1); }; };
 
-            completion.then((result) => {
-                message.reply(result.data.choices[0].text);
-            });
+            await openaiAPI
+                .createCompletion({
+                    model: "text-davinci-003",
+                    prompt: content.join(' '),
+                    max_tokens: 1024,
+                    n: 1,
+                    stop: undefined,
+                    temperature: 0.9
+                })
+                .then((data) => {
+                    message
+                        .reply(data.data.choices[0].text)
+                        .catch(err => {
+                            message.channel.send(language.embedError);
+                            console.log(`[${getCurrentDatetime('comm')}] Error message openai() ${err}`);
+                            return;
+                        });
+                })
+                .catch(err => {
+                    message.channel.send(language.openAiCrash);
+                    console.log(`[${getCurrentDatetime('comm')}] Error openai() ${err}`);
+                    return;
+                });
         }
     }
 };
