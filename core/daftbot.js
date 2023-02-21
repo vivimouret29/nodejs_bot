@@ -8,12 +8,12 @@ const { Client, Collection, IntentsBitField, ActivityType, Events, Partials } = 
     { fr, en, uk } = require('../resx/lang.json'),
     { memes } = require('../resx/memes.json'),
     { sendEmbed, getCurrentDatetime, randomIntFromInterval } = require('./function.js'),
-    commandFile = require('../appdata/command.js'),
-    responseFile = require('../appdata/response.js'),
     mobbotFile = require('./mobbot.js'),
-    clientFile = require('../appdata/client.js'),
-    reactionFile = require('../appdata/reaction.js'),
-    openaiFile = require('../appdata/openai.js');
+    commandFile = require('../app/command.js'),
+    responseFile = require('../app/response.js'),
+    clientFile = require('../app/client.js'),
+    reactionFile = require('../app/reaction.js'),
+    openaiFile = require('../app/openai.js');
 
 const intents = new IntentsBitField();
 intents.add(
