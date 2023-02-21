@@ -100,15 +100,15 @@ module.exports = {
     guild: {
         name: 'guild',
         description: 'a dynamic guild',
-        execute(message, client, language) {
-            sendEmbed(message, `${client.user.username} ${language.guild}\n${client.guilds.cache.map(guild => guild.name).join(', ')}`);
+        async execute(message, client, language) {
+            await sendEmbed(message, `${client.user.username} ${language.guild}\n${client.guilds.cache.map(guild => guild.name).join(', ')}`);
             console.log(`[${getCurrentDatetime('comm')}] ${client.user.username} present in : `, client.guilds.cache.map(guild => guild.name));
         }
     },
     uptime: {
         name: 'uptime',
         description: 'a dynamic uptime',
-        execute(message, client, language, initDateTime) {
+        async execute(message, client, language, initDateTime) {
             try {
                 let totalSeconds = (client.uptime / 1000);
                 let days = Math.floor(totalSeconds / 86400);
@@ -119,9 +119,9 @@ module.exports = {
                 let seconds = Math.floor(totalSeconds % 60);
                 let start = initDateTime;
 
-                sendEmbed(message, `${language.uptime} ${start}\n${days}D:${hours}H:${minutes}M:${seconds}S`);
+                await sendEmbed(message, `${language.uptime} ${start}\n${days}D:${hours}H:${minutes}M:${seconds}S`);
             } catch (err) {
-                sendEmbed(message, language.error);
+                await sendEmbed(message, language.error);
                 console.log(`[${getCurrentDatetime('comm')}] Error function uptime() ${err}`);
             };
         }
@@ -130,8 +130,8 @@ module.exports = {
         name: 'status',
         description: 'a dynamic status',
         args: true,
-        execute(message, client, language, initDateTime, args) {
-            if (!(message.author.id === owner)) return sendEmbed(message, language.areYouOwner);
+        async execute(message, client, language, initDateTime, args) {
+            if (!(message.author.id === owner)) return await sendEmbed(message, language.areYouOwner);
 
             let typeThings = args[0],
                 stOnOff = args[1],
@@ -148,7 +148,7 @@ module.exports = {
             };
 
             if (String(contenText).startsWith('http') || contenText == undefined) {
-                sendEmbed(message, `${language.wrongContent}\n
+                await sendEmbed(message, `${language.wrongContent}\n
 *e.g. ${prefix}status ${typeThings != undefined ? typeThings : 'watch'} ${stOnOff != undefined ? stOnOff : 'dnd'} hello world ! ${urlLike != undefined ? urlLike : ''}*`);
                 return;
             };
@@ -175,7 +175,7 @@ module.exports = {
                 case 'dnd':
                     break;
                 default:
-                    sendEmbed(message, `${language.wrongStatus}\n
+                    await sendEmbed(message, `${language.wrongStatus}\n
 *e.g. ${prefix}status ${typeThings != undefined ? typeThings : 'watch'} online ${contenText != undefined ? contenText : 'hello world !'} ${urlLike != undefined ? urlLike : ''}*`);
                     return;
             };
@@ -197,7 +197,7 @@ module.exports = {
                     typeThings = ActivityType.Competing;
                     break;
                 default:
-                    sendEmbed(message, `${language.wrongActivities}\n
+                    await sendEmbed(message, `${language.wrongActivities}\n
 *e.g. ${prefix}status stream ${stOnOff != undefined ? stOnOff : 'idle'} ${contenText != undefined ? contenText : 'hello world !'} ${urlLike != undefined ? urlLike : ''}*`);
                     return;
             };
@@ -221,16 +221,16 @@ module.exports = {
                 });
             };
 
-            sendEmbed(message, language.changedActivites);
+            await sendEmbed(message, language.changedActivites);
         }
     },
     kill: {
         name: 'kill',
         description: 'a dynamic kill',
         async execute(message, client, language) {
-            if (!(message.author.id === owner)) return sendEmbed(message, language.areYouOwner);
+            if (!(message.author.id === owner)) return await sendEmbed(message, language.areYouOwner);
 
-            await sendEmbed(message, language.killBot);
+            await await sendEmbed(message, language.killBot);
             new Promise(resolve => setTimeout(resolve, 3 * 1000));
             client.destroy();
         }
@@ -239,9 +239,9 @@ module.exports = {
         name: 'reset',
         description: 'a dynamic reset',
         async execute(message, client, language) {
-            if (!(message.author.id === owner)) return sendEmbed(message, language.areYouOwner);
+            if (!(message.author.id === owner)) return await sendEmbed(message, language.areYouOwner);
 
-            await sendEmbed(message, language.resetBot);
+            await await sendEmbed(message, language.resetBot);
             new Promise(resolve => setTimeout(resolve, 1 * 1000));
             client.destroy();
 
@@ -270,7 +270,7 @@ module.exports = {
                 wt = survey.split('/')[0],
                 ctm = survey.split('/')[1].split('-');
 
-            if (ctm == undefined) { return sendEmbed(message, language.error); };
+            if (ctm == undefined) { return await sendEmbed(message, language.error); };
 
             var dictMojis = [],
                 maxCount = [],

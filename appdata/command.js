@@ -7,22 +7,22 @@ const package = require("../package.json"),
     axios = require('axios'),
     { sendEmbed, randomColor, getCurrentDatetime } = require('../core/function.js');
 
-var duration_average = 0;
+var duration_average = 86.50834874673323;
 
 module.exports = {
     invit: {
         name: 'invit',
         description: 'a dynamic invit',
         args: true,
-        execute(message, args, language) {
-            sendEmbed(message, language.invitMsg, true);
+        async execute(message, args, language) {
+            await sendEmbed(message, language.invitMsg, true);
         }
     },
     version: {
         name: 'version',
         description: 'a dynamic view version',
-        execute(message) {
-            sendEmbed(message, `daftbot ${package.version}`);
+        async execute(message) {
+            await sendEmbed(message, `daftbot ${package.version}`);
         }
     },
     say: {
@@ -42,21 +42,21 @@ module.exports = {
         name: 'purge',
         description: 'a dynamic purge',
         args: true,
-        execute(message, args, language) {
-            if (!(message.author.id == owner)) return sendEmbed(message, language.restricted);
+        async execute(message, args, language) {
+            if (!(message.author.id == owner)) return await sendEmbed(message, language.restricted);
 
             var amount = parseInt(args[0]);
 
             if (isNaN(amount)) {
-                sendEmbed(message, language.pruneInvalid);
+                await sendEmbed(message, language.pruneInvalid);
             } else if (amount > 0 && amount < 101) {
-                message.channel
+                await message.channel
                     .bulkDelete(amount, true)
                     .catch(err => {
                         console.error(err);
                         sendEmbed(message, language.pruneError);
                     });
-            } else { sendEmbed(message, language.pruneOut); };
+            } else { await sendEmbed(message, language.pruneOut); };
         }
     },
     ping: {
@@ -76,7 +76,7 @@ module.exports = {
         description: 'a dynamic pepe',
         args: true,
         async execute(message, args, language) {
-            if (args.length == 0) { return sendEmbed(message, language.argsUndefined); };
+            if (args.length == 0) { return await sendEmbed(message, language.argsUndefined); };
 
             let msg = await message.channel
                 .send({
@@ -128,7 +128,7 @@ module.exports = {
 
             fs.writeFileSync(`./styles/ai/pepe-diffuser.jpg`, buffer);
             await msg.delete().catch(O_o => { });
-            
+
             await message.channel
                 .send({
                     'channel_id': message.channel.channel_id,
