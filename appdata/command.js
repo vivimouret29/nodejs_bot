@@ -78,7 +78,7 @@ module.exports = {
         async execute(message, args, language) {
             if (args.length == 0) { return sendEmbed(message, language.argsUndefined); };
 
-            var msg = await message.channel
+            let msg = await message.channel
                 .send({
                     'channel_id': message.channel.channel_id,
                     'content': `pepe ${args.join(' ')} / *Waiting to display...*\n${language.timeAverage}${duration_average} seconds`
@@ -127,27 +127,30 @@ module.exports = {
             };
 
             fs.writeFileSync(`./styles/ai/pepe-diffuser.jpg`, buffer);
-            msg.edit({
-                'channel_id': message.channel.channel_id,
-                'content': `<@${message.author.id}>`,
-                'tts': false,
-                'embeds': [{
-                    'type': 'rich',
-                    'title': 'Pepe',
-                    'description': `**${args.join(' ')}**\n${language.timeDiffuse}${(60 * countResponse) + data.duration} seconds
+            await msg.delete().catch(O_o => { });
+            
+            await message.channel
+                .send({
+                    'channel_id': message.channel.channel_id,
+                    'content': `<@${message.author.id}>`,
+                    'tts': false,
+                    'embeds': [{
+                        'type': 'rich',
+                        'title': 'Pepe',
+                        'description': `**${args.join(' ')}**\n${language.timeDiffuse}${(60 * countResponse) + data.duration} seconds
 ${language.timeAverage}${data.average_duration} seconds\n\n[**Pepe Diffuser**](https://huggingface.co/Dipl0/pepe-diffuser)`,
-                    'color': randomColor(),
-                    'author': {
-                        'name': message.author.username,
-                        'icon_url': message.author.avatarURL({ format: 'png', dynamic: true, size: 1024 })
-                    },
-                    'thumbnail': {
-                        'url': `https://aeiljuispo.cloudimg.io/v7/https://s3.amazonaws.com/moonup/production/uploads/${link}?w=200&h=200&f=face`,
-                        'proxy_url': 'https://huggingface.co/Dipl0/pepe-diffuser'
-                    }
-                }],
-                'files': [`./styles/ai/pepe-diffuser.jpg`]
-            })
+                        'color': randomColor(),
+                        'author': {
+                            'name': message.author.username,
+                            'icon_url': message.author.avatarURL({ format: 'png', dynamic: true, size: 1024 })
+                        },
+                        'thumbnail': {
+                            'url': `https://aeiljuispo.cloudimg.io/v7/https://s3.amazonaws.com/moonup/production/uploads/${link}?w=200&h=200&f=face`,
+                            'proxy_url': 'https://huggingface.co/Dipl0/pepe-diffuser'
+                        }
+                    }],
+                    'files': [`./styles/ai/pepe-diffuser.jpg`]
+                })
                 .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error command pepe edit ${err}`); });
 
             duration_average = data.average_duration;
