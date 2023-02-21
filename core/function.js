@@ -1,7 +1,7 @@
 async function sendEmbed(message, content, descp) {
 	if (descp == undefined) descp = false;
 
-	var messageToSend = message.channel
+	var messageToSend = await message.channel
 		.send({
 			'channel_id': message.channel.channel_id,
 			'content': descp ? 'https://discord.gg/ucwnMKKxZe' : '',

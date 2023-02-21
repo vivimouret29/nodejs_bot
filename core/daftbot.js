@@ -67,7 +67,8 @@ class DaftBot {
         this.isMuted = false;
         this.language = this.language == undefined ? fr : this.language;
 
-        this.streamers = 'daftmob';
+        this.streamer = 'daftmob';
+
         this.emojiRoles = ['💜', '❤️', 'looners', 'mandalorian', 'linkitem', 'croisade'];
         this.rolesNames = ['/D/TWITCH', '/D/YOUTUBE', '/D/STALKERS', '/D/CHASSEURS', '/D/HÉROS', '/D/GUERRIERS', '/D/RECRUES'];
         this.avoidBot = ['757970907992948826', '758393470024155186', '758319298325905428'];
@@ -75,12 +76,12 @@ class DaftBot {
         this.userToCheck = ['491907126701064193'];
     };
 
-    on() {
+    async on() {
         this.setCollection()
-        this.login();
-        this.guildNewMember();
-        this.message();
-        this.roles();
+        await this.setLogin();
+        await this.listenGuildNewMember();
+        await this.listenMessage();
+        await this.setRoles();
     };
 
     setCollection() {
@@ -121,7 +122,7 @@ class DaftBot {
         this.collectionReaction.set(reactionFile.trashtalk.name, reactionFile.trashtalk);
     }
 
-    login() {
+    async setLogin() {
         this.dbClient
             .login(token)
             .then(() => console.log(`[${getCurrentDatetime('comm')}] ${this.dbClient.user.username}\'s logged
@@ -149,7 +150,7 @@ class DaftBot {
                 oldDescpMemory = '';
 
             while (true) {
-                let ax = await axios.get(`http://api.twitch.tv/helix/streams?user_login=` + this.streamers, params)
+                let ax = await axios.get(`http://api.twitch.tv/helix/streams?user_login=` + this.streamer, params)
                     .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error GET AXIOS ${err}`); });
 
                 if (ax.data.data.length == 0) {
@@ -176,7 +177,7 @@ class DaftBot {
 
     };
 
-    guildNewMember() {
+    async listenGuildNewMember() {
         this.dbClient.on(Events.GuildMemberAdd, async (guild) => {
             if (this.dbClient.user.id == this.avoidBot[1] || guild.id != '948894919878123570') return;
             console.log(`[${getCurrentDatetime('comm')}] New member \'${guild.user.username}\' join server : ${guild.guild.name}`);
@@ -208,7 +209,7 @@ class DaftBot {
         });
     };
 
-    message() {
+    async listenMessage() {
         this.dbClient.on(Events.MessageCreate, async (message) => {
             var args = message.content.slice(prefix.length).trim().split(/ +/),
                 command = args.shift().toLowerCase(),
@@ -229,32 +230,32 @@ class DaftBot {
                 switch (command) {
                     case 'feature':
                         console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${this.language.commandAttempt} : (${msg}) / (${author})`);
-                        sendEmbed(message, `${this.language.commandNotFound} ${command}`);
+                        await sendEmbed(message, `${this.language.commandNotFound} ${command}`);
                         break;
                     case 'lang':
-                        this.setLanguage(this.dbClient, message, args);
+                        await this.setLanguage(this.dbClient, message, args);
                         break;
                     case 'language':
-                        this.setLanguage(this.dbClient, message, args);
+                        await this.setLanguage(this.dbClient, message, args);
                         break;
                     case 'mute':
-                        if (!(message.author.id === owner)) return sendEmbed(message, this.language.restricted);
-                        this.setMute(message, args);
+                        if (!(message.author.id === owner)) return await sendEmbed(message, this.language.restricted);
+                        await this.setMute(message, args);
                         break;
                     case checkMobbotCollection:
-                        if (!(message.author.id === owner)) return sendEmbed(message, this.language.restricted);
-                        this.collectionMobbot
+                        if (!(message.author.id === owner)) return await sendEmbed(message, this.language.restricted);
+                        await this.collectionMobbot
                             .get(command)
                             .execute(message, this.dbClient.emojis);
                         break;
                     case checkClientCollection:
-                        this.collectionClient
+                        await this.collectionClient
                             .get(command)
                             .execute(message, this.dbClient, this.language, this.initDateTime, args);
                         console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
                         break;
                     case checkCollection:
-                        this.collectionCommands
+                        await this.collectionCommands
                             .get(command)
                             .execute(message, args, this.language);
                         console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
@@ -262,13 +263,11 @@ class DaftBot {
                 };
             };
 
-            if (message.author.id === owner) {
+            if (message.author.id == owner) {
                 if (Math.random() < .05) {
                     let dio = this.dbClient.emojis.cache.find(emoji => emoji.name === 'dio_sama');
-
-                    if (dio == undefined) return console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # Emoji not found`);
+                    if (dio == undefined) return console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # Dio Sama not found here`);
                     message.react(dio);
-                    console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # Za Warudo`);
                 };
             };
 
@@ -277,7 +276,7 @@ class DaftBot {
             if (!message.content.startsWith(prefix)) {
                 if ((message.mentions.has(this.dbClient.user.id)) && !(message.channel.messages.cache.get(message.id).mentions.everyone)) {
                     try {
-                        this.collectionOpenAI
+                        await this.collectionOpenAI
                             .get('openai')
                             .execute(this.dbClient, message, this.language);
                         console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
@@ -286,19 +285,8 @@ class DaftBot {
                     };
                 };
 
-                if (!this.collectionResponse.has(msg)) return;
-
-                try {
-                    this.collectionResponse
-                        .get(msg)
-                        .execute(message, args, this.language);
-                    console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
-                } catch (err) {
-                    console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # Error output reply() : ${err}`);
-                };
-
                 if (this.avoidBot.includes(message.author.id) && !(this.channelToAvoid.includes(message.channel.id))) {
-                    if (Math.random() < .005) {
+                    if (Math.random() > .025) {
                         try {
                             this.collectionReaction
                                 .get('trashtalk')
@@ -312,7 +300,7 @@ class DaftBot {
                 };
 
                 if (this.userToCheck.includes(message.author.id)) {
-                    if (Math.random() < .025) return;
+                    if (Math.random() > .05) return;
                     try {
                         message.delete().catch(O_o => { });
                         console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${message.author.user}'s message deleted`);
@@ -339,8 +327,8 @@ class DaftBot {
         });
     };
 
-    roles() {
-        this.dbClient.on(Events.MessageReactionAdd, (react, user) => {
+    async setRoles() {
+        this.dbClient.on(Events.MessageReactionAdd, async (react, user) => {
             var roChan = '1068559351570247741',
                 roMsg = '1071286935726854216',
                 emoji = react.emoji.name,
@@ -352,22 +340,22 @@ class DaftBot {
             if (message.channelId == roChan && message.id == roMsg && this.emojiRoles.includes(emoji)) {
                 switch (emoji) {
                     case '💜':
-                        this.switchRoles(this.dbClient, guild, user.id, 0, true);
+                        await this.switchRoles(this.dbClient, guild, user.id, 0, true);
                         break;
                     case '❤️':
-                        this.switchRoles(this.dbClient, guild, user.id, 1, true);
+                        await this.switchRoles(this.dbClient, guild, user.id, 1, true);
                         break;
                     case 'looners':
-                        this.switchRoles(this.dbClient, guild, user.id, 2, true);
+                        await this.switchRoles(this.dbClient, guild, user.id, 2, true);
                         break;
                     case 'mandalorian':
-                        this.switchRoles(this.dbClient, guild, user.id, 3, true);
+                        await this.switchRoles(this.dbClient, guild, user.id, 3, true);
                         break;
                     case 'linkitem':
-                        this.switchRoles(this.dbClient, guild, user.id, 4, true);
+                        await this.switchRoles(this.dbClient, guild, user.id, 4, true);
                         break;
                     case 'croisade':
-                        this.switchRoles(this.dbClient, guild, user.id, 5, true);
+                        await this.switchRoles(this.dbClient, guild, user.id, 5, true);
                         break;
                 };
             };
@@ -378,12 +366,12 @@ class DaftBot {
                 messageReg = channel.messages.cache.get(messageIdReg);
 
             if (messageReg.channelId == reChan && reMsg.includes(message.id)) {
-                this.switchRoles(this.dbClient, guild, user.id, 6, true);
+                await this.switchRoles(this.dbClient, guild, user.id, 6, true);
                 console.log(`[${getCurrentDatetime('comm')}] ${guild.name} / ${channel.name} # ${user.username} read the reglement`);
             };
         });
 
-        this.dbClient.on(Events.MessageReactionRemove, (react, user) => {
+        this.dbClient.on(Events.MessageReactionRemove, async (react, user) => {
             var rChan = '1068559351570247741',
                 rMsg = '1071286935726854216',
                 emoji = react.emoji.name,
@@ -395,43 +383,43 @@ class DaftBot {
             if (message.channelId == rChan && message.id == rMsg && this.emojiRoles.includes(emoji)) {
                 switch (emoji) {
                     case '💜':
-                        this.switchRoles(this.dbClient, guild, user.id, 0, false);
+                        await this.switchRoles(this.dbClient, guild, user.id, 0, false);
                         break;
                     case '❤️':
-                        this.switchRoles(this.dbClient, guild, user.id, 1, false);
+                        await this.switchRoles(this.dbClient, guild, user.id, 1, false);
                         break;
                     case 'looners':
-                        this.switchRoles(this.dbClient, guild, user.id, 2, false);
+                        await this.switchRoles(this.dbClient, guild, user.id, 2, false);
                         break;
                     case 'mandalorian':
-                        this.switchRoles(this.dbClient, guild, user.id, 3, false);
+                        await this.switchRoles(this.dbClient, guild, user.id, 3, false);
                         break;
                     case 'linkitem':
-                        this.switchRoles(this.dbClient, guild, user.id, 4, false);
+                        await this.switchRoles(this.dbClient, guild, user.id, 4, false);
                         break;
                     case 'croisade':
-                        this.switchRoles(this.dbClient, guild, user.id, 5, false);
+                        await this.switchRoles(this.dbClient, guild, user.id, 5, false);
                         break;
                 };
             };
         });
     };
 
-    switchRoles(client, guild, userId, roleIndex, style) {
-        var role = client.guilds.cache.find(s => s.name == guild.name).roles.cache.find(r => r.name == rolesNames[roleIndex]),
-            user = client.guilds.cache.find(s => s.name == guild.name).members.cache.get(userId);
+    async switchRoles(client, guild, userId, roleIndex, style) {
+        var role = await client.guilds.cache.find(s => s.name == guild.name).roles.cache.find(r => r.name == rolesNames[roleIndex]),
+            user = await client.guilds.cache.find(s => s.name == guild.name).members.cache.get(userId);
 
         switch (style) {
             case true:
                 if (!(role.members.has(user.id))) {
                     try {
-                        user.roles.add(role);
+                        await user.roles.add(role);
                         console.log(`[${getCurrentDatetime('comm')}] ${user.user.username} get ${role.name}`);
                     } catch (error) {
                         console.log(`[${getCurrentDatetime('comm')}] Error when assigning the role ${role.name} to ${user.user.username} : ${error}`);
                     };
                 } else {
-                    user.send(this.language.addRole)
+                    await user.send(this.language.addRole)
                         .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error author.send() ${err}`); });
                     console.log(`[${getCurrentDatetime('comm')}] ${user.user.username} already have the role ${role.name}`);
                 };
@@ -439,13 +427,13 @@ class DaftBot {
             case false:
                 if (role.members.has(user.id)) {
                     try {
-                        user.roles.remove(role);
+                        await user.roles.remove(role);
                         console.log(`[${getCurrentDatetime('comm')}] ${user.user.username} remove ${role.name}`);
                     } catch (error) {
                         console.log(`[${getCurrentDatetime('comm')}] Error when unassigning the role ${role.name} to ${user.user.username} : ${error}`);
                     };
                 } else {
-                    user.send(this.language.remRole)
+                    awaituser.send(this.language.remRole)
                         .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error author.send() ${err}`); });
                     console.log(`[${getCurrentDatetime('comm')}] ${user.user.username} have not the role ${role.name}`);
                 };
@@ -453,18 +441,18 @@ class DaftBot {
         };
     };
 
-    setLanguage(client, message, args) {
+    async setLanguage(client, message, args) {
         let msg = message.content.toLowerCase(),
             author = message.author.username;
 
         switch (args[0]) {
             case 'fr':
                 this.language = fr;
-                sendEmbed(message, this.language.changLang);
+                await sendEmbed(message, this.language.changLang);
 
                 client.user.setPresence({
                     activities: [{
-                        name: language.activities,
+                        name: this.language.activities,
                         type: ActivityType.Watching
                     }],
                     status: 'online'
@@ -474,7 +462,7 @@ class DaftBot {
                 break;
             case 'en':
                 this.language = en;
-                sendEmbed(message, this.language.changLang);
+                await sendEmbed(message, this.language.changLang);
 
                 client.user.setPresence({
                     activities: [{
@@ -488,7 +476,7 @@ class DaftBot {
                 break;
             case 'uk':
                 this.language = uk;
-                sendEmbed(message, this.language.changLang);
+                await sendEmbed(message, this.language.changLang);
 
                 client.user.setPresence({
                     activities: [{
@@ -501,13 +489,13 @@ class DaftBot {
                 console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
                 break;
             default:
-                sendEmbed(message, this.language.languageNtReco);
+                await sendEmbed(message, this.language.languageNtReco);
                 console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
                 break;
         };
     };
 
-    setMute(message, args) {
+    async setMute(message, args) {
         let action = args[0],
             msg = message.content.toLowerCase(),
             author = message.author.username;
@@ -515,23 +503,23 @@ class DaftBot {
         if (action != undefined) {
             if ((action.toLowerCase()) === 'on') {
                 console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
-                sendEmbed(message, this.language.botMuted);
+                await sendEmbed(message, this.language.botMuted);
                 this.isMuted = true;
                 return this.isMuted;
             } else if ((action.toLowerCase()) === 'off') {
                 console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
-                sendEmbed(message, this.language.botUnmuted);
+                await sendEmbed(message, this.language.botUnmuted);
                 this.isMuted = false;
                 return this.isMuted;
             } else {
                 console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
-                sendEmbed(message, `${this.language.howMute}\n\r*e.g. : ${prefix}mute on*`);
+                await sendEmbed(message, `${this.language.howMute}\n\r*e.g. : ${prefix}mute on*`);
                 this.isMuted = false;
                 return this.isMuted;
             };
         } else {
             console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
-            sendEmbed(message, `${this.language.howMute}\n\r*e.g. : ${prefix}mute on*`);
+            await sendEmbed(message, `${this.language.howMute}\n\r*e.g. : ${prefix}mute on*`);
             this.isMuted = false;
             return this.isMuted;
         };
