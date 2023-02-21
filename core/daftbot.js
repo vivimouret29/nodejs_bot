@@ -237,7 +237,7 @@ class DaftBot {
                         break;
                     case 'mute':
                         if (!(message.author.id === owner)) return sendEmbed(message, this.language.restricted);
-                        setMute(message, args);
+                        this.setMute(message, args);
                         break;
                     case checkMobbotCollection:
                         if (!(message.author.id === owner)) return sendEmbed(message, this.language.restricted);
