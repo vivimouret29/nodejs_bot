@@ -406,7 +406,7 @@ class DaftBot {
     };
 
     async switchRoles(client, guild, userId, roleIndex, style) {
-        var role = await client.guilds.cache.find(s => s.name == guild.name).roles.cache.find(r => r.name == rolesNames[roleIndex]),
+        var role = await client.guilds.cache.find(s => s.name == guild.name).roles.cache.find(r => r.name == this.rolesNames[roleIndex]),
             user = await client.guilds.cache.find(s => s.name == guild.name).members.cache.get(userId);
 
         switch (style) {
