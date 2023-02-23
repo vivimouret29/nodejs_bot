@@ -253,6 +253,7 @@ class DaftBot {
                             .get(command)
                             .execute(message, this.dbClient, this.language, this.initDateTime, args);
                         console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
+                        if (checkClientCollection == 'guild') { console.log(`[${getCurrentDatetime('comm')}] ${this.dbClient.guilds.cache.map(guild => guild.name)}`); };
                         break;
                     case checkCollection:
                         await this.collectionCommands

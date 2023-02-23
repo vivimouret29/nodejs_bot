@@ -102,7 +102,6 @@ module.exports = {
         description: 'a dynamic guild',
         async execute(message, client, language) {
             await sendEmbed(message, `${client.user.username} ${language.guild}\n${client.guilds.cache.map(guild => guild.name).join(', ')}`);
-            console.log(`[${getCurrentDatetime('comm')}] ${client.user.username} present in : `, client.guilds.cache.map(guild => guild.name));
         }
     },
     uptime: {

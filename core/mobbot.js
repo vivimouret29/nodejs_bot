@@ -1,6 +1,7 @@
 'use.strict'
 
 const { Client } = require('tmi.js'),
+    { ActivityType } = require('discord.js'),
     { parse } = require('json2csv'),
     fs = require('fs'),
     { clientId, identity, channels } = require('./config.json'),
@@ -60,7 +61,7 @@ module.exports = {
                 return;
             };
 
-            fs.writeFile(`./core/data/mobbot_analytics.csv`, parse(dataToExport), function (err) {
+            fs.writeFile(`../core/data/mobbot_analytics.csv`, parse(dataToExport), function (err) {
                 if (err) {
                     let emoji = client.cache.find(emoji => emoji.name === 'fufufu');
                     message
@@ -80,7 +81,7 @@ module.exports = {
 
             message.author
                 .send({ 'content': 'csv being transferred' })
-                .then((msg) => { msg.edit({ 'content': 'csv transferred', 'files': ['./core/data/mobbot_analytics.csv'] }); })
+                .then((msg) => { msg.edit({ 'content': 'csv transferred', 'files': ['../core/data/mobbot_analytics.csv'] }); })
                 .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error during file send ${err}`); });
         }
     },
@@ -89,7 +90,7 @@ module.exports = {
         description: 'a dynamic live notification',
         execute(client, language, gD, axios) {
             let guidDot = gD,
-                channelTwitch = ['twitch', '🎦-fox-stream-🎦'],
+                channelTwitch = ['twitch', '🎦-fox-stream-🎦'], // TODO : change activites in same time
                 guid = '',
                 dot = '';
 
@@ -146,7 +147,16 @@ module.exports = {
                     .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error livenotif ${err}`); });
             };
 
-            console.log(`[${getCurrentDatetime('comm')}] Notif Twitch ${axios.data.data[0].user_name} sent in ${channelTwitch}`);
+            client.user.setPresence({
+                activities: [{
+                    name: language.stream,
+                    type: ActivityType.Streaming,
+                    url: 'https://twitch.tv/daftmob'
+                }],
+                status: 'online'
+            });
+
+            console.log(`[${getCurrentDatetime('comm')}] ${channelTwitch}`);
         }
     }
 };
