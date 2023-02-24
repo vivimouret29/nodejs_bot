@@ -253,7 +253,7 @@ class DaftBot {
                             .get(command)
                             .execute(message, this.dbClient, this.language, this.initDateTime, args);
                         console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
-                        if (checkClientCollection == 'guild') { console.log(`[${getCurrentDatetime('comm')}] ${this.dbClient.guilds.cache.map(guild => guild.name)}`); };
+                        if (checkClientCollection == 'guild') { console.log(`[${getCurrentDatetime('comm')}] `, this.dbClient.guilds.cache.map(guild => guild.name)) };
                         break;
                     case checkCollection:
                         await this.collectionCommands
@@ -302,11 +302,12 @@ class DaftBot {
 
                 if (this.userToCheck.includes(message.author.id)) {
                     if (Math.random() > .05) return;
+                    let userId = message.author.user;
                     try {
                         message.delete().catch(O_o => { });
-                        console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${message.author.user}'s message deleted`);
+                        console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${userId}'s message deleted`);
                     } catch (err) {
-                        console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # Can't delete ${message.author.user}'s message : ${err}`);
+                        console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # Can't delete ${userId}'s message : ${err}`);
                     };
                 };
 
