@@ -1,34 +1,31 @@
 'use.strict'
 
-const { Client, Collection, IntentsBitField, ActivityType, Events, Partials } = require('discord.js'),
+const { Client, Collection, GatewayIntentBits, ActivityType, Events, Partials, REST, Routes } = require('discord.js'),
     axios = require('axios'),
+    fs = require('node:fs'),
+    path = require('node:path'),
     packageVersion = require('../package.json'),
-    { prefix, token, owner } = require('../config.json'),
+    { prefix, token, owner, client } = require('../config.json'),
     { clientId, identity } = require('./config.json'),
     { fr, en, uk } = require('../resx/lang.json'),
     { memes } = require('../resx/memes.json'),
-    { sendEmbed, getCurrentDatetime, randomIntFromInterval } = require('./function.js'),
-    mobbotFile = require('./mobbot.js'),
-    commandFile = require('../app/command.js'),
-    responseFile = require('../app/response.js'),
-    clientFile = require('../app/client.js'),
-    reactionFile = require('../app/reaction.js'),
-    openaiFile = require('../app/openai.js');
+    { sendEmbed, getCurrentDatetime, randomIntFromInterval } = require('./function.js');
 
-const intents = new IntentsBitField();
-intents.add(
-    IntentsBitField.Flags.DirectMessages,
-    IntentsBitField.Flags.DirectMessageReactions,
-    IntentsBitField.Flags.Guilds,
-    IntentsBitField.Flags.GuildMembers,
-    IntentsBitField.Flags.GuildInvites,
-    IntentsBitField.Flags.GuildMessages,
-    IntentsBitField.Flags.GuildPresences,
-    IntentsBitField.Flags.GuildMessageReactions,
-    IntentsBitField.Flags.GuildMessageTyping,
-    IntentsBitField.Flags.GuildEmojisAndStickers,
-    IntentsBitField.Flags.MessageContent
-);
+const intents = [
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildIntegrations,
+    GatewayIntentBits.GuildPresences,
+    GatewayIntentBits.GuildMembers,
+    GatewayIntentBits.MessageContent,
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.GuildInvites,
+    GatewayIntentBits.GuildPresences,
+    GatewayIntentBits.GuildMessageReactions,
+    GatewayIntentBits.GuildMessageTyping,
+    GatewayIntentBits.GuildEmojisAndStickers,
+    GatewayIntentBits.DirectMessages,
+    GatewayIntentBits.DirectMessageReactions
+];
 const params = {
     headers: {
         Authorization: `Bearer ${identity.password}`,
@@ -55,12 +52,11 @@ class DaftBot {
     constructor() {
         this.dbClient = new Client({ intents: intents, partials: partials });
 
-        this.collectionCommands = new Collection();
-        this.collectionMobbot = new Collection();
-        this.collectionClient = new Collection();
-        this.collectionResponse = new Collection();
-        this.collectionOpenAI = new Collection();
-        this.collectionReaction = new Collection();
+        this.dbClient.command = new Collection();
+        this.dbClient.mobbot = new Collection();
+        this.dbClient.response = new Collection();
+        this.dbClient.slash = new Collection();
+        this.commands = [];
 
         this.date = new Date();
         this.initDateTime = `${(this.date.getUTCHours() + 1) < 10 ? `0${this.date.getUTCHours()}` : this.date.getUTCHours()}:${this.date.getUTCMinutes() < 10 ? `0${this.date.getUTCMinutes()}` : this.date.getUTCMinutes()} - ${this.date.getUTCDate() < 10 ? `0${this.date.getUTCDate()}` : this.date.getUTCDate()}/${this.date.getUTCMonth() < 10 ? `0${this.date.getUTCMonth()}` : this.date.getUTCMonth()}/${this.date.getUTCFullYear()}`;
@@ -68,16 +64,15 @@ class DaftBot {
         this.language = this.language == undefined ? fr : this.language;
 
         this.streamer = 'daftmob';
-
         this.emojiRoles = ['💜', '❤️', 'looners', 'mandalorian', 'linkitem', 'croisade'];
         this.rolesNames = ['/D/TWITCH', '/D/YOUTUBE', '/D/STALKERS', '/D/CHASSEURS', '/D/HÉROS', '/D/GUERRIERS', '/D/RECRUES'];
+
         this.avoidBot = ['757970907992948826', '758393470024155186', '758319298325905428'];
-        this.channelToAvoid = ['948894919878123573'];
         this.userToCheck = ['491907126701064193'];
     };
 
     async on() {
-        this.setCollection()
+        this.setCollection();
         await this.setLogin();
         await this.listenGuildNewMember();
         await this.listenMessage();
@@ -86,41 +81,55 @@ class DaftBot {
 
     setCollection() {
         // Command Collection
-        this.collectionCommands.set(commandFile.version.name, commandFile.version);
-        this.collectionCommands.set(commandFile.say.name, commandFile.say);
-        this.collectionCommands.set(commandFile.purge.name, commandFile.purge);
-        this.collectionCommands.set(commandFile.imagine.name, commandFile.imagine);
-        this.collectionCommands.set(commandFile.ping.name, commandFile.ping);
-        this.collectionCommands.set(commandFile.invit.name, commandFile.invit);
+        const commandsPath = path.join(__dirname, '../command');
+        const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
+
+        for (let file of commandFiles) {
+            var filePath = path.join(commandsPath, file);
+            var command = require(filePath);
+            if ('data' in command && 'execute' in command) { this.dbClient.command.set(command.data.name, command); }
+            else { console.log(`[ERROR_FILE_COMMAND] The command at ${filePath} is missing a required "data" or "execute" property.`); };
+        };
 
         // Mobbot Collection
-        this.collectionMobbot.set(mobbotFile.mobbot.name, mobbotFile.mobbot);
-        this.collectionMobbot.set(mobbotFile.exportmobbot.name, mobbotFile.exportmobbot);
-        this.collectionMobbot.set(mobbotFile.livenotif.name, mobbotFile.livenotif);
+        const mobbotsPath = path.join(__dirname, './command');
+        const mobbotFiles = fs.readdirSync(mobbotsPath).filter(file => file.endsWith('.js'));
 
-        // Client Collection
-        this.collectionClient.set(clientFile.help.name, clientFile.help);
-        this.collectionClient.set(clientFile.guild.name, clientFile.guild);
-        this.collectionClient.set(clientFile.uptime.name, clientFile.uptime);
-        this.collectionClient.set(clientFile.status.name, clientFile.status);
-        this.collectionClient.set(clientFile.poll.name, clientFile.poll);
-        this.collectionClient.set(clientFile.kill.name, clientFile.kill);
-        this.collectionClient.set(clientFile.reset.name, clientFile.reset);
+        for (let file of mobbotFiles) {
+            var filePath = path.join(mobbotsPath, file);
+            var command = require(filePath);
+            if ('data' in command && 'execute' in command) { this.dbClient.mobbot.set(command.data.name, command); }
+            else { console.log(`[ERROR_FILE_MOBBOT] The command at ${filePath} is missing a required "data" or "execute" property.`); };
+        };
 
-        // Reply Collection
-        this.collectionResponse.set(responseFile.daftbot.name, responseFile.daftbot);
-        this.collectionResponse.set(responseFile.laugh.name, responseFile.laugh);
-        this.collectionResponse.set(responseFile.yes.name, responseFile.yes);
-        this.collectionResponse.set(responseFile.no.name, responseFile.no);
-        this.collectionResponse.set(responseFile.mais.name, responseFile.mais);
-        this.collectionResponse.set(responseFile.tqt.name, responseFile.tqt);
+        // Slash Collection
+        const slashsPath = path.join(__dirname, '../slash');
+        const slashFiles = fs.readdirSync(slashsPath).filter(file => file.endsWith('.js'));
 
-        // OpenAI Collection
-        this.collectionOpenAI.set(openaiFile.openai.name, openaiFile.openai);
+        for (let file of slashFiles) {
+            var filePath = path.join(slashsPath, file);
+            var command = require(filePath);
+            if ('data' in command && 'execute' in command) { this.dbClient.slash.set(command.data.name, command); }
+            else { console.log(`[ERROR_FILE_MOBBOT] The command at ${filePath} is missing a required "data" or "execute" property.`); };
+        };
 
-        // Reaction Collection
-        this.collectionReaction.set(reactionFile.trashtalk.name, reactionFile.trashtalk);
-    }
+        // Response Collection
+        const responsesPath = path.join(__dirname, '../response');
+        const responseFiles = fs.readdirSync(responsesPath).filter(file => file.endsWith('.js'));
+
+        for (let file of responseFiles) {
+            var filePath = path.join(responsesPath, file);
+            var command = require(filePath);
+            if ('data' in command && 'execute' in command) { this.dbClient.response.set(command.data.name, command); }
+            else { console.log(`[ERROR_FILE_RESPONSE] The command at ${filePath} is missing a required "data" or "execute" property.`); };
+        };
+
+        // Grab the SlashCommandBuilder#toJSON() output of each command's data for deployment
+        for (const file of slashFiles) {
+            const command = require(`../slash/${file}`);
+            this.commands.push(command.data.toJSON());
+        };
+    };
 
     async setLogin() {
         this.dbClient
@@ -139,7 +148,7 @@ class DaftBot {
             });
             console.log(`[${getCurrentDatetime('comm')}] ${this.dbClient.user.username} present in : `, this.dbClient.guilds.cache.map(guild => guild.name));
 
-            this.collectionMobbot
+            this.dbClient.mobbot
                 .get('mobbotConnection')
                 .execute();
             console.log(`[${getCurrentDatetime('comm')}] ${this.dbClient.user.username} connect on irc-ws.chat.twitch.tv:443`);
@@ -160,7 +169,7 @@ class DaftBot {
 
                     if (descpMemory != oldDescpMemory && ax.data.data.length == 1) {
                         let guiDot = await axios.get(`https://twitch.tv/${ax.data.data[0].user_login}`);
-                        this.collectionMobbot
+                        this.dbClient.mobbot
                             .get('livenotif')
                             .execute(this.dbClient, this.language, guiDot, ax);
                     };
@@ -172,9 +181,7 @@ class DaftBot {
         });
 
         this.dbClient.on(Events.GuildCreate, async (guild) => { console.log(`[${getCurrentDatetime('comm')}] ${this.dbClient.user.username} added in : ${guild.name}`); });
-
         this.dbClient.on(Events.GuildDelete, async (guild) => { console.log(`[${getCurrentDatetime('comm')}] ${this.dbClient.user.username} removed in : ${guild.name}`); });
-
     };
 
     async listenGuildNewMember() {
@@ -217,12 +224,10 @@ class DaftBot {
                 author = message.author.username,
                 msgSplit = msg.split(' '),
                 checkMobbotCollection,
-                checkCollection,
-                checkClientCollection;
+                checkCollection;
 
-            this.collectionMobbot.has(command) ? checkMobbotCollection = this.collectionMobbot.get(command).name : checkMobbotCollection = false;
-            this.collectionCommands.has(command) ? checkCollection = this.collectionCommands.get(command).name : checkCollection = false;
-            this.collectionClient.has(command) ? checkClientCollection = this.collectionClient.get(command).name : checkClientCollection = false;
+            this.dbClient.mobbot.has(command) ? checkMobbotCollection = this.dbClient.mobbot.get(command).data.name : checkMobbotCollection = false;
+            this.dbClient.command.has(command) ? checkCollection = this.dbClient.command.get(command).data.name : checkCollection = false;
 
             if (message.author.bot) return;
 
@@ -244,21 +249,14 @@ class DaftBot {
                         break;
                     case checkMobbotCollection:
                         if (!(message.author.id === owner)) return await sendEmbed(message, this.language.restricted);
-                        await this.collectionMobbot
+                        await this.dbClient.mobbot
                             .get(command)
-                            .execute(message, this.dbClient.emojis);
-                        break;
-                    case checkClientCollection:
-                        await this.collectionClient
-                            .get(command)
-                            .execute(message, this.dbClient, this.language, this.initDateTime, args);
-                        console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
-                        if (checkClientCollection == 'guild') { console.log(`[${getCurrentDatetime('comm')}] `, this.dbClient.guilds.cache.map(guild => guild.name)) };
+                            .execute(message, this.dbClient);
                         break;
                     case checkCollection:
-                        await this.collectionCommands
+                        await this.dbClient.command
                             .get(command)
-                            .execute(message, args, this.language);
+                            .execute(message, this.dbClient, this.language, args, this.initDateTime);
                         console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
                         break;
                 };
@@ -277,26 +275,12 @@ class DaftBot {
             if (!message.content.startsWith(prefix)) {
                 if ((message.mentions.has(this.dbClient.user.id)) && !(message.channel.messages.cache.get(message.id).mentions.everyone)) {
                     try {
-                        await this.collectionOpenAI
+                        await this.dbClient.command
                             .get('openai')
                             .execute(this.dbClient, message, this.language);
                         console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
                     } catch (err) {
                         console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # Error output openai() : ${err}`);
-                    };
-                };
-
-                if (this.avoidBot.includes(message.author.id) && !(this.channelToAvoid.includes(message.channel.id))) {
-                    if (Math.random() > .025) {
-                        try {
-                            this.collectionReaction
-                                .get('trashtalk')
-                                .execute(message);
-                            console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}
-[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${this.dbClient.user.username} used (or not) a trashtalk`);
-                        } catch (err) {
-                            console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # Error output randomCollection() : ${err}`);
-                        };
                     };
                 };
 
@@ -312,10 +296,10 @@ class DaftBot {
                 };
 
                 for (let word in msgSplit) {
-                    if (this.collectionResponse.has(msgSplit[word])) {
+                    if (this.dbClient.response.has(msgSplit[word])) {
                         if (Math.random() > .15) return;
                         try {
-                            this.collectionResponse
+                            this.dbClient.response
                                 .get(msgSplit[word])
                                 .execute(message, args, this.language);
                             console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
