@@ -110,7 +110,10 @@ class DaftBot {
         for (let file of slashFiles) {
             var filePath = path.join(slashsPath, file);
             var command = require(filePath);
-            if ('data' in command && 'execute' in command) { this.dbClient.slash.set(command.data.name, command); }
+            if ('data' in command && 'execute' in command) { 
+                this.dbClient.slash.set(command.data.name, command); 
+                this.commands.push(command.data.toJSON());
+            }
             else { console.log(`[ERROR_FILE_MOBBOT] The command at ${filePath} is missing a required "data" or "execute" property.`); };
         };
 
@@ -123,12 +126,6 @@ class DaftBot {
             var command = require(filePath);
             if ('data' in command && 'execute' in command) { this.dbClient.response.set(command.data.name, command); }
             else { console.log(`[ERROR_FILE_RESPONSE] The command at ${filePath} is missing a required "data" or "execute" property.`); };
-        };
-
-        // Grab the SlashCommandBuilder#toJSON() output of each command's data for deployment
-        for (const file of slashFiles) {
-            const command = require(`../slash/${file}`);
-            this.commands.push(command.data.toJSON());
         };
     };
 
@@ -229,7 +226,7 @@ class DaftBot {
             var checkCollection;
 
             this.dbClient.slash.has(interaction.commandName) ? checkCollection = this.dbClient.slash.get(interaction.commandName).data.name : checkCollection = false;
-
+            
             switch (interaction.commandName) {
                 case checkCollection:
                     await this.dbClient.slash
