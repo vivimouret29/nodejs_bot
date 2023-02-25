@@ -47,6 +47,7 @@ const partials = [
     Partials.Role,
     Partials.User
 ];
+const rest = new REST({ version: '10' }).setToken(token);
 
 class DaftBot {
     constructor() {
@@ -132,6 +133,11 @@ class DaftBot {
     };
 
     async setLogin() {
+        await rest.put(
+            Routes.applicationCommands(client),
+            { body: this.commands },
+        );
+
         this.dbClient
             .login(token)
             .then(() => console.log(`[${getCurrentDatetime('comm')}] ${this.dbClient.user.username}\'s logged
@@ -217,6 +223,23 @@ class DaftBot {
     };
 
     async listenMessage() {
+        this.dbClient.on(Events.InteractionCreate, async interaction => {
+            if (!interaction.isCommand()) return;
+
+            var checkCollection;
+
+            this.dbClient.slash.has(interaction.commandName) ? checkCollection = this.dbClient.slash.get(interaction.commandName).data.name : checkCollection = false;
+
+            switch (interaction.commandName) {
+                case checkCollection:
+                    await this.dbClient.slash
+                        .get(interaction.commandName)
+                        .execute(interaction, this.dbClient, this.language, this.initDateTime);
+                    console.log(`[${getCurrentDatetime('comm')}] ${interaction.member.guild.name} # ${interaction.member.user.username} : ${interaction.options.get("prompt").value}`);
+                    break;
+            };
+        });
+
         this.dbClient.on(Events.MessageCreate, async (message) => {
             var args = message.content.slice(prefix.length).trim().split(/ +/),
                 command = args.shift().toLowerCase(),
