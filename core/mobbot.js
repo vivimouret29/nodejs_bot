@@ -3,7 +3,7 @@
 const { Client } = require('tmi.js'),
     { ActivityType } = require('discord.js'),
     { parse } = require('json2csv'),
-    fs = require('fs'),
+    fs = require('node:fs'),
     { clientId, identity, channels } = require('./config.json'),
     { getCurrentDatetime } = require('./function.js');
 

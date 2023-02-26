@@ -1,7 +1,7 @@
 'use.strict'
 
 const { SlashCommandBuilder } = require('discord.js'),
-	fs = require('fs'),
+	fs = require('node:fs'),
 	axios = require('axios'),
 	{ clientId, identity } = require('../core/config.json'),
 	{ randomColor, getCurrentDatetime, randomIntFromInterval } = require('../core/function.js');
@@ -11,10 +11,9 @@ var duration_average = randomIntFromInterval(0, 100);
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('pepe')
-		.setDescription('Permet de faire imaginer une image via le bot avec pepe diffuser')
+		.setDescription('Permet d\'imaginer une image via le bot avec pepe diffuser')
 		.addStringOption(option => {
-			return option
-				.setName('prompt')
+			return option.setName('prompt')
 				.setDescription('what you want to see')
 				.setRequired(true)
 		}),

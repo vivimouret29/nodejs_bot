@@ -1,6 +1,6 @@
 'use.strict'
 
-const fs = require('fs'),
+const fs = require('node:fs'),
     axios = require('axios'),
     { clientId, identity } = require('../core/config.json'),
     { sendEmbed, randomColor, getCurrentDatetime, randomIntFromInterval } = require('../core/function.js');

@@ -16,7 +16,7 @@
             "ping": "-  ping : permet de connaître le ping du bot\r",
             "invit": "-  invit : permet d'obtenir le lien d'invitation du bot\r",
             "guild": "-  guild : renvoie la liste de serveurs où le bot est\r",
-            "pepe": "-  pepe : permet de faire imaginer une image via le bot avec ([**pepe diffuser**](https://huggingface.co/Dipl0/pepe-diffuser))\r"
+            "pepe": "-  pepe : permet d'imaginer une image via le bot avec ([**pepe diffuser**](https://huggingface.co/Dipl0/pepe-diffuser))\r"
         },
         "en": {
             "littleLine": "Here is the list of commands that can be used at this time\r",

@@ -110,8 +110,8 @@ class DaftBot {
         for (let file of slashFiles) {
             var filePath = path.join(slashsPath, file);
             var command = require(filePath);
-            if ('data' in command && 'execute' in command) { 
-                this.dbClient.slash.set(command.data.name, command); 
+            if ('data' in command && 'execute' in command) {
+                this.dbClient.slash.set(command.data.name, command);
                 this.commands.push(command.data.toJSON());
             }
             else { console.log(`[ERROR_FILE_MOBBOT] The command at ${filePath} is missing a required "data" or "execute" property.`); };
@@ -226,13 +226,13 @@ class DaftBot {
             var checkCollection;
 
             this.dbClient.slash.has(interaction.commandName) ? checkCollection = this.dbClient.slash.get(interaction.commandName).data.name : checkCollection = false;
-            
+
             switch (interaction.commandName) {
                 case checkCollection:
                     await this.dbClient.slash
                         .get(interaction.commandName)
                         .execute(interaction, this.dbClient, this.language, this.initDateTime);
-                    console.log(`[${getCurrentDatetime('comm')}] ${interaction.member.guild.name} # ${interaction.member.user.username} : ${interaction.options.get("prompt").value}`);
+                    console.log(`[${getCurrentDatetime('comm')}] ${interaction.member.guild.name} / ${interaction.member.user.username} # ${interaction.commandName}${interaction.options.get("prompt") != undefined ? ` - ${interaction.options.get("prompt").value}` : ''}`);
                     break;
             };
         });

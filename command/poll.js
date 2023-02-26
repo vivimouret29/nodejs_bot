@@ -11,7 +11,6 @@ module.exports = {
     args: true,
     async execute(message, client, language, args, initDateTime) {
         Array.prototype.max = function () { return Math.max.apply(null, this); };
-        Array.prototype.min = function () { return Math.min.apply(null, this); };
 
         var survey = args.join(' '),
             wt = survey.split('/')[0],
