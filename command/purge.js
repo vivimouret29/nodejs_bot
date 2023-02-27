@@ -1,3 +1,8 @@
+'use.strict'
+
+const { owner } = require('../config.json'),
+    { sendEmbed } = require('../core/function.js');
+
 module.exports = {
     data: {
         name: 'purge',
