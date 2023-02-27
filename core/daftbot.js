@@ -159,7 +159,8 @@ class DaftBot {
             if (this.dbClient.user.id == this.avoidBot[1]) return;
 
             let descpMemory = '',
-                oldDescpMemory = '';
+                oldDescpMemory = '',
+                message;
 
             while (true) {
                 let ax = await axios.get(`http://api.twitch.tv/helix/streams?user_login=` + this.streamer, params)
@@ -174,12 +175,12 @@ class DaftBot {
                         let guiDot = await axios.get(`https://twitch.tv/${ax.data.data[0].user_login}`);
                         this.dbClient.mobbot
                             .get('livenotif')
-                            .execute(this.dbClient, this.language, guiDot, ax);
+                            .execute(message, this.dbClient, this.language, guiDot.data, ax);
                     };
                 };
 
                 oldDescpMemory = descpMemory;
-                await new Promise(resolve => setTimeout(resolve, 300 * 1000));
+                await new Promise(resolve => setTimeout(resolve, 600 * 1000));
             };
         });
 

@@ -81,17 +81,17 @@ class MobBot {
             .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error during file send ${err}`); });
     };
 
-    liveNotif(client, language, gD, axios) {
+    liveNotif(message, client, language, gD, axios) {
         let guidDot = gD,
             channelTwitch = ['twitch', '🎦-fox-stream-🎦'],
             guid = '',
             dot = '';
 
         try {
-            guid = guidDot.data.split(new RegExp(`(s\/[^.]*-p)`, 'giu'))[1];
+            guid = guidDot.split(new RegExp(`(s\/[^.]*-p)`, 'giu'))[1];
             guid = guid.split('s/')[1].split('-p')[0];
 
-            dot = guidDot.data.split(new RegExp(`(ge-[.]*...........)`, 'giu'))[1];
+            dot = guidDot.split(new RegExp(`(ge-[.]*...........)`, 'giu'))[1];
             dot = dot.split('.')[1].split(' ')[0];
         } catch (err) {
             console.log(`[${getCurrentDatetime('comm')}] Can't get guid and dot : `, err);
