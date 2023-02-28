@@ -130,11 +130,6 @@ class DaftBot {
     };
 
     async setLogin() {
-        await rest.put(
-            Routes.applicationCommands(client),
-            { body: this.commands },
-        );
-
         this.dbClient
             .login(token)
             .then(() => console.log(`[${getCurrentDatetime('comm')}] ${this.dbClient.user.username}\'s logged
@@ -179,6 +174,18 @@ class DaftBot {
                     };
                 };
 
+                let fe = await fetch(`https://www.youtube.com/feeds/videos.xml?channel_id=UCreItrEewfO6IPZYPu4C7pA`)
+                    .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error FETCH ${err}`); }),
+                    fetched = await fe.text(),
+                    published = fetched.split(new RegExp(`(\>[^.]*?\/)`, 'giu'))[37].slice(15, -2),
+                    pubDate = new Date(published);
+
+                if (new Date(new Date().setHours(new Date().getHours() - 2)) < pubDate) {
+                    this.dbClient.mobbot
+                        .get('videonotif')
+                        .execute(message, this.dbClient, this.language);
+                };
+
                 oldDescpMemory = descpMemory;
                 await new Promise(resolve => setTimeout(resolve, 600 * 1000));
             };
@@ -186,6 +193,11 @@ class DaftBot {
 
         this.dbClient.on(Events.GuildCreate, async (guild) => { console.log(`[${getCurrentDatetime('comm')}] ${this.dbClient.user.username} added in : ${guild.name}`); });
         this.dbClient.on(Events.GuildDelete, async (guild) => { console.log(`[${getCurrentDatetime('comm')}] ${this.dbClient.user.username} removed in : ${guild.name}`); });
+
+        await rest.put(
+            Routes.applicationCommands(client),
+            { body: this.commands },
+        );
     };
 
     async listenGuildNewMember() {
@@ -272,7 +284,7 @@ class DaftBot {
                         if (!(message.author.id === owner)) return await sendEmbed(message, this.language.restricted);
                         await this.dbClient.mobbot
                             .get(command)
-                            .execute(message, this.dbClient);
+                            .execute(message, this.dbClient, this.language);
                         break;
                     case checkCollection:
                         await this.dbClient.command

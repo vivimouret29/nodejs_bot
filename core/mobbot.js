@@ -5,7 +5,7 @@ const { Client } = require('tmi.js'),
     { parse } = require('json2csv'),
     fs = require('node:fs'),
     { clientId, identity, channels } = require('./config.json'),
-    { getCurrentDatetime } = require('./function.js');
+    { getCurrentDatetime, randomColor } = require('./function.js');
 
 const oauth = {
     options: {
@@ -82,6 +82,11 @@ class MobBot {
     };
 
     liveNotif(message, client, language, gD, axios) {
+        if (gD == undefined || axios == undefined) {
+            console.log(`[${getCurrentDatetime('comm')}] Error function liveNotif() : GUID = ${gD} and/or AXIOS = ${axios}`);
+            return;
+        };
+
         let guidDot = gD,
             channelTwitch = ['twitch', '🎦-fox-stream-🎦'],
             guid = '',
@@ -111,7 +116,7 @@ class MobBot {
                         'type': 'rich',
                         'title': `Live de ${axios.data.data[0].user_name}`,
                         'description': `${language.descLiveSt} ${axios.data.data[0].user_name} ${language.descLiveNd}`,
-                        'color': 0x4d04bb,
+                        'color': randomColor(),
                         'fields': [{
                             'name': axios.data.data[0].game_name,
                             'value': axios.data.data[0].title
@@ -137,7 +142,7 @@ class MobBot {
                         'url': `https://twitch.tv/${axios.data.data[0].user_login}`
                     }]
                 })
-                .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error livenotif ${err}`); });
+                .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error message liveNotif() ${err}`); });
         };
 
         client.user.setPresence({
@@ -150,6 +155,62 @@ class MobBot {
         });
 
         console.log(`[${getCurrentDatetime('comm')}] ${channelTwitch}`);
+    };
+
+    async videoNotif(message, client, language) {
+        let fe = await fetch(`https://www.youtube.com/feeds/videos.xml?channel_id=UCreItrEewfO6IPZYPu4C7pA`)
+            .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error GET AXIOS ${err}`); }),
+            fetched = await fe.text(),
+            channelYoutube = ['youtube'],
+            video = [],
+            urI,
+            title,
+            thumbnail,
+            descp;
+
+        try {
+            video = fetched.split(new RegExp(`(\:[^.]*\<\/)`, 'giu'));
+            urI = video[3].split(new RegExp(`(\<[^.]*?\>)`, 'giu'))[10];
+            title = video[3].split(new RegExp(`(\<[^.]*?\>)`, 'giu'))[18].slice(0, -2);
+            thumbnail = video[6].split(new RegExp(`(\"[^.]*?\")`, 'giu'))[8];
+            descp = video[6].split(new RegExp(`(\"[^.]*?\")`, 'giu'))[12].split(new RegExp(`(\>[^.]*?\:)`, 'giu'))[3].slice(1, -9);
+        } catch (err) {
+            console.log(`[${getCurrentDatetime('comm')}] Can't get video's information : `, err);
+        };
+
+        for (let chan in channelYoutube) {
+            var channelSend = client.channels.cache.find(channel => channel.name == channelYoutube[chan]);
+            if (channelSend.id == undefined) break;
+
+            client.channels.cache
+                .get(channelSend.id)
+                .send({
+                    'channel_id': channelSend.id,
+                    'content': '<@&1071049081910210661>',
+                    'tts': false,
+                    'embeds': [{
+                        'type': 'rich',
+                        'title': title,
+                        'description': descp,
+                        'color': randomColor(),
+                        'image': {
+                            'url': thumbnail,
+                            'proxy_url': `https://www.youtube.com/watch?v=${urI}`
+                        },
+                        'thumbnail': {
+                            'url': `https://yt3.ggpht.com/SeggshbVSGnz8KFWP-KsS6pQyYpc-BRNc_OxvJH_ilwuLgKEo7bxtxoP1yooIH2ELiq7hTGM=s600-c-k-c0x00ffffff-no-rj-rp-mo`,
+                            'proxy_url': `https://www.youtube.com/watch?v=${urI}`
+                        },
+                        'author': {
+                            'name': 'Les Lives de daftmob',
+                            'url': `https://www.youtube.com/watch?v=${urI}`,
+                            'icon_url': client.user.avatarURL({ format: 'png', dynamic: true, size: 1024 })
+                        },
+                        'url': `https://www.youtube.com/watch?v=${urI}`
+                    }]
+                })
+                .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error message videoNotif() ${err}`); });
+        };
     };
 
     onConnectedHandler(addr, port) { console.log(`* Connected to ${addr}:${port} *`); };
