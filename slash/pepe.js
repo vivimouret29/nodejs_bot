@@ -23,6 +23,7 @@ module.exports = {
 		await message.reply({
 			'channel_id': message.channel.channel_id,
 			'content': `pepe ${args} / *Waiting to display...*\n${language.timeAverage}${duration_average} seconds`,
+			'fetchReply': true,
 			'ephemeral': false
 		})
 			.catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error command pepe send ${err}`); });
@@ -89,6 +90,7 @@ ${language.timeAverage}${data.average_duration} seconds\n\n[**Pepe Diffuser**](h
 				}
 			}],
 			'files': [`./styles/ai/pepe-diffuser.jpg`],
+			'fetchReply': false,
 			'ephemeral': false
 		})
 			.catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error command pepe edit ${err}`); });
