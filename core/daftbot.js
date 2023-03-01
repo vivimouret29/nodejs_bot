@@ -160,7 +160,7 @@ class DaftBot {
                 message;
 
             while (true) {
-                let ax = await axios.get(`http://api.twitch.tv/helix/streams?user_login=` + 'ultia', params)
+                let ax = await axios.get(`http://api.twitch.tv/helix/streams?user_login=` + this.streamer, params)
                     .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error GET AXIOS ${err}`); });
 
                 if (ax.data.data.length == 0) {
