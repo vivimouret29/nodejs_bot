@@ -151,11 +151,11 @@ class DaftBot {
                 .execute();
             console.log(`[${getCurrentDatetime('comm')}] ${this.dbClient.user.username} connect on irc-ws.chat.twitch.tv:443`);
 
-            // if (this.dbClient.user.id == this.avoidBot[1]) return;
+            if (this.dbClient.user.id == this.avoidBot[1]) return;
 
-            let descpMemory = '',
+            let gameMemory = '',
                 urIMemory = '',
-                oldDescpMemory = '',
+                oldGameMemory = '',
                 oldUrIMemory = '',
                 message;
 
@@ -164,11 +164,10 @@ class DaftBot {
                     .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error GET AXIOS ${err}`); });
 
                 if (ax.data.data.length == 0) {
-                    descpMemory = '';
+                    gameMemory = '';
                 } else {
-                    descpMemory = ax.data.data[0].game_name;
-
-                    if (descpMemory != oldDescpMemory && ax.data.data.length == 1) {
+                    gameMemory = ax.data.data[0].game_name;
+                    if (gameMemory != oldGameMemory && ax.data.data.length == 1) {
                         let guiDot = await axios.get(`https://twitch.tv/${ax.data.data[0].user_login}`);
                         this.dbClient.mobbot
                             .get('livenotif')
@@ -181,8 +180,8 @@ class DaftBot {
                     fetched = await fe.text(),
                     published = fetched.split(new RegExp(`(\>[^.]*?\/)`, 'giu'))[37].slice(15, -2),
                     pubDate = new Date(published);
-                urIMemory = fetched.split(new RegExp(`(\:[^.]*\<\/)`, 'giu'))[3].split(new RegExp(`(\<[^.]*?\>)`, 'giu'))[10];
 
+                urIMemory = fetched.split(new RegExp(`(\:[^.]*\<\/)`, 'giu'))[3].split(new RegExp(`(\<[^.]*?\>)`, 'giu'))[10];
                 if (new Date(new Date().setHours(new Date().getHours() - 2)) < pubDate && urIMemory != oldUrIMemory) {
                     this.dbClient.mobbot
                         .get('videonotif')
@@ -190,7 +189,7 @@ class DaftBot {
                 };
 
                 oldUrIMemory = urIMemory;
-                oldDescpMemory = descpMemory;
+                oldGameMemory = gameMemory;
                 await new Promise(resolve => setTimeout(resolve, 600 * 1000));
             };
         });
@@ -314,48 +313,45 @@ class DaftBot {
             if (message.author.id == owner) {
                 if (Math.random() < .05) {
                     let dio = this.dbClient.emojis.cache.find(emoji => emoji.name === 'dio_sama');
-                    if (dio == undefined) return console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # Dio Sama not found here`);
+                    if (dio == undefined) { return console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # Dio Sama not found here`); };
                     message.react(dio);
                 };
             };
 
-            if (this.isMuted) return;
+            if (this.isMuted || message.content.startsWith(prefix)) return;
 
-            if (!message.content.startsWith(prefix)) {
-                if ((message.mentions.has(this.dbClient.user.id)) && !(message.channel.messages.cache.get(message.id).mentions.everyone)) {
+            if ((message.mentions.has(this.dbClient.user.id)) && !(message.channel.messages.cache.get(message.id).mentions.everyone)) {
+                try {
+                    await this.dbClient.command
+                        .get('openai')
+                        .execute(this.dbClient, message, this.language);
+                    console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
+                } catch (err) {
+                    console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # Error output openai() : ${err}`);
+                };
+            };
+
+            if (this.userToCheck.includes(message.author.id)) {
+                if (Math.random() > .05) return;
+                let userId = message.author.user;
+                try {
+                    console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${userId}'s message '${message}' deleted`);
+                    await messageErase(message);
+                } catch (err) {
+                    console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # Can't delete ${userId}'s message : ${err}`);
+                };
+            };
+
+            for (let word in msgSplit) {
+                if (this.dbClient.response.has(msgSplit[word])) {
+                    if (Math.random() > .15) return;
                     try {
-                        await this.dbClient.command
-                            .get('openai')
-                            .execute(this.dbClient, message, this.language);
+                        this.dbClient.response
+                            .get(msgSplit[word])
+                            .execute(message, args, this.language);
                         console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
                     } catch (err) {
-                        console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # Error output openai() : ${err}`);
-                    };
-                };
-
-                if (this.userToCheck.includes(message.author.id)) {
-                    if (Math.random() > .05) return;
-                    let userId = message.author.user;
-                    try {
-                        console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${userId}'s message deleted`);
-                        await messageErase(message);
-                    } catch (err) {
-                        console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # Can't delete ${userId}'s message : ${err}`);
-                    };
-                };
-
-                for (let word in msgSplit) {
-                    if (this.dbClient.response.has(msgSplit[word])) {
-                        if (Math.random() > .15) return;
-                        try {
-                            this.dbClient.response
-                                .get(msgSplit[word])
-                                .execute(message, args, this.language);
-                            console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
-                        } catch (err) {
-                            console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # Error output reply() : ${err}`);
-                        };
-                        return;
+                        console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # Error output reply() : ${err}`);
                     };
                 };
             };
@@ -591,7 +587,6 @@ class DaftBot {
             return this.isMuted;
         };
     };
-
 };
 
 exports.DaftBot = DaftBot;
