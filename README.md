@@ -1,38 +1,98 @@
-# DaftBot
+<h1 align="center">
+    <b> DaftBot // MobBot </b>
+</h1>
+<br>
+<div>
+    <div align="center">
+        <a>
+            <img src="https://img.shields.io/badge/daftbot-v2.0.1-green">
+        </a>
+        <a>
+            <img src="https://img.shields.io/badge/mobbot-v1.0.0-purple">
+        </a>
+    </div>
+    <br>
+    <div align="center">
+        <a>
+            <img src="https://img.shields.io/npm/v/npm/latest">
+        </a>
+        <a>
+            <img src="https://img.shields.io/badge/discord.js-v14.7.0-green">
+        </a>
+        <a>
+            <img src="https://img.shields.io/badge/tmi.js-v1.8.5-blue">
+        </a>
+    </div>
+</div>
+<br>
+<br>
+<h1 align="center">
+    Qui sont DaftBot et Mobbot ?
+</h1>
+<br>
+<p>
+Principal bot d'un serveur discord public, ayant des tâches multifonctionnelles, <b>daftbot</b> a été conçu et créé pour aider
+<p>
+C'est un bot qui sera utilisé pour être amusant et pratique en même temps
+<p>
+Il aime s'afficher quand son codeur commence à diffuser ou à publier des choses
+<p>
+Avec plus de 10 commandes possibles dans son serveur principal, et beaucoup d'autres en cours d'écriture, daftbot va vous surprendre
+<p>
+    <a href="https://discord.com/api/oauth2/authorize?client_id=757955750164430980&permissions=4398046511095&scope=bot">
+        Testez-le dès maintenant !
+    </a>
+</p>
+<br>
+<h1 align="center">
+    Clonage
+</h1>
+<br>
+<h2 align="center">
+    Pré-requis
+</h2>
+<ul>
+    <li>
+        Token de votre bot Discord
+    </li>
+    <li>
+        Token de votre bot Twitch
+    </li>
+    <li>
+        Token de OpenAI
+    </li>
+    <li>
+        Nodejs et npm
+    </li>
+</ul>
+<h2 align="center">
+    Installation
+</h2>
+Après avoir cloné le repo, rendez vous simplement à la racine du projet puis copiez le fichier <code>config.json.example</code> en <code>config.json</code> et mettez y votre token secret de bot discord ainsi que le préfixe que vous utiliserez.<br>
+Vous pouvez ensuite exécuter les commandes suivantes : 
+<br>
 
-
-![db](https://img.shields.io/badge/daftbot-v2.0.0-red)
-![npm](https://img.shields.io/npm/v/npm/latest)
-![discord.js](https://img.shields.io/badge/discord.js-v14.7.0-green)
-![tmi.js](https://img.shields.io/badge/tmi.js-v1.8.5-blue)
-![json2csv](https://img.shields.io/badge/json2csv-v6.0.0.alpha.2-orange)
-![GitHub repo size](https://img.shields.io/github/repo-size/vivimouret29/bot_discord?color=yellow)
-
-## Pré-requis
-
-- Token de votre bot Discord
-- Token de votre bot Twitch (optionnel)
-- Token de OpenAI (optionnel)
-- Nodejs et npm
-
-## Utilisation
-
-**CONSEIL**   
-Pour ajouter directement le bot à votre serveur discord, cliquez sur ce [lien](https://discord.com/api/oauth2/authorize?client_id=757955750164430980&permissions=4398046511095&scope=bot)
-
-Après avoir cloné le repo, rendez vous simplement à la racine du projet puis copiez le fichier `config.json.example` en `config.json` et mettez y votre token secret de bot discord ainsi que le préfixe que vous utiliserez. 
-  
-Vous pouvez ensuite exécuter les commandes suivantes :
-  
 ```bash
-# Pour installer les packages nécessaires
+# Installer les packages nécessaires
 npm install
 
-# Pour lancer le bot
+# Lancer le bot
 node main.js
 ```
-
-### Petit plus
-  
-Voici un petit lien [trello](https://trello.com/b/kdy25wXP/daftbot-mobbot) afin de suivre l'avancée des bots, bientôt dans le projet GitHub directement !
-
+</p>
+<br>
+<h1 align="center">
+    Petit Plus
+</h1>
+<div>
+    Pour ajouter directement le bot à votre serveur discord, cliquez sur ce
+    <a href="https://discord.com/api/oauth2/authorize?client_id=757955750164430980&permissions=4398046511095&scope=bot"> 
+        lien
+    </a>
+    <br>
+    Voici un petit lien
+    <a href="https://trello.com/b/kdy25wXP/daftbot-mobbot">
+        trello
+    </a>
+    afin de suivre l'avancée des bots, bientôt dans le projet GitHub directement !
+</div>

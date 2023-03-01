@@ -3,7 +3,7 @@
         "help": "Liste des commandes",
         "helpAuthor": "par daftmob",
         "changLang": "Langue changée en Français",
-        "error": "Erreur de la commande\nRéessaie plus tard",
+        "error": "Erreur de la commande, réessaie plus tard",
         "stream": "son petit daft",
         "uptime": "En ligne depuis",
         "activities": "tout twitch | !help",
@@ -47,14 +47,13 @@
         "timeDiffuse": "Temps de création de l'image : ",
         "timeAverage": "Temps moyen de création de l'image : ",
         "helpError": "Erreur lors de l\\'envoi de l\\'aide, débloques tes DM ou réessaie plus tard",
-        "embedError": "Erreur lors de l'envoie d'un message personnalisé",
         "openAiCrash": "je suis un peu surchargé, réessaie de me parler plus tard..."
     },
     "en": {
         "help": "List of orders",
         "helpAuthor": "by daftmob",
         "changLang": "Language changed to English",
-        "error": "Command error\nTry again later",
+        "error": "Command error, try again later",
         "stream": "his little daft",
         "uptime": "Online since",
         "activities": "all twitch | !help",
@@ -97,14 +96,13 @@
         "timeDiffuse": "Time to create the image : ",
         "timeAverage": "Average time to create the image : ",
         "helpError": "Error when sending help, unblock your DMs or try again later",
-        "embedError": "Error while sending a custom message",
         "openAiCrash": "I'm a bit overloaded, try to talk to me again later..."
     },
     "uk": {
         "help": "Список замовлень",
         "helpAuthor": "by daftmob",
         "changLang": "Мову змінено на українську",
-        "error": "Помилка команди\nСпробуйте пізніше",
+        "error": "Помилка команди, Спробуйте пізніше",
         "stream": "його маленька дурниця",
         "uptime": "Онлайн з тих пір, як",
         "activities": "весь Сіпатися | !help",
@@ -147,7 +145,6 @@
         "timeDiffuse": "Час для створення образу : ",
         "timeAverage": "Середній час створення зображення : ",
         "helpError": "Помилка при відправці допомоги, розблокуйте свої DM або спробуйте пізніше",
-        "embedError": "Помилка під час надсилання користувацького повідомлення",
         "openAiCrash": "Я трохи перевантажений, спробуйте поговорити зі мною пізніше..."
     }
 }
