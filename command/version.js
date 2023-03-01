@@ -9,6 +9,10 @@ module.exports = {
         description: 'a dynamic view version'
     },
     async execute(message, client, language, args, initDateTime) {
-        await sendEmbed(message, `daftbot ${package.version}`);
+        await sendEmbed(message, `daftbot ${package.version}`)
+            .catch(err => {
+                message.reply({ 'content': language.error, 'ephemeral': true });
+                console.log(`[${getCurrentDatetime('comm')}] Error sending message SEERROR ${err}`);
+            });
     }
 };

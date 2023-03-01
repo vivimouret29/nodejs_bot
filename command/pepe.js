@@ -3,7 +3,7 @@
 const fs = require('node:fs'),
     axios = require('axios'),
     { clientId, identity } = require('../core/config.json'),
-    { sendEmbed, randomColor, getCurrentDatetime, randomIntFromInterval } = require('../core/function.js');
+    { sendEmbed, messageErase, randomColor, getCurrentDatetime, randomIntFromInterval } = require('../core/function.js');
 
 var duration_average = randomIntFromInterval(0, 100);
 
@@ -64,11 +64,10 @@ module.exports = {
             console.log(`[${getCurrentDatetime('comm')}] Can't get guid : `, err);
         };
 
+        await messageErase(msg);
         fs.writeFileSync(`./styles/ai/pepe-diffuser.jpg`, buffer);
-        await msg.delete().catch(O_o => { });
-
-        await message.channel
-            .send({
+        await message
+            .reply({
                 'channel_id': message.channel.channel_id,
                 'content': `<@${message.author.id}>`,
                 'tts': false,

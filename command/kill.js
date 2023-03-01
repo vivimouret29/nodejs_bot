@@ -9,9 +9,20 @@ module.exports = {
         description: 'a dynamic kill'
     },
     async execute(message, client, language, args, initDateTime) {
-        if (!(message.author.id === owner)) return await sendEmbed(message, language.areYouOwner);
+        if (!(message.author.id === owner)) {
+            return await sendEmbed(message, language.areYouOwner)
+                .catch(err => {
+                    message.reply({ 'content': language.error, 'ephemeral': true });
+                    console.log(`[${getCurrentDatetime('comm')}] Error sending message SEERROR ${err}`);
+                });
+        };
 
-        await await sendEmbed(message, language.killBot);
+        await sendEmbed(message, language.killBot)
+            .catch(err => {
+                message.reply({ 'content': language.error, 'ephemeral': true });
+                console.log(`[${getCurrentDatetime('comm')}] Error sending message SEERROR ${err}`);
+            });
+
         new Promise(resolve => setTimeout(resolve, 3 * 1000));
         client.destroy();
     }

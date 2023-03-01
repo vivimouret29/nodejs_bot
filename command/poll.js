@@ -1,7 +1,7 @@
 'use.strict'
 
 const { emojis: dctmj } = require('../resx/emojis.json'),
-    { sendEmbed, getCurrentDatetime, randomColor } = require('../core/function.js');
+    { sendEmbed, messageErase, getCurrentDatetime, randomColor } = require('../core/function.js');
 
 module.exports = {
     data: {
@@ -16,7 +16,13 @@ module.exports = {
             wt = survey.split('/')[0],
             ctm = survey.split('/')[1].split('-');
 
-        if (ctm == undefined) { return await sendEmbed(message, language.error); };
+        if (ctm == undefined) {
+            return await sendEmbed(message, language.error)
+                .catch(err => {
+                    message.reply({ 'content': language.error, 'ephemeral': true });
+                    console.log(`[${getCurrentDatetime('comm')}] Error sending message SEERROR ${err}`);
+                });
+        };
 
         var dictMojis = [],
             maxCount = [],
@@ -66,5 +72,7 @@ module.exports = {
         message.channel
             .send(`${wt}${ctm[postSurvey]}`)
             .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error command poll result ${err}`); });
+
+        await messageErase(message);
     }
 };

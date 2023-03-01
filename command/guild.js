@@ -1,6 +1,6 @@
 'use.strict'
 
-const { sendEmbed } = require('../core/function.js');
+const { sendEmbed, messageErase } = require('../core/function.js');
 
 module.exports = {
     data: {
@@ -8,6 +8,10 @@ module.exports = {
         description: 'a dynamic guild'
     },
     async execute(message, client, language, args, initDateTime) {
-        await sendEmbed(message, `${client.user.username} ${language.guild}\n${client.guilds.cache.map(guild => guild.name).join('\n ')}`);
+        await sendEmbed(message, `${client.user.username} ${language.guild}\n${client.guilds.cache.map(guild => guild.name).join('\n ')}`)
+            .catch(err => {
+                message.reply({ 'content': language.error, 'ephemeral': true });
+                console.log(`[${getCurrentDatetime('comm')}] Error sending message SEERROR ${err}`);
+            });
     }
 };

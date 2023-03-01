@@ -10,15 +10,25 @@ module.exports = {
         description: 'a dynamic reset'
     },
     async execute(message, client, language, args, initDateTime) {
-        if (!(message.author.id === owner)) return await sendEmbed(message, language.areYouOwner);
+        if (!(message.author.id === owner)) {
+            return await sendEmbed(message, language.areYouOwner)
+                .catch(err => {
+                    message.reply({ 'content': language.error, 'ephemeral': true });
+                    console.log(`[${getCurrentDatetime('comm')}] Error sending message SEERROR ${err}`);
+                });
+        };
 
-        await await sendEmbed(message, language.resetBot);
-        new Promise(resolve => setTimeout(resolve, 1 * 1000));
+        await sendEmbed(message, language.resetBot)
+            .catch(err => {
+                message.reply({ 'content': language.error, 'ephemeral': true });
+                console.log(`[${getCurrentDatetime('comm')}] Error sending message SEERROR ${err}`);
+            });
         client.destroy();
 
-        new Promise(resolve => setTimeout(resolve, 1 * 1000));
+        new Promise(resolve => setTimeout(resolve, 2 * 1000));
         client.login(token);
 
+        new Promise(resolve => setTimeout(resolve, 5 * 1000));
         client.user.setPresence({
             activities: [{
                 name: language.activities,

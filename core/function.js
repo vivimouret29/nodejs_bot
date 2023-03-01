@@ -1,8 +1,8 @@
 async function sendEmbed(message, content, descp) {
 	if (descp == undefined) descp = false;
 
-	var messageToSend = await message.channel
-		.send({
+	var messageToSend = await message
+		.reply({
 			'channel_id': message.channel.channel_id,
 			'content': descp ? 'https://discord.gg/ucwnMKKxZe' : '',
 			'tts': false,
@@ -11,10 +11,6 @@ async function sendEmbed(message, content, descp) {
 				'title': '',
 				'description': content,
 				'color': randomColor(),
-				// 'image': {
-				// 	'url': ` `,
-				// 	'proxy_url': ` `
-				// },
 				'author': {
 					'name': message.author.username,
 					'icon_url': message.author.avatarURL({ format: 'png', dynamic: true, size: 1024 })
@@ -24,16 +20,19 @@ async function sendEmbed(message, content, descp) {
 					'icon_url': 'https://cdn.discordapp.com/app-icons/757955750164430980/94a997258883caba5f553f98aea8df59.png?size=256',
 					'proxy_icon_url': 'https://discord.gg/ucwnMKKxZe'
 				}
-			}]
+			}],
+			'ephemeral': true
 		})
 		.catch(err => {
-			message.channel.send(language.embedError);
+			message.reply({ 'content': 'Error while sending a custom message', 'ephemeral': true });
 			console.log(`[${getCurrentDatetime('comm')}] Error function sendEmbed() ${err}`);
 			return;
 		});
 
 	return messageToSend;
 };
+
+async function messageErase(message) { await message.delete().catch(O_o => { }); };
 
 function randomIntFromInterval(min, max) { return Math.floor(Math.random() * (max - min + 1) + min) };
 
@@ -59,6 +58,7 @@ function randomColor() {
 };
 
 exports.sendEmbed = sendEmbed;
+exports.messageErase = messageErase;
+exports.randomIntFromInterval = randomIntFromInterval;
 exports.getCurrentDatetime = getCurrentDatetime;
 exports.randomColor = randomColor;
-exports.randomIntFromInterval = randomIntFromInterval;

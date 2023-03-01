@@ -24,7 +24,7 @@ module.exports = {
 			'channel_id': message.channel.channel_id,
 			'content': `pepe ${args} / *Waiting to display...*\n${language.timeAverage}${duration_average} seconds`,
 			'fetchReply': true,
-			'ephemeral': false
+			'ephemeral': true
 		})
 			.catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error command pepe send ${err}`); });
 

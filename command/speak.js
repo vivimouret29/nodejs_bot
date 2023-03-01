@@ -1,6 +1,6 @@
 'use.strict'
 
-const { getCurrentDatetime } = require('../core/function.js');
+const { getCurrentDatetime, messageErase } = require('../core/function.js');
 
 module.exports = {
     data: {
@@ -8,11 +8,11 @@ module.exports = {
         description: 'a dynamic tchat',
         args: true
     },
-    execute(message, client, language, args, initDateTime) {
+    async execute(message, client, language, args, initDateTime) {
         var say = args.join(' ');
 
-        message.delete().catch(O_o => { });
-        message.channel
+        await messageErase(message);
+        await message.channel
             .send(say)
             .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error command say ${err}`); });
     }

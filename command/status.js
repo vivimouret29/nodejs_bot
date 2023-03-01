@@ -11,7 +11,7 @@ module.exports = {
         args: true
     },
     async execute(message, client, language, args, initDateTime) {
-        if (!(message.author.id === owner)) return await sendEmbed(message, language.areYouOwner);
+        if (!(message.author.id === owner)) { return await sendEmbed(message, language.areYouOwner); };
 
         let typeThings = args[0],
             stOnOff = args[1],
@@ -101,6 +101,10 @@ module.exports = {
             });
         };
 
-        await sendEmbed(message, language.changedActivites);
+        await sendEmbed(message, language.changedActivites)
+            .catch(err => {
+                message.reply({ 'content': language.error, 'ephemeral': true });
+                console.log(`[${getCurrentDatetime('comm')}] Error sending message SEERROR ${err}`);
+            });
     }
 };

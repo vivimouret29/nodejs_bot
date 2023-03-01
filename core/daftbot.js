@@ -9,7 +9,7 @@ const { Client, Collection, GatewayIntentBits, ActivityType, Events, Partials, R
     { clientId, identity } = require('./config.json'),
     { fr, en, uk } = require('../resx/lang.json'),
     { memes } = require('../resx/memes.json'),
-    { sendEmbed, getCurrentDatetime, randomIntFromInterval } = require('./function.js');
+    { sendEmbed, messageErase, getCurrentDatetime, randomIntFromInterval } = require('./function.js');
 
 const intents = [
     GatewayIntentBits.Guilds,
@@ -268,7 +268,11 @@ class DaftBot {
                 switch (command) {
                     case 'feature':
                         console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${this.language.commandAttempt} : (${msg}) / (${author})`);
-                        await sendEmbed(message, `${this.language.commandNotFound} ${command}`);
+                        await sendEmbed(message, `${this.language.commandNotFound} ${command}`)
+                            .catch(err => {
+                                message.reply({ 'content': language.error, 'ephemeral': true });
+                                console.log(`[${getCurrentDatetime('comm')}] Error sending message SEERROR ${err}`);
+                            });
                         break;
                     case 'lang':
                         await this.setLanguage(this.dbClient, message, args);
@@ -277,11 +281,19 @@ class DaftBot {
                         await this.setLanguage(this.dbClient, message, args);
                         break;
                     case 'mute':
-                        if (!(message.author.id === owner)) return await sendEmbed(message, this.language.restricted);
+                        if (!(message.author.id === owner)) return await sendEmbed(message, this.language.restricted)
+                            .catch(err => {
+                                message.reply({ 'content': language.error, 'ephemeral': true });
+                                console.log(`[${getCurrentDatetime('comm')}] Error sending message SEERROR ${err}`);
+                            });
                         await this.setMute(message, args);
                         break;
                     case checkMobbotCollection:
-                        if (!(message.author.id === owner)) return await sendEmbed(message, this.language.restricted);
+                        if (!(message.author.id === owner)) return await sendEmbed(message, this.language.restricted)
+                            .catch(err => {
+                                message.reply({ 'content': language.error, 'ephemeral': true });
+                                console.log(`[${getCurrentDatetime('comm')}] Error sending message SEERROR ${err}`);
+                            });
                         await this.dbClient.mobbot
                             .get(command)
                             .execute(message, this.dbClient, this.language);
@@ -321,8 +333,8 @@ class DaftBot {
                     if (Math.random() > .05) return;
                     let userId = message.author.user;
                     try {
-                        message.delete().catch(O_o => { });
                         console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${userId}'s message deleted`);
+                        await messageErase(message);
                     } catch (err) {
                         console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # Can't delete ${userId}'s message : ${err}`);
                     };
@@ -467,7 +479,11 @@ class DaftBot {
         switch (args[0]) {
             case 'fr':
                 this.language = fr;
-                await sendEmbed(message, this.language.changLang);
+                await sendEmbed(message, this.language.changLang)
+                    .catch(err => {
+                        message.reply({ 'content': language.error, 'ephemeral': true });
+                        console.log(`[${getCurrentDatetime('comm')}] Error sending message SEERROR ${err}`);
+                    });
 
                 client.user.setPresence({
                     activities: [{
@@ -481,7 +497,11 @@ class DaftBot {
                 break;
             case 'en':
                 this.language = en;
-                await sendEmbed(message, this.language.changLang);
+                await sendEmbed(message, this.language.changLang)
+                    .catch(err => {
+                        message.reply({ 'content': language.error, 'ephemeral': true });
+                        console.log(`[${getCurrentDatetime('comm')}] Error sending message SEERROR ${err}`);
+                    });
 
                 client.user.setPresence({
                     activities: [{
@@ -495,7 +515,11 @@ class DaftBot {
                 break;
             case 'uk':
                 this.language = uk;
-                await sendEmbed(message, this.language.changLang);
+                await sendEmbed(message, this.language.changLang)
+                    .catch(err => {
+                        message.reply({ 'content': language.error, 'ephemeral': true });
+                        console.log(`[${getCurrentDatetime('comm')}] Error sending message SEERROR ${err}`);
+                    });
 
                 client.user.setPresence({
                     activities: [{
@@ -508,7 +532,11 @@ class DaftBot {
                 console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
                 break;
             default:
-                await sendEmbed(message, this.language.languageNtReco);
+                await sendEmbed(message, this.language.languageNtReco)
+                    .catch(err => {
+                        message.reply({ 'content': language.error, 'ephemeral': true });
+                        console.log(`[${getCurrentDatetime('comm')}] Error sending message SEERROR ${err}`);
+                    });
                 console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
                 break;
         };
@@ -522,23 +550,39 @@ class DaftBot {
         if (action != undefined) {
             if ((action.toLowerCase()) === 'on') {
                 console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
-                await sendEmbed(message, this.language.botMuted);
+                await sendEmbed(message, this.language.botMuted)
+                    .catch(err => {
+                        message.reply({ 'content': language.error, 'ephemeral': true });
+                        console.log(`[${getCurrentDatetime('comm')}] Error sending message SEERROR ${err}`);
+                    });
                 this.isMuted = true;
                 return this.isMuted;
             } else if ((action.toLowerCase()) === 'off') {
                 console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
-                await sendEmbed(message, this.language.botUnmuted);
+                await sendEmbed(message, this.language.botUnmuted)
+                    .catch(err => {
+                        message.reply({ 'content': language.error, 'ephemeral': true });
+                        console.log(`[${getCurrentDatetime('comm')}] Error sending message SEERROR ${err}`);
+                    });
                 this.isMuted = false;
                 return this.isMuted;
             } else {
                 console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
-                await sendEmbed(message, `${this.language.howMute}\n\r*e.g. : ${prefix}mute on*`);
+                await sendEmbed(message, `${this.language.howMute}\n\r*e.g. : ${prefix}mute on*`)
+                    .catch(err => {
+                        message.reply({ 'content': language.error, 'ephemeral': true });
+                        console.log(`[${getCurrentDatetime('comm')}] Error sending message SEERROR ${err}`);
+                    });
                 this.isMuted = false;
                 return this.isMuted;
             };
         } else {
             console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
-            await sendEmbed(message, `${this.language.howMute}\n\r*e.g. : ${prefix}mute on*`);
+            await sendEmbed(message, `${this.language.howMute}\n\r*e.g. : ${prefix}mute on*`)
+                .catch(err => {
+                    message.reply({ 'content': language.error, 'ephemeral': true });
+                    console.log(`[${getCurrentDatetime('comm')}] Error sending message SEERROR ${err}`);
+                });
             this.isMuted = false;
             return this.isMuted;
         };

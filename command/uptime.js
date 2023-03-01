@@ -18,9 +18,17 @@ module.exports = {
             let seconds = Math.floor(totalSeconds % 60);
             let start = initDateTime;
 
-            await sendEmbed(message, `${language.uptime} ${start}\n${days}D:${hours}H:${minutes}M:${seconds}S`);
+            await sendEmbed(message, `${language.uptime} ${start}\n${days}D:${hours}H:${minutes}M:${seconds}S`)
+                .catch(err => {
+                    message.reply({ 'content': language.error, 'ephemeral': true });
+                    console.log(`[${getCurrentDatetime('comm')}] Error sending message SEERROR ${err}`);
+                });
         } catch (err) {
-            await sendEmbed(message, language.error);
+            await sendEmbed(message, language.error)
+                .catch(err => {
+                    message.reply({ 'content': language.error, 'ephemeral': true });
+                    console.log(`[${getCurrentDatetime('comm')}] Error sending message SEERROR ${err}`);
+                });
             console.log(`[${getCurrentDatetime('comm')}] Error function uptime() ${err}`);
         };
     }
