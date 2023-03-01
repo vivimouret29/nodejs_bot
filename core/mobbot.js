@@ -58,7 +58,7 @@ class MobBot {
             return;
         };
 
-        fs.writeFile(`../core/data/mobbot_analytics.csv`, parse(dataToExport), function (err) {
+        fs.writeFile(`./core/data/mobbot_analytics.csv`, parse(dataToExport), function (err) {
             if (err) {
                 let emoji = client.emojis.cache.find(emoji => emoji.name === 'fufufu');
                 message
@@ -77,7 +77,7 @@ class MobBot {
 
         message.author
             .send({ 'content': 'csv being transferred' })
-            .then((msg) => { msg.edit({ 'content': 'csv transferred', 'files': ['../core/data/mobbot_analytics.csv'] }); })
+            .then((msg) => { msg.edit({ 'content': 'csv transferred', 'files': ['./core/data/mobbot_analytics.csv'] }); })
             .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error during file send ${err}`); });
     };
 
