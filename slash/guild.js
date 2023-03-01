@@ -1,6 +1,7 @@
 'use.strict'
 
-const { SlashCommandBuilder } = require('discord.js');
+const { SlashCommandBuilder } = require('discord.js'),
+    { randomColor } = require('../core/function.js');
 
 module.exports = {
     data: new SlashCommandBuilder()
