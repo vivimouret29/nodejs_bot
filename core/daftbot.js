@@ -151,20 +151,22 @@ class DaftBot {
                 .execute();
             console.log(`[${getCurrentDatetime('comm')}] ${this.dbClient.user.username} connect on irc-ws.chat.twitch.tv:443`);
 
-            if (this.dbClient.user.id == this.avoidBot[1]) return;
+            // if (this.dbClient.user.id == this.avoidBot[1]) return;
 
             let descpMemory = '',
+                urIMemory = '',
                 oldDescpMemory = '',
+                oldUrIMemory = '',
                 message;
 
             while (true) {
-                let ax = await axios.get(`http://api.twitch.tv/helix/streams?user_login=` + this.streamer, params)
+                let ax = await axios.get(`http://api.twitch.tv/helix/streams?user_login=` + 'ultia', params)
                     .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error GET AXIOS ${err}`); });
 
                 if (ax.data.data.length == 0) {
                     descpMemory = '';
                 } else {
-                    descpMemory = ax.data.data[0].title;
+                    descpMemory = ax.data.data[0].game_name;
 
                     if (descpMemory != oldDescpMemory && ax.data.data.length == 1) {
                         let guiDot = await axios.get(`https://twitch.tv/${ax.data.data[0].user_login}`);
@@ -179,13 +181,15 @@ class DaftBot {
                     fetched = await fe.text(),
                     published = fetched.split(new RegExp(`(\>[^.]*?\/)`, 'giu'))[37].slice(15, -2),
                     pubDate = new Date(published);
+                urIMemory = fetched.split(new RegExp(`(\:[^.]*\<\/)`, 'giu'))[3].split(new RegExp(`(\<[^.]*?\>)`, 'giu'))[10];
 
-                if (new Date(new Date().setHours(new Date().getHours() - 2)) < pubDate) {
+                if (new Date(new Date().setHours(new Date().getHours() - 2)) < pubDate && urIMemory != oldUrIMemory) {
                     this.dbClient.mobbot
                         .get('videonotif')
                         .execute(message, this.dbClient, this.language);
                 };
 
+                oldUrIMemory = urIMemory;
                 oldDescpMemory = descpMemory;
                 await new Promise(resolve => setTimeout(resolve, 600 * 1000));
             };
