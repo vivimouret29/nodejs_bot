@@ -9,7 +9,6 @@ module.exports = {
         description: 'a dynamic tchat twitch bot'
     },
     async execute(message, client, language, gD, axios) {
-        mobbot.on();
-        mobbot.data();
+        mobbot.onConnect();
     }
 };

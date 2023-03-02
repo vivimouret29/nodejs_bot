@@ -9,6 +9,6 @@ module.exports = {
         description: 'a dynamic export of mobbot dataset'
     },
     execute(message, client, language, gD, axios) {
-        mobbot.export(message, client);
+        mobbot.onDataExport(message, client);
     }
 };

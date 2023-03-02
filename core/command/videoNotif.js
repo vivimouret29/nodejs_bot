@@ -9,6 +9,6 @@ module.exports = {
         description: 'a dynamic video notification'
     },
     execute(message, client, language, gD, axios) {
-        mobbot.videoNotif(message, client, language);
+        mobbot.onVideoPublish(message, client, language);
     }
 };

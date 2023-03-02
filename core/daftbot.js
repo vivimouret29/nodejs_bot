@@ -72,12 +72,12 @@ class DaftBot {
         this.userToCheck = ['491907126701064193'];
     };
 
-    async on() {
+    async onConnect() {
         this.setCollection();
-        await this.setLogin();
-        await this.listenGuildNewMember();
-        await this.listenMessage();
-        await this.setRoles();
+        await this.onLogin();
+        await this.onListenGuildNewMember();
+        await this.onListenMessage();
+        await this.setRole();
     };
 
     setCollection() {
@@ -129,7 +129,7 @@ class DaftBot {
         };
     };
 
-    async setLogin() {
+    async onLogin() {
         this.dbClient
             .login(token)
             .then(() => console.log(`[${getCurrentDatetime('comm')}] ${this.dbClient.user.username}\'s logged
@@ -203,7 +203,7 @@ class DaftBot {
         );
     };
 
-    async listenGuildNewMember() {
+    async onListenGuildNewMember() {
         this.dbClient.on(Events.GuildMemberAdd, async (guild) => {
             if (this.dbClient.user.id == this.avoidBot[1] || guild.id != '948894919878123570') return;
             console.log(`[${getCurrentDatetime('comm')}] New member \'${guild.user.username}\' join server : ${guild.guild.name}`);
@@ -235,7 +235,7 @@ class DaftBot {
         });
     };
 
-    async listenMessage() {
+    async onListenMessage() {
         this.dbClient.on(Events.InteractionCreate, async interaction => {
             if (!interaction.isCommand()) return;
 
@@ -358,7 +358,7 @@ class DaftBot {
         });
     };
 
-    async setRoles() {
+    async setRole() {
         this.dbClient.on(Events.MessageReactionAdd, async (react, user) => {
             var roChan = '1068559351570247741',
                 roMsg = '1071286935726854216',

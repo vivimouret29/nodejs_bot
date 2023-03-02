@@ -9,6 +9,6 @@ module.exports = {
         description: 'a dynamic live notification'
     },
     execute(message, client, language, gD, axios) {
-        mobbot.liveNotif(message, client, language, gD, axios);
+        mobbot.onLive(message, client, language, gD, axios);
     }
 };

@@ -90,9 +90,9 @@ node main.js
         lien
     </a>
     <br>
-    Voici un petit lien
+    Voici un petit lien du projet 
     <a href="https://trello.com/b/kdy25wXP/daftbot-mobbot">
-        trello
+        github
     </a>
-    afin de suivre l'avancée des bots, bientôt dans le projet GitHub directement !
+    afin de suivre l'avancée des bots !
 </div>

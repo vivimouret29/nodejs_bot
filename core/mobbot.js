@@ -14,7 +14,10 @@ const oauth = {
     },
     identity: identity,
     channels: channels,
-    connection: { reconnect: true }
+    connection: {
+        reconnect: true,
+        secure: true,
+    }
 };
 
 var dataToExport = [];
@@ -24,32 +27,38 @@ class MobBot {
         this.mbClient = new Client(oauth);
     };
 
-    on() {
+    onConnect() {
+        this.mbClient.connect()
+            .catch(console.error);
         this.mbClient.on('connected', this.onConnectedHandler);
-        this.mbClient.connect();
+        this.onDataImport();
+        // this.onMessageListen();
     };
 
-    data() {
-        this.mbClient
-            .on('message', (channel, tags, message, self) => {
-                if (self || tags['username'] === 'moobot') return;
-
-                let data = {
-                    'id': Number(tags['user-id']),
-                    'date': getCurrentDatetime('date'),
-                    'badges': tags['badges'],
-                    'color': String(tags['color']),
-                    'username': String(tags['username']),
-                    'message': String(message),
-                    'emotes': tags['emotes-raw'] == null ? null : String(tags['emotes-raw']),
-                    'turbo': Boolean(tags['turbo'])
-                };
-
-                return dataToExport.push(data);
-            });
+    onMessageListen() {
+        // In Progress
     };
 
-    export(message, client) {
+    onDataImport() {
+        this.mbClient.on('message', (channel, userstate, message, self) => {
+            if (self || userstate['username'] === 'moobot') return;
+
+            let data = {
+                'id': Number(userstate['user-id']),
+                'date': getCurrentDatetime('date'),
+                'badges': userstate['badges'],
+                'color': String(userstate['color']),
+                'username': String(userstate['username']),
+                'message': String(message),
+                'emotes': userstate['emotes-raw'] == null ? null : String(userstate['emotes-raw']),
+                'turbo': Boolean(userstate['turbo'])
+            };
+
+            return dataToExport.push(data);
+        });
+    };
+
+    onDataExport(message, client) {
         if (dataToExport.length === 0) {
             let emoji = client.emojis.cache.find(emoji => emoji.name === 'sadpepe');
             message
@@ -81,7 +90,7 @@ class MobBot {
             .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error during file send ${err}`); });
     };
 
-    liveNotif(message, client, language, gD, axios) {
+    onLive(message, client, language, gD, axios) {
         if (gD == undefined || axios == undefined) {
             console.log(`[${getCurrentDatetime('comm')}] Error function liveNotif() : GUID = ${gD} and/or AXIOS = ${axios}`);
             return;
@@ -157,7 +166,7 @@ class MobBot {
         console.log(`[${getCurrentDatetime('comm')}] ${channelTwitch}`);
     };
 
-    async videoNotif(message, client, language) {
+    async onVideoPublish(message, client, language) {
         let fe = await fetch(`https://www.youtube.com/feeds/videos.xml?channel_id=UCreItrEewfO6IPZYPu4C7pA`)
             .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error GET AXIOS ${err}`); }),
             fetched = await fe.text(),
