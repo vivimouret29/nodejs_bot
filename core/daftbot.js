@@ -237,7 +237,7 @@ class DaftBot {
 
     async onListenMessage() {
         this.dbClient.on(Events.InteractionCreate, async interaction => {
-            if (!interaction.isCommand()) return;
+            if (!interaction.isCommand() || interaction.user.bot) return;
 
             var checkCollection;
 
@@ -254,6 +254,8 @@ class DaftBot {
         });
 
         this.dbClient.on(Events.MessageCreate, async (message) => {
+            if (message.author.bot) return;
+
             var args = message.content.slice(prefix.length).trim().split(/ +/),
                 command = args.shift().toLowerCase(),
                 msg = message.content.toLowerCase(),
@@ -264,8 +266,6 @@ class DaftBot {
 
             this.dbClient.mobbot.has(command) ? checkMobbotCollection = this.dbClient.mobbot.get(command).data.name : checkMobbotCollection = false;
             this.dbClient.command.has(command) ? checkCollection = this.dbClient.command.get(command).data.name : checkCollection = false;
-
-            if (message.author.bot) return;
 
             if (message.content.startsWith(prefix)) {
                 switch (command) {
