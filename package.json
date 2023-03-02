@@ -23,7 +23,7 @@
     "install": "^0.13.0",
     "json2csv": "^6.0.0-alpha.2",
     "openai": "^3.1.0",
-    "tmi.js": "^1.8.5"
+    "tmi.js": "^1.9.0-pre.1"
   },
   "devDependencies": {
     "@types/axios": "^0.14.0",
