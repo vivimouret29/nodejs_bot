@@ -4,6 +4,7 @@ const { SlashCommandBuilder } = require('discord.js'),
 	fs = require('node:fs'),
 	axios = require('axios'),
 	{ clientId, identity } = require('../core/config.json'),
+	{ huggingface } = require('../config.json'),
 	{ randomColor, getCurrentDatetime, randomIntFromInterval } = require('../core/utils.js');
 
 var duration_average = randomIntFromInterval(0, 100);
@@ -28,17 +29,6 @@ module.exports = {
 		})
 			.catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error command pepe send ${err}`); });
 
-		const urI = `https://vivsmouret-dipl0-pepe-diffuser-bot.hf.space/run/predict`,
-			headers = {
-				'Content-Type': 'application/json',
-				'Connection': 'Keep-Alive'
-			},
-			dt = JSON.stringify({
-				data: [
-					'pepe ' + args.toLowerCase()
-				]
-			});
-
 		let response = { status: 100 },
 			countResponse = -1,
 			link = '';
@@ -46,7 +36,18 @@ module.exports = {
 		while (response.status != 200) {
 			countResponse++;
 			response = await axios
-				.post(urI, dt, { headers: headers, timeout: 300000 }) // timeout not really working so infinite loop
+				.post(
+					'https://vivsmouret-dipl0-pepe-diffuser.hf.space/run/predict',
+					JSON.stringify({
+						data: [
+							'pepe ' + args.join(' ').toLowerCase()
+						]
+					}),
+					{
+						'Authorization': `Bearer ${huggingface}`,
+						'Content-Type': 'application/json',
+						'Connection': 'keep-alive'
+					})
 				.catch(error => { return response = error.response; });
 		};
 

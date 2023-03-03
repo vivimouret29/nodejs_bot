@@ -245,10 +245,10 @@ class DaftBot {
 
             switch (interaction.commandName) {
                 case checkCollection:
+                    console.log(`[${getCurrentDatetime('comm')}] ${interaction.member.guild.name} / ${interaction.member.user.username} # ${interaction.commandName}${interaction.options.get("prompt") != undefined ? ` - ${interaction.options.get("prompt").value}` : ''}`);
                     await this.dbClient.slash
                         .get(interaction.commandName)
                         .execute(interaction, this.dbClient, this.language, this.initDateTime);
-                    console.log(`[${getCurrentDatetime('comm')}] ${interaction.member.guild.name} / ${interaction.member.user.username} # ${interaction.commandName}${interaction.options.get("prompt") != undefined ? ` - ${interaction.options.get("prompt").value}` : ''}`);
                     break;
             };
         });
@@ -297,15 +297,16 @@ class DaftBot {
                                 message.reply({ 'content': language.error, 'ephemeral': true });
                                 console.log(`[${getCurrentDatetime('comm')}] Error sending message SEERROR ${err}`);
                             });
+                        console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
                         await this.dbClient.mobbot
                             .get(command)
                             .execute(message, this.dbClient, this.language);
                         break;
                     case checkCollection:
+                        console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
                         await this.dbClient.command
                             .get(command)
                             .execute(message, this.dbClient, this.language, args, this.initDateTime);
-                        console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
                         break;
                 };
             };
