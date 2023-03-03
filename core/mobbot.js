@@ -150,7 +150,7 @@ class MobBot {
     };
 
     async onGiftSubscription() {
-        this.mbCommandslient.on("submysterygift", (channel, username, numbOfSubs, methods, userstate) => {
+        this.mbClient.on("submysterygift", (channel, username, numbOfSubs, methods, userstate) => {
             this.mbClient.say(channel, `ok ok... @${username} offre ${numbOfSubs} sub PogChamp PogChamp`)
                 .catch(e => console.log(e));
         });
