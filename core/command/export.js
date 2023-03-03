@@ -8,7 +8,7 @@ module.exports = {
         name: 'export',
         description: 'a dynamic export of mobbot dataset'
     },
-    execute(message, client, language, gD, axios) {
-        mobbot.onDataExport(message, client);
+    async execute(message, client, language, gD, axios) {
+        await mobbot.onDataExport(message, client);
     }
 };

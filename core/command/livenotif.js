@@ -8,7 +8,7 @@ module.exports = {
         name: 'livenotif',
         description: 'a dynamic live notification'
     },
-    execute(message, client, language, gD, axios) {
-        mobbot.onLive(message, client, language, gD, axios);
+    async execute(message, client, language, gD, axios) {
+        await mobbot.onLive(message, client, language, gD, axios);
     }
 };
