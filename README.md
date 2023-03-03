@@ -5,7 +5,7 @@
 <div>
     <div align="center">
         <a>
-            <img src="https://img.shields.io/badge/daftbot-v2.0.1-green">
+            <img src="https://img.shields.io/badge/daftbot-v2.1.0-green">
         </a>
         <a>
             <img src="https://img.shields.io/badge/mobbot-v1.0.0-purple">
