@@ -3,9 +3,12 @@
 const { Client } = require('tmi.js'),
     { ActivityType } = require('discord.js'),
     { parse } = require('json2csv'),
+    axios = require('axios'),
     fs = require('node:fs'),
+    path = require('node:path'),
     { clientId, identity, channels } = require('./config.json'),
-    { getCurrentDatetime, randomColor } = require('./function.js');
+    { getCurrentDatetime, randomColor } = require('./utils.js'),
+    { users: regular_users } = require('../resx/regular_users.json');
 
 const oauth = {
     options: {
@@ -19,29 +22,150 @@ const oauth = {
         secure: true,
     }
 };
+const params = {
+    headers: {
+        Authorization: `Bearer ${identity.password}`,
+        'Client-ID': clientId
+    }
+};
 
 var dataToExport = [];
 
 class MobBot {
     constructor() {
         this.mbClient = new Client(oauth);
+
+        this.mbCommands = new Map();
+
+        this._count = 0 | this._count;
     };
 
-    onConnect() {
-        this.mbClient.connect()
+    async onConnect() {
+        this.setCollection();
+
+        await this.mbClient.connect()
             .catch(console.error);
         this.mbClient.on('connected', this.onConnectedHandler);
-        this.onDataImport();
-        // this.onMessageListen();
+
+        await this.onDataImport();
+        await this.onMessageListen();
+        await this.onSubscription();
+        await this.onGiftSubscription();
+        await this.onReSubsciption();
+        await this.onCheers();
+        await this.onYeeetTheChild();
     };
 
-    onMessageListen() {
-        // In Progress
+    setCollection() {
+        const commandsPath = path.join(__dirname, './subcommands'),
+            commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
+
+        for (let file of commandFiles) {
+            var filePath = path.join(commandsPath, file),
+                command = require(filePath);
+            if ('data' in command && 'execute' in command) { this.mbCommands.set(command.data.name, command); }
+            else { console.log(`[ERROR_FILE_COMMAND] The command at ${filePath} is missing a required "data" or "execute" property.`); };
+        };
     };
 
-    onDataImport() {
+    async onMessageListen() {
+        this.mbClient.on('message', async (channel, userstate, message, self) => {
+            if (self || userstate.username === 'mobbot_') return;
+            var _rdm = Math.random();
+
+            if (message.startsWith('!')) {
+                let msg = message.trim().toLowerCase(),
+                    args = msg.slice(1).split(' '),
+                    command = args.shift().toLowerCase(),
+                    checkCollection;
+
+                this.mbCommands.has(command) ? checkCollection = this.mbCommands.get(command).data.name : checkCollection = false;
+
+                switch (command) {
+                    case checkCollection:
+                        await this.mbCommands
+                            .get(checkCollection)
+                            .execute(this.mbClient,
+                                channel,
+                                message,
+                                userstate,
+                                await this.onLastVideo(),
+                                await this.onTimeStamp(),
+                                false);
+                        break;
+                    case 'test':
+                        this.mbClient.reply(channel, 'Can not send message (-&?. undefined)', userstate.id)
+                            .catch(e => console.log(e));
+                        break;
+                };
+            };
+
+            for (let i in message.split(' ')) {
+                if (message.split(' ')[i].toLowerCase() === '@mobbot_') {
+                    this.mbClient.reply(channel, 'Qu\'est-ce ?', userstate.id)
+                        .catch(e => console.log(e));
+                };
+            };
+
+            this._count++;
+            if (_rdm < .33 && this._count % 2 === 0 && this._count > 8) {
+                await this.mbCommands
+                    .get('timer')
+                    .execute(this.mbClient,
+                        channel,
+                        message,
+                        userstate,
+                        await this.onLastVideo(),
+                        await this.onTimeStamp(),
+                        true);
+            };
+
+            if (regular_users.includes(userstate.username) && _rdm < .33) {
+                this.mbClient.reply(channel, `salu twa PixelBob`, userstate.id)
+                    .catch(e => console.log(e));
+            };
+        });
+    };
+
+    async onSubscription() {
+        this.mbClient.on("subscription", (channel, username, method, message, userstate) => {
+            this.mbClient.say(channel, `eh @${username} fais maintenant parti des recrues, merci !`)
+                .catch(e => console.log(e));
+        });
+    };
+
+    async onReSubsciption() {
+        this.mbClient.on("resub", (channel, username, months, message, userstate, methods) => {
+            let cumulativeMonths = userstate["msg-param-cumulative-months"];
+            this.mbClient.say(channel, `un exploit GlitchCat @${username} est revenu pour le ${cumulativeMonths} mois consécutif`)
+                .catch(e => console.log(e));
+        });
+    };
+
+    async onCheers() {
+        this.mbClient.on("cheer", (channel, userstate, message) => {
+            this.mbClient.say(channel, `trop généreux !! @${username} m'envoie ${userstate.bits} bits RyuChamp`)
+                .catch(e => console.log(e));
+        });
+    };
+
+    async onGiftSubscription() {
+        this.mbCommandslient.on("submysterygift", (channel, username, numbOfSubs, methods, userstate) => {
+            this.mbClient.say(channel, `ok ok... @${username} offre ${numbOfSubs} sub PogChamp PogChamp`)
+                .catch(e => console.log(e));
+        });
+    };
+
+    async onYeeetTheChild() {
+        this.mbClient.on("ban", (channel, username, reason, userstate) => {
+            this.mbClient.say(channel, `YEEEEEEEEEEEEEEEEEEET THE ${username} !! FBPass`)
+                .catch(e => console.log(e));
+        });
+    }
+
+    async onDataImport() {
         this.mbClient.on('message', (channel, userstate, message, self) => {
-            if (self || userstate['username'] === 'moobot') return;
+            if (self || userstate['username'] === 'moobot_') return;
 
             let data = {
                 'id': Number(userstate['user-id']),
@@ -58,7 +182,7 @@ class MobBot {
         });
     };
 
-    onDataExport(message, client) {
+    async onDataExport(message, client) {
         if (dataToExport.length === 0) {
             let emoji = client.emojis.cache.find(emoji => emoji.name === 'sadpepe');
             message
@@ -90,7 +214,7 @@ class MobBot {
             .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error during file send ${err}`); });
     };
 
-    onLive(message, client, language, gD, axios) {
+    async onLive(message, client, language, gD, axios) {
         if (gD == undefined || axios == undefined) {
             console.log(`[${getCurrentDatetime('comm')}] Error function liveNotif() : GUID = ${gD} and/or AXIOS = ${axios}`);
             return;
@@ -110,6 +234,16 @@ class MobBot {
         } catch (err) {
             console.log(`[${getCurrentDatetime('comm')}] Can't get guid and dot : `, err);
         };
+
+        this.mbCommands
+            .get('timer')
+            .execute(this.mbClient,
+                channels[0],
+                undefined,
+                undefined,
+                await this.onLastVideo(),
+                await this.onTimeStamp(),
+                true);
 
         for (let chan in channelTwitch) {
             var channelSend = client.channels.cache.find(channel => channel.name == channelTwitch[chan]);
@@ -145,7 +279,7 @@ class MobBot {
                         },
                         'footer': {
                             'text': `Viewers : ${axios.data.data[0].viewer_count}`,
-                            'icon_url': `https://cdn-icons-png.flaticon.com/512/4299/4299106.png`,
+                            'icon_url': `https://em-content.zobj.net/thumbs/120/microsoft/319/busts-in-silhouette_1f465.png`,
                             'proxy_icon_url': `https://twitch.tv/${axios.data.data[0].user_login}`
                         },
                         'url': `https://twitch.tv/${axios.data.data[0].user_login}`
@@ -220,6 +354,21 @@ class MobBot {
                 })
                 .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error message videoNotif() ${err}`); });
         };
+    };
+
+    async onLastVideo() {
+        let fe = await fetch(`https://www.youtube.com/feeds/videos.xml?channel_id=UCreItrEewfO6IPZYPu4C7pA`)
+            .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error FETCH ${err}`); }),
+            fetched = await fe.text();
+        return String(fetched.split(new RegExp(`(\:[^.]*\<\/)`, 'giu'))[3].split(new RegExp(`(\<[^.]*?\>)`, 'giu'))[10]);
+    };
+
+    async onTimeStamp() {
+        let ax = await axios.get(`http://api.twitch.tv/helix/streams?user_login=` + channels[0].slice(1), params)
+            .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error GET AXIOS ${err}`); });
+        return ax.data.data.length != 0 ?
+            new Date(new Date().getTime() - new Date(ax.data.data[0].started_at).getTime()).toUTCString().slice(17, -4) :
+            '00:00:00';
     };
 
     onConnectedHandler(addr, port) { console.log(`* Connected to ${addr}:${port} *`); };
