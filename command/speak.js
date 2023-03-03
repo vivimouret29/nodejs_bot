@@ -1,6 +1,6 @@
 'use.strict'
 
-const { getCurrentDatetime, messageErase } = require('../core/function.js');
+const { getCurrentDatetime, messageErase } = require('../core/utils.js');
 
 module.exports = {
     data: {

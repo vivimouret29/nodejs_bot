@@ -4,7 +4,7 @@ const axios = require('axios'),
     { owner } = require('../config.json'),
     { fr, en, uk } = require('../resx/lang.json'),
     { master, user } = require('../resx/help.json'),
-    { getCurrentDatetime } = require('../core/function.js');
+    { getCurrentDatetime } = require('../core/utils.js');
 
 module.exports = {
     data: {

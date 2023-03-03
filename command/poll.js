@@ -1,7 +1,7 @@
 'use.strict'
 
 const { emojis: dctmj } = require('../resx/emojis.json'),
-    { sendEmbed, messageErase, getCurrentDatetime, randomColor } = require('../core/function.js');
+    { sendEmbed, messageErase, getCurrentDatetime, randomColor } = require('../core/utils.js');
 
 module.exports = {
     data: {

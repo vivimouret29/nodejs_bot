@@ -1,6 +1,6 @@
 'use.strict'
 
-const { sendEmbed } = require('../core/function.js'),
+const { sendEmbed } = require('../core/utils.js'),
     package = require('../package.json');
 
 module.exports = {

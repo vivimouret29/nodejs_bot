@@ -1,6 +1,6 @@
 'use.strict'
 
-const { getCurrentDatetime } = require('../core/function.js');
+const { getCurrentDatetime } = require('../core/utils.js');
 
 module.exports = {
     data: {

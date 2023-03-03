@@ -1,7 +1,7 @@
 'use.strict'
 
 const { SlashCommandBuilder } = require('discord.js'),
-    { getCurrentDatetime } = require('../core/function.js');
+    { getCurrentDatetime } = require('../core/utils.js');
 
 module.exports = {
     data: new SlashCommandBuilder()

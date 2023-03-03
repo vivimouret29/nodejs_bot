@@ -3,7 +3,7 @@
 const fs = require('node:fs'),
     axios = require('axios'),
     { clientId, identity } = require('../core/config.json'),
-    { sendEmbed, messageErase, randomColor, getCurrentDatetime, randomIntFromInterval } = require('../core/function.js');
+    { sendEmbed, messageErase, randomColor, getCurrentDatetime, randomIntFromInterval } = require('../core/utils.js');
 
 var duration_average = randomIntFromInterval(0, 100);
 

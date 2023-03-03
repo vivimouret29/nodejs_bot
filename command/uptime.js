@@ -1,6 +1,6 @@
 'use.strict'
 
-const { sendEmbed, getCurrentDatetime } = require('../core/function.js');
+const { sendEmbed, getCurrentDatetime } = require('../core/utils.js');
 
 module.exports = {
     data: {

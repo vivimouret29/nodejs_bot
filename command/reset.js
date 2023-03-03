@@ -2,7 +2,7 @@
 
 const { ActivityType } = require('discord.js'),
     { token, owner } = require('../config.json'),
-    { sendEmbed } = require('../core/function.js');
+    { sendEmbed } = require('../core/utils.js');
 
 module.exports = {
     data: {

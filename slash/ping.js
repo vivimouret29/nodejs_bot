@@ -1,7 +1,7 @@
 'use.strict'
 
 const { SlashCommandBuilder } = require('discord.js'),
-    { getCurrentDatetime, randomIntFromInterval } = require('../core/function.js');
+    { getCurrentDatetime, randomIntFromInterval } = require('../core/utils.js');
 
 module.exports = {
     data: new SlashCommandBuilder()

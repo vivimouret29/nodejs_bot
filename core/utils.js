@@ -1,3 +1,5 @@
+// TODO rename utils.js
+
 async function sendEmbed(message, content, descp) {
 	if (descp == undefined) descp = false;
 

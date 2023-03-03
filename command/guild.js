@@ -1,6 +1,6 @@
 'use.strict'
 
-const { sendEmbed, messageErase } = require('../core/function.js');
+const { sendEmbed, messageErase } = require('../core/utils.js');
 
 module.exports = {
     data: {

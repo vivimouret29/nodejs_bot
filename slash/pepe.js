@@ -4,7 +4,7 @@ const { SlashCommandBuilder } = require('discord.js'),
 	fs = require('node:fs'),
 	axios = require('axios'),
 	{ clientId, identity } = require('../core/config.json'),
-	{ randomColor, getCurrentDatetime, randomIntFromInterval } = require('../core/function.js');
+	{ randomColor, getCurrentDatetime, randomIntFromInterval } = require('../core/utils.js');
 
 var duration_average = randomIntFromInterval(0, 100);
 
