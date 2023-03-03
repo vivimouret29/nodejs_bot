@@ -40,7 +40,7 @@ module.exports = {
 					'https://vivsmouret-dipl0-pepe-diffuser.hf.space/run/predict',
 					JSON.stringify({
 						data: [
-							'pepe ' + args.join(' ').toLowerCase()
+							'pepe ' + args.toLowerCase()
 						]
 					}),
 					{
