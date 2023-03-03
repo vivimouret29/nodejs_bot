@@ -9,7 +9,7 @@ const { Client, Collection, GatewayIntentBits, ActivityType, Events, Partials, R
     { clientId, identity } = require('./config.json'),
     { fr, en, uk } = require('../resx/lang.json'),
     { memes } = require('../resx/memes.json'),
-    { sendEmbed, messageErase, getCurrentDatetime, randomIntFromInterval } = require('./function.js');
+    { sendEmbed, messageErase, getCurrentDatetime, randomIntFromInterval } = require('./utils.js');
 
 const intents = [
     GatewayIntentBits.Guilds,
@@ -82,34 +82,34 @@ class DaftBot {
 
     setCollection() {
         // Command Collection
-        const commandsPath = path.join(__dirname, '../command');
-        const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
+        const commandsPath = path.join(__dirname, '../command'),
+            commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
 
         for (let file of commandFiles) {
-            var filePath = path.join(commandsPath, file);
-            var command = require(filePath);
+            var filePath = path.join(commandsPath, file),
+                command = require(filePath);
             if ('data' in command && 'execute' in command) { this.dbClient.command.set(command.data.name, command); }
             else { console.log(`[ERROR_FILE_COMMAND] The command at ${filePath} is missing a required "data" or "execute" property.`); };
         };
 
         // Mobbot Collection
-        const mobbotsPath = path.join(__dirname, './command');
-        const mobbotFiles = fs.readdirSync(mobbotsPath).filter(file => file.endsWith('.js'));
+        const mobbotsPath = path.join(__dirname, './command'),
+            mobbotFiles = fs.readdirSync(mobbotsPath).filter(file => file.endsWith('.js'));
 
         for (let file of mobbotFiles) {
-            var filePath = path.join(mobbotsPath, file);
-            var command = require(filePath);
+            var filePath = path.join(mobbotsPath, file),
+                command = require(filePath);
             if ('data' in command && 'execute' in command) { this.dbClient.mobbot.set(command.data.name, command); }
             else { console.log(`[ERROR_FILE_MOBBOT] The command at ${filePath} is missing a required "data" or "execute" property.`); };
         };
 
         // Slash Collection
-        const slashsPath = path.join(__dirname, '../slash');
-        const slashFiles = fs.readdirSync(slashsPath).filter(file => file.endsWith('.js'));
+        const slashsPath = path.join(__dirname, '../slash'),
+            slashFiles = fs.readdirSync(slashsPath).filter(file => file.endsWith('.js'));
 
         for (let file of slashFiles) {
-            var filePath = path.join(slashsPath, file);
-            var command = require(filePath);
+            var filePath = path.join(slashsPath, file),
+                command = require(filePath);
             if ('data' in command && 'execute' in command) {
                 this.dbClient.slash.set(command.data.name, command);
                 this.commands.push(command.data.toJSON());
@@ -118,12 +118,12 @@ class DaftBot {
         };
 
         // Response Collection
-        const responsesPath = path.join(__dirname, '../response');
-        const responseFiles = fs.readdirSync(responsesPath).filter(file => file.endsWith('.js'));
+        const responsesPath = path.join(__dirname, '../response'),
+            responseFiles = fs.readdirSync(responsesPath).filter(file => file.endsWith('.js'));
 
         for (let file of responseFiles) {
-            var filePath = path.join(responsesPath, file);
-            var command = require(filePath);
+            var filePath = path.join(responsesPath, file),
+                command = require(filePath);
             if ('data' in command && 'execute' in command) { this.dbClient.response.set(command.data.name, command); }
             else { console.log(`[ERROR_FILE_RESPONSE] The command at ${filePath} is missing a required "data" or "execute" property.`); };
         };
@@ -333,12 +333,11 @@ class DaftBot {
 
             if (this.userToCheck.includes(message.author.id)) {
                 if (Math.random() > .05) return;
-                let userId = message.author.user;
                 try {
-                    console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${userId}'s message '${message}' deleted`);
+                    console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author}'s message '${message}' deleted`);
                     await messageErase(message);
                 } catch (err) {
-                    console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # Can't delete ${userId}'s message : ${err}`);
+                    console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # Can't delete ${author}'s message : ${err}`);
                 };
             };
 
