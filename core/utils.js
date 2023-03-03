@@ -1,4 +1,4 @@
-// TODO rename utils.js
+'use.strict'
 
 async function sendEmbed(message, content, descp) {
 	if (descp == undefined) descp = false;
