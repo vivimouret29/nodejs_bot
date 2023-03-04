@@ -235,6 +235,8 @@ class MobBot {
             console.log(`[${getCurrentDatetime('comm')}] Can't get guid and dot : `, err);
         };
 
+        if (this.mbCommands.size == 0) { this.setCollection(); };
+
         this.mbCommands
             .get('timer')
             .execute(this.mbClient,
