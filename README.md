@@ -62,6 +62,12 @@ Avec plus de 10 commandes possibles dans son serveur principal, et beaucoup d'au
         Token de OpenAI
     </li>
     <li>
+        Client Id du Bot Discord
+    </li>
+    <li>
+        Token de HuggingFace
+    </li>
+    <li>
         Nodejs et npm
     </li>
 </ul>
