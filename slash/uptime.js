@@ -18,7 +18,7 @@ module.exports = {
             let seconds = Math.floor(totalSeconds % 60);
             let start = initDateTime;
 
-            message.reply({ 'content': `${language.uptime} ${start}\n${days}D:${hours}H:${minutes}M:${seconds}S`, 'ephemeral': true });
+            message.reply({ 'content': `${language.uptime} ${days}:${hours}:${minutes}:${seconds}\n${start}`, 'ephemeral': true });
         } catch (err) {
             message.reply({ 'content': language.error, 'ephemeral': true });
             console.log(`[${getCurrentDatetime('comm')}] Error function uptime() ${err}`);
