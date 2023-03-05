@@ -7,6 +7,6 @@ module.exports = {
         .setName('invit')
         .setDescription('Te fournit un lien direct pour inviter tes amis sur le serveur de daftmob'),
     async execute(message, client, language, initDateTime) {
-        await message.reply({ 'content': `${language.invitMsg}\nhttps://discord.gg/ucwnMKKxZe`, 'ephemere': false });
+        await message.reply({ 'content': `${language.invitMsg}`, 'ephemere': true });
     }
 };
