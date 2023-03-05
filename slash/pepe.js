@@ -49,6 +49,29 @@ module.exports = {
 						'Connection': 'keep-alive'
 					})
 				.catch(error => { return response = error.response; });
+			await new Promise(resolve => setTimeout(resolve, 2 * 1000));
+
+			if (countResponse > 11) {
+				message.editReply({
+					'channel_id': message.channel.channel_id,
+					'content': `${language.imagineError}`,
+					'fetchReply': false,
+					'ephemeral': false
+				})
+					.catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error command pepe send ${err}`); });
+				return;
+			};
+
+			if (response.status == 410) {
+				message.editReply({
+					'channel_id': message.channel.channel_id,
+					'content': response.data,
+					'fetchReply': false,
+					'ephemeral': false
+				})
+					.catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error command pepe send ${err}`); });
+				return;
+			};
 		};
 
 		const data = await response.data,

@@ -1,12 +1,10 @@
 'use.strict'
 
-async function sendEmbed(message, content, descp) {
-	if (descp == undefined) descp = false;
-
+async function sendEmbed(message, content) {
 	var messageToSend = await message
 		.reply({
 			'channel_id': message.channel.channel_id,
-			'content': descp ? 'https://discord.gg/ucwnMKKxZe' : '',
+			'content': '',
 			'tts': false,
 			'embeds': [{
 				'type': 'rich',
