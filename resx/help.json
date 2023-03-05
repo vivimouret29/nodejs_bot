@@ -65,7 +65,6 @@
             "version": "-  version : permet de connaître la version du bot\r",
             "say": "-  say : permet de faire parler le bot (e.g.: !say Hello World !)\r",
             "ping": "-  ping : permet de connaître le ping du bot\r",
-            "guild": "-  guild : renvoie la liste de serveurs où le bot est\r",
             "pepe": "-  pepe : permet de faire imaginer une image via le bot avec ([**pepe diffuser**](https://huggingface.co/Dipl0/pepe-diffuser))\r"
         },
         "en": {
@@ -77,7 +76,6 @@
             "say": "- say : allows to make the bot speak (e.g.: !say Hello World !)\r",
             "ping": "- ping : allows to know the ping of the bot\r",
             "invit": "-  invit : allows to get the invitation link of the bot\r",
-            "guild": "-  guild : returns the list of guilds where the bot is located\r",
             "pepe": "-  pepe : allows you to imagine an image via the bot with ([**pepe diffuser**](https://huggingface.co/Dipl0/pepe-diffuser))\r"
         },
         "uk": {
@@ -89,7 +87,6 @@
             "say": "-  say : дозволяє змусити бота говорити (наприклад: !say Hello World !)\r",
             "ping": "-  ping : дозволяє дізнатися пінг бота\r",
             "invit": "-  invit : дозволяє отримати посилання запрошення бота\r",
-            "guild": "-  guild : повертає список гільдій, де знаходиться бот\r",
             "pepe": "-  pepe : дозволяє уявити зображення через бота за допомогою ([**pepe diffuser**](https://huggingface.co/Dipl0/pepe-diffuser))\r"
         }
     }
