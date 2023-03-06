@@ -97,7 +97,7 @@ node main.js
     </a>
     <br>
     Voici un petit lien du projet 
-    <a href="https://trello.com/b/kdy25wXP/daftbot-mobbot">
+    <a href="https://github.com/users/vivimouret29/projects/1">
         github
     </a>
     afin de suivre l'avancée des bots !
