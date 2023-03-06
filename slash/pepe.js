@@ -7,7 +7,7 @@ const { SlashCommandBuilder } = require('discord.js'),
 	{ huggingface } = require('../config.json'),
 	{ randomColor, getCurrentDatetime, randomIntFromInterval } = require('../core/utils.js');
 
-var duration_average = randomIntFromInterval(0, 100);
+var duration_average = randomIntFromInterval(40, 140);
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -33,25 +33,22 @@ module.exports = {
 			countResponse = -1,
 			link = '';
 
+		const urI = 'https://vivsmouret-dipl0-pepe-diffuser.hf.space/run/predict',
+			headers = {
+				'Authorization': `Bearer ${huggingface}`,
+				'Content-Type': 'application/json',
+				'Connection': 'Keep-Alive'
+			},
+			dt = JSON.stringify({
+				data: [
+					'pepe ' + args.toLowerCase()
+				]
+			});
+
 		while (response.status != 200) {
 			countResponse++;
-			response = await axios
-				.post(
-					'https://vivsmouret-dipl0-pepe-diffuser.hf.space/run/predict',
-					JSON.stringify({
-						data: [
-							'pepe ' + args.toLowerCase()
-						]
-					}),
-					{
-						'Authorization': `Bearer ${huggingface}`,
-						'Content-Type': 'application/json',
-						'Connection': 'keep-alive'
-					})
-				.catch(error => { return response = error.response; });
-			await new Promise(resolve => setTimeout(resolve, 2 * 1000));
-
-			if (countResponse > 11) {
+			
+			if (countResponse > 10) {
 				message.editReply({
 					'channel_id': message.channel.channel_id,
 					'content': `${language.imagineError}`,
@@ -59,8 +56,11 @@ module.exports = {
 					'ephemeral': false
 				})
 					.catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error command pepe send ${err}`); });
-				return;
+				return console.log(`[${getCurrentDatetime('comm')}] Error command pepe ${response.data}`);
 			};
+
+			response = await axios.post(urI, dt, { headers: headers })
+				.catch(error => { return response = error.response; });
 
 			if (response.status == 410) {
 				message.editReply({
@@ -70,7 +70,7 @@ module.exports = {
 					'ephemeral': false
 				})
 					.catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error command pepe send ${err}`); });
-				return;
+				return console.log(`[${getCurrentDatetime('comm')}] Error command pepe ${response.data}`);
 			};
 		};
 

@@ -6,7 +6,7 @@ const fs = require('node:fs'),
     { huggingface } = require('../config.json'),
     { sendEmbed, messageErase, randomColor, getCurrentDatetime, randomIntFromInterval } = require('../core/utils.js');
 
-var duration_average = randomIntFromInterval(0, 100);
+var duration_average = randomIntFromInterval(40, 140);
 
 module.exports = {
     data: {
@@ -28,46 +28,44 @@ module.exports = {
             countResponse = -1,
             link = '';
 
+        const urI = 'https://vivsmouret-dipl0-pepe-diffuser.hf.space/run/predict',
+            headers = {
+                'Authorization': `Bearer ${huggingface}`,
+                'Content-Type': 'application/json',
+                'Connection': 'Keep-Alive'
+            },
+            dt = JSON.stringify({
+                data: [
+                    'pepe ' + args.join(' ').toLowerCase()
+                ]
+            });
+
         while (response.status != 200) {
             countResponse++;
-            response = await axios
-                .post(
-                    'https://vivsmouret-dipl0-pepe-diffuser.hf.space/run/predict',
-                    JSON.stringify({
-                        data: [
-                            'pepe ' + args.join(' ').toLowerCase()
-                        ]
-                    }),
-                    {
-                        'Authorization': `Bearer ${huggingface}`,
-                        'Content-Type': 'application/json',
-                        'Connection': 'keep-alive'
-                    })
+            if (countResponse > 11) {
+                msg.edit({
+                    'channel_id': message.channel.channel_id,
+                    'content': `${language.imagineError}`,
+                    'fetchReply': false,
+                    'ephemeral': false
+                })
+                    .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error command pepe send ${err}`); });
+                return;
+            };
+            
+            response = await axios.post(urI, dt, { headers: headers })
                 .catch(error => { return response = error.response; });
-            await new Promise(resolve => setTimeout(resolve, 2 * 1000));
-			await new Promise(resolve => setTimeout(resolve, 2 * 1000));
 
-			if (countResponse > 11) {
-				message.editReply({
-					'channel_id': message.channel.channel_id,
-					'content': `${language.imagineError}`,
-					'fetchReply': false,
-					'ephemeral': false
-				})
-					.catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error command pepe send ${err}`); });
-				return;
-			};
-
-			if (response.status == 410) {
-				message.editReply({
-					'channel_id': message.channel.channel_id,
-					'content': response.data,
-					'fetchReply': false,
-					'ephemeral': false
-				})
-					.catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error command pepe send ${err}`); });
-				return;
-			};
+            if (response.status == 410) {
+                msg.edit({
+                    'channel_id': message.channel.channel_id,
+                    'content': response.data,
+                    'fetchReply': false,
+                    'ephemeral': false
+                })
+                    .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error command pepe send ${err}`); });
+                return;
+            };
         };
 
         const data = await response.data,
