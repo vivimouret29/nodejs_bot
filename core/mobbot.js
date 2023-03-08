@@ -102,7 +102,7 @@ class MobBot {
 
             for (let i in message.split(' ')) {
                 if (message.split(' ')[i].toLowerCase() === '@mobbot_') {
-                    this.mbClient.reply(channel, 'Qu\'est-ce ?', userstate.id)
+                    this.mbClient.reply(channel, 'qu\'est-ce ?', userstate.id)
                         .catch(e => console.log(e));
                 };
             };
@@ -120,7 +120,7 @@ class MobBot {
                         true);
             };
 
-            if (regular_users.includes(userstate.username) && _rdm < .33) {
+            if (regular_users.includes(userstate.username) && _rdm < .05) {
                 this.mbClient.reply(channel, `salu twa PixelBob`, userstate.id)
                     .catch(e => console.log(e));
             };
