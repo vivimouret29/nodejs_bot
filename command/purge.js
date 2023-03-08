@@ -10,7 +10,7 @@ module.exports = {
         args: true
     },
     async execute(message, client, language, args, initDateTime) {
-        if (!(message.author.id == owner)) {
+        if (!(message.author.id == owner) || message.guildId == null) {
             return await sendEmbed(message, language.restricted)
                 .catch(err => {
                     message.reply({ 'content': language.error, 'ephemeral': true });

@@ -246,7 +246,8 @@ class DaftBot {
 
             switch (interaction.commandName) {
                 case checkCollection:
-                    console.log(`[${getCurrentDatetime('comm')}] ${interaction.member.guild.name} / ${interaction.member.user.username} # ${interaction.commandName}${interaction.options.get("prompt") != undefined ? ` - ${interaction.options.get("prompt").value}` : ''}`);
+                    if (interaction.member == null) { console.log(`[${getCurrentDatetime('comm')}] ${interaction.user.username}'s DM # ${interaction.commandName}${interaction.options.get("prompt") != undefined ? ` - ${interaction.options.get("prompt").value}` : ''}`); }
+                    else { console.log(`[${getCurrentDatetime('comm')}] ${interaction.member.guild.name} / ${interaction.user.username} # ${interaction.commandName}${interaction.options.get("prompt") != undefined ? ` - ${interaction.options.get("prompt").value}` : ''}`); };
                     await this.dbClient.slash
                         .get(interaction.commandName)
                         .execute(interaction, this.dbClient, this.language, this.initDateTime);
@@ -290,13 +291,15 @@ class DaftBot {
                                 message.reply({ 'content': language.error, 'ephemeral': true });
                                 console.log(`[${getCurrentDatetime('comm')}] Error sending message SEERROR ${err}`);
                             });
-                        console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
+                        if (message.guild == null && message.channel.name == undefined) { console.log(`[${getCurrentDatetime('comm')}] ${author}'s DM # ${msg}`); }
+                        else { console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`); };
                         await this.dbClient.mobbot
                             .get(command)
                             .execute(message, this.dbClient, this.language);
                         break;
                     case checkCollection:
-                        console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
+                        if (message.guild == null && message.channel.name == undefined) { console.log(`[${getCurrentDatetime('comm')}] ${author}'s DM # ${msg}`); }
+                        else { console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`); };
                         await this.dbClient.command
                             .get(command)
                             .execute(message, this.dbClient, this.language, args, this.initDateTime);
@@ -319,19 +322,23 @@ class DaftBot {
                     await this.dbClient.command
                         .get('openai')
                         .execute(this.dbClient, message, this.language);
-                    console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
+                    if (message.guild == null && message.channel.name == undefined) { console.log(`[${getCurrentDatetime('comm')}] ${author}'s DM # ${msg}`); }
+                    else { console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`); };
                 } catch (err) {
-                    console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # Error output openai() : ${err}`);
+                    if (message.guild == null && message.channel.name == undefined) { console.log(`[${getCurrentDatetime('comm')}] ${author}'s DM # Error output openai() : ${err}`); }
+                    else { console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # Error output openai() : ${err}`); };
                 };
             };
 
             if (this.userToCheck.includes(message.author.id)) {
                 if (Math.random() > .05) return;
                 try {
-                    console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author}'s message '${message}' deleted`);
+                    if (message.guild == null && message.channel.name == undefined) { console.log(`[${getCurrentDatetime('comm')}] ${author}'s DM # ${message.content}`); }
+                    else { console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author}'s message '${message.content}' deleted`); };
                     await messageErase(message);
                 } catch (err) {
-                    console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # Can't delete ${author}'s message : ${err}`);
+                    if (message.guild == null && message.channel.name == undefined) { console.log(`[${getCurrentDatetime('comm')}] ${author}'s DM # Can't delete ${author}'s message : ${err}`); }
+                    else { console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # Can't delete ${author}'s message : ${err}`); };
                 };
             };
 
@@ -342,9 +349,11 @@ class DaftBot {
                         this.dbClient.response
                             .get(msgSplit[word])
                             .execute(message, args, this.language);
-                        console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
+                        if (message.guild == null && message.channel.name == undefined) { console.log(`[${getCurrentDatetime('comm')}] ${author}'s DM # ${msg}`); }
+                        else { console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`); };
                     } catch (err) {
-                        console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # Error output reply() : ${err}`);
+                        if (message.guild == null && message.channel.name == undefined) { console.log(`[${getCurrentDatetime('comm')}] ${author}'s DM # Error output reply() : ${err}`); }
+                        else { console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # Error output reply() : ${err}`); };
                     };
                 };
             };
@@ -487,7 +496,8 @@ class DaftBot {
                     status: 'online'
                 });
 
-                console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
+                if (message.guild == null && message.channel.name == undefined) { console.log(`[${getCurrentDatetime('comm')}] ${author}'s DM # ${msg}`); }
+                else { console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`); };
                 break;
             case 'en':
                 this.language = en;
@@ -506,7 +516,8 @@ class DaftBot {
                     status: 'online'
                 });
 
-                console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
+                if (message.guild == null && message.channel.name == undefined) { console.log(`[${getCurrentDatetime('comm')}] ${author}'s DM # ${msg}`); }
+                else { console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`); };
                 break;
             case 'uk':
                 this.language = uk;
@@ -525,7 +536,8 @@ class DaftBot {
                     status: 'online'
                 });
 
-                console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
+                if (message.guild == null && message.channel.name == undefined) { console.log(`[${getCurrentDatetime('comm')}] ${author}'s DM # ${msg}`); }
+                else { console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`); };
                 break;
             default:
                 await sendEmbed(message, this.language.languageNtReco)
@@ -533,7 +545,8 @@ class DaftBot {
                         message.reply({ 'content': language.error, 'ephemeral': true });
                         console.log(`[${getCurrentDatetime('comm')}] Error sending message SEERROR ${err}`);
                     });
-                console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
+                if (message.guild == null && message.channel.name == undefined) { console.log(`[${getCurrentDatetime('comm')}] ${author}'s DM # ${msg}`); }
+                else { console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`); };
                 break;
         };
     };
@@ -545,7 +558,8 @@ class DaftBot {
 
         if (action != undefined) {
             if ((action.toLowerCase()) === 'on') {
-                console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
+                if (message.guild == null && message.channel.name == undefined) { console.log(`[${getCurrentDatetime('comm')}] ${author}'s DM # ${msg}`); }
+                else { console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`); };
                 await sendEmbed(message, this.language.botMuted)
                     .catch(err => {
                         message.reply({ 'content': language.error, 'ephemeral': true });
@@ -554,7 +568,8 @@ class DaftBot {
                 this.isMuted = true;
                 return this.isMuted;
             } else if ((action.toLowerCase()) === 'off') {
-                console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
+                if (message.guild == null && message.channel.name == undefined) { console.log(`[${getCurrentDatetime('comm')}] ${author}'s DM # ${msg}`); }
+                else { console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`); };
                 await sendEmbed(message, this.language.botUnmuted)
                     .catch(err => {
                         message.reply({ 'content': language.error, 'ephemeral': true });
@@ -563,7 +578,8 @@ class DaftBot {
                 this.isMuted = false;
                 return this.isMuted;
             } else {
-                console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
+                if (message.guild == null && message.channel.name == undefined) { console.log(`[${getCurrentDatetime('comm')}] ${author}'s DM # ${msg}`); }
+                else { console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`); };
                 await sendEmbed(message, `${this.language.howMute}\n\r*e.g. : ${prefix}mute on*`)
                     .catch(err => {
                         message.reply({ 'content': language.error, 'ephemeral': true });
@@ -573,7 +589,8 @@ class DaftBot {
                 return this.isMuted;
             };
         } else {
-            console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
+            if (message.guild == null && message.channel.name == undefined) { console.log(`[${getCurrentDatetime('comm')}] ${author}'s DM # ${msg}`); }
+            else { console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`); };
             await sendEmbed(message, `${this.language.howMute}\n\r*e.g. : ${prefix}mute on*`)
                 .catch(err => {
                     message.reply({ 'content': language.error, 'ephemeral': true });

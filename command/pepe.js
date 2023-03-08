@@ -71,7 +71,8 @@ module.exports = {
         const data = await response.data,
             splitted = data.data[0].split(',')[1],
             buffer = Buffer.from(splitted, 'base64');
-        console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # Success after ${(60 * countResponse) + data.duration} seconds - ${message.author.username} diffuse \'pepe ${args.join(' ').toLowerCase()}\'`)
+        if (message.guild == null && message.channel.name == undefined) { console.log(`[${getCurrentDatetime('comm')}] ${message.author.username}'s DM # Success after ${(60 * countResponse) + data.duration} seconds - ${message.author.username} diffuse \'pepe ${args.join(' ').toLowerCase()}\'`); }
+        else { console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # Success after ${(60 * countResponse) + data.duration} seconds - ${message.author.username} diffuse \'pepe ${args.join(' ').toLowerCase()}\'`); };
 
         var fetchPdp = await axios.get('https://huggingface.co/Dipl0', {
             headers: {

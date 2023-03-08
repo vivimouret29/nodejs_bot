@@ -12,9 +12,17 @@ module.exports = {
     async execute(message, client, language, args, initDateTime) {
         Array.prototype.max = function () { return Math.max.apply(null, this); };
 
-        var survey = args.join(' '),
-            wt = survey.split('/')[0],
-            ctm = survey.split('/')[1].split('-');
+        try {
+            var survey = args.join(' '),
+                wt = survey.split('/')[0],
+                ctm = survey.split('/')[1].split('-');
+        } catch (err) {
+            return await sendEmbed(message, language.error)
+                .catch(err => {
+                    message.reply({ 'content': language.error, 'ephemeral': true });
+                    console.log(`[${getCurrentDatetime('comm')}] Error split command poll ${err}`);
+                });
+        };
 
         if (ctm == undefined) {
             return await sendEmbed(message, language.error)
@@ -41,8 +49,8 @@ module.exports = {
             });
         };
 
-        await message.channel
-            .send({
+        await message
+            .reply({
                 'channel_id': message.channel.channel_id,
                 'content': '',
                 'tts': false,
@@ -69,8 +77,8 @@ module.exports = {
         highReact = maxCount.max();
         dictMojis.forEach((emoji, index) => { reactions[index].count == highReact ? postSurvey = index : postSurvey; });
 
-        message.channel
-            .send(`${wt}${ctm[postSurvey]}`)
+        message
+            .reply(`${wt}${ctm[postSurvey]}`)
             .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error command poll result ${err}`); });
 
         await messageErase(message);
