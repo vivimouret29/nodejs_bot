@@ -249,7 +249,7 @@ class MobBot {
 
         for (let chan in channelTwitch) {
             var channelSend = client.channels.cache.find(channel => channel.name == channelTwitch[chan]);
-            if (channelSend.id == undefined) break;
+            if (channelSend == undefined) break;
 
             client.channels.cache
                 .get(channelSend.id)
@@ -267,7 +267,7 @@ class MobBot {
                             'value': axios.data.data[0].title
                         }],
                         'image': {
-                            'url': `https://static-cdn.jtvnw.net/previews-ttv/live_user_${axios.data.data[0].user_login}-360x220.jpg`,
+                            'url': `https://static-cdn.jtvnw.net/previews-ttv/live_user_${axios.data.data[0].user_login}-320x180.jpg`,
                             'proxy_url': `https://twitch.tv/${axios.data.data[0].user_login}`
                         },
                         'thumbnail': {
