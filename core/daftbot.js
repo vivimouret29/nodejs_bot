@@ -269,14 +269,6 @@ class DaftBot {
 
             if (message.content.startsWith(prefix)) {
                 switch (command) {
-                    case 'feature':
-                        console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${this.language.commandAttempt} : (${msg}) / (${author})`);
-                        await sendEmbed(message, `${this.language.commandNotFound} ${command}`)
-                            .catch(err => {
-                                message.reply({ 'content': language.error, 'ephemeral': true });
-                                console.log(`[${getCurrentDatetime('comm')}] Error sending message SEERROR ${err}`);
-                            });
-                        break;
                     case 'lang':
                         await this.setLanguage(this.dbClient, message, args);
                         break;
