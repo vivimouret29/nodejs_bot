@@ -1,7 +1,7 @@
 'use.strict'
 
 const { owner } = require('../config.json'),
-    { sendEmbed, messageErase } = require('../core/utils.js');
+    { sendEmbed } = require('../core/utils.js');
 
 module.exports = {
     data: {
