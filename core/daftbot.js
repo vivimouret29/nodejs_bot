@@ -140,7 +140,8 @@ class DaftBot {
             this.dbClient.user.setPresence({
                 activities: [{
                     name: this.language.activities,
-                    type: ActivityType.Watching
+                    type: ActivityType.Streaming,
+                    url: 'https://twitch.tv/daftmob'
                 }],
                 status: 'online'
             });
@@ -480,7 +481,8 @@ class DaftBot {
                 client.user.setPresence({
                     activities: [{
                         name: this.language.activities,
-                        type: ActivityType.Watching
+                        type: ActivityType.Streaming,
+                        url: 'https://twitch.tv/daftmob'
                     }],
                     status: 'online'
                 });
@@ -498,7 +500,8 @@ class DaftBot {
                 client.user.setPresence({
                     activities: [{
                         name: this.language.activities,
-                        type: ActivityType.Watching
+                        type: ActivityType.Streaming,
+                        url: 'https://twitch.tv/daftmob'
                     }],
                     status: 'online'
                 });
@@ -516,7 +519,8 @@ class DaftBot {
                 client.user.setPresence({
                     activities: [{
                         name: this.language.activities,
-                        type: ActivityType.Watching
+                        type: ActivityType.Streaming,
+                        url: 'https://twitch.tv/daftmob'
                     }],
                     status: 'online'
                 });

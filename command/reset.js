@@ -32,7 +32,8 @@ module.exports = {
         client.user.setPresence({
             activities: [{
                 name: language.activities,
-                type: ActivityType.Watching
+                type: ActivityType.Streaming,
+                url: 'https://twitch.tv/daftmob'
 
             }],
             status: 'online'
