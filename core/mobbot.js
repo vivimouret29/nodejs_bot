@@ -54,6 +54,39 @@ class MobBot {
         await this.onReSubsciption();
         await this.onCheers();
         await this.onYeeetTheChild();
+
+        let checkLive = true,
+            gameMemory = '',
+            oldGameMemory = '';
+
+        while (true) {
+            let ax = await axios.get(`http://api.twitch.tv/helix/streams?user_login=` + channels[0].slice(1), params)
+                .catch(err => {
+                    checkLive = false;
+                    console.log(`[${getCurrentDatetime('comm')}] Error GET AXIOS ${err}`);
+                });
+
+            if (!checkLive || ax.data.data.length == 0) {
+                gameMemory = '';
+            } else {
+                gameMemory = ax.data.data[0].game_name;
+                if (gameMemory != oldGameMemory && ax.data.data.length == 1) {
+                    this.mbCommands
+                        .get('timer')
+                        .execute(this.mbClient,
+                            channels[0],
+                            undefined,
+                            undefined,
+                            await this.onLastVideo(),
+                            await this.onTimeStamp(),
+                            true);
+                };
+            };
+
+            checkLive = true;
+            oldGameMemory = gameMemory;
+            await new Promise(resolve => setTimeout(resolve, 600 * 1000));
+        };
     };
 
     setCollection() {
@@ -216,8 +249,7 @@ class MobBot {
 
     async onLive(message, client, language, gD, axios) {
         if (gD == undefined || axios == undefined) {
-            console.log(`[${getCurrentDatetime('comm')}] Error function liveNotif() : GUID = ${gD} and/or AXIOS = ${axios}`);
-            return;
+            return console.log(`[${getCurrentDatetime('comm')}] Error function liveNotif() : GUID [${gD}] and/or AXIOS [${axios}]`);
         };
 
         let guidDot = gD,
@@ -234,18 +266,6 @@ class MobBot {
         } catch (err) {
             console.log(`[${getCurrentDatetime('comm')}] Can't get guid and dot : `, err);
         };
-
-        if (this.mbCommands.size == 0) { this.setCollection(); };
-
-        this.mbCommands
-            .get('timer')
-            .execute(this.mbClient,
-                channels[0],
-                undefined,
-                undefined,
-                await this.onLastVideo(),
-                await this.onTimeStamp(),
-                true);
 
         for (let chan in channelTwitch) {
             var channelSend = client.channels.cache.find(channel => channel.name == channelTwitch[chan]);

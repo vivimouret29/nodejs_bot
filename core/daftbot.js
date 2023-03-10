@@ -6,7 +6,7 @@ const { Client, Collection, GatewayIntentBits, ActivityType, Events, Partials, R
     path = require('node:path'),
     packageVersion = require('../package.json'),
     { prefix, token, owner, client } = require('../config.json'),
-    { clientId, identity } = require('./config.json'),
+    { clientId, identity, channels } = require('./config.json'),
     { fr, en, uk } = require('../resx/lang.json'),
     { memes } = require('../resx/memes.json'),
     { sendEmbed, messageErase, getCurrentDatetime, randomIntFromInterval } = require('./utils.js');
@@ -64,7 +64,6 @@ class DaftBot {
         this.isMuted = false;
         this.language = this.language == undefined ? fr : this.language;
 
-        this.streamer = 'daftmob';
         this.emojiRoles = ['💜', '❤️', 'looners', 'mandalorian', 'linkitem', 'croisade'];
         this.rolesNames = ['/D/TWITCH', '/D/YOUTUBE', '/D/STALKERS', '/D/CHASSEURS', '/D/HÉROS', '/D/GUERRIERS', '/D/RECRUES'];
 
@@ -152,19 +151,24 @@ class DaftBot {
                 .execute();
             console.log(`[${getCurrentDatetime('comm')}] ${this.dbClient.user.username} connect on irc-ws.chat.twitch.tv:443`);
 
+            await new Promise(resolve => setTimeout(resolve, 5 * 1000));
             if (this.dbClient.user.id == this.avoidBot[1]) return;
 
-            let gameMemory = '',
+            let checkLive = true,
+                gameMemory = '',
                 urIMemory = '',
                 oldGameMemory = '',
                 oldUrIMemory = '',
                 message;
 
             while (true) {
-                let ax = await axios.get(`http://api.twitch.tv/helix/streams?user_login=` + this.streamer, params)
-                    .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error GET AXIOS ${err}`); });
+                let ax = await axios.get(`http://api.twitch.tv/helix/streams?user_login=` + channels[0].slice(1), params)
+                    .catch(err => {
+                        checkLive = false;
+                        console.log(`[${getCurrentDatetime('comm')}] Error GET AXIOS ${err}`);
+                    });
 
-                if (ax.data.data.length == 0) {
+                if (!checkLive || ax.data.data.length == 0) {
                     gameMemory = '';
                 } else {
                     gameMemory = ax.data.data[0].game_name;
@@ -189,6 +193,7 @@ class DaftBot {
                         .execute(message, this.dbClient, this.language);
                 };
 
+                checkLive = true;
                 oldUrIMemory = urIMemory;
                 oldGameMemory = gameMemory;
                 await new Promise(resolve => setTimeout(resolve, 600 * 1000));
