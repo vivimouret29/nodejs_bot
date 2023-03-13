@@ -46,7 +46,9 @@
         "timeDiffuse": "Temps de création de l'image : ",
         "timeAverage": "Temps moyen de création de l'image : ",
         "helpError": "Erreur lors de l\\'envoi de l\\'aide, débloques tes DM ou réessaie plus tard",
-        "openAiCrash": "je suis un peu surchargé, réessaie de me parler plus tard..."
+        "openAiCrash": "je suis un peu surchargé, réessaie de me parler plus tard...",
+        "winRoll": "Tu as gagné",
+        "lossRoll": "Tu n'as rien gagné !"
     },
     "en": {
         "help": "List of orders",
@@ -94,7 +96,9 @@
         "timeDiffuse": "Time to create the image : ",
         "timeAverage": "Average time to create the image : ",
         "helpError": "Error when sending help, unblock your DMs or try again later",
-        "openAiCrash": "I'm a bit overloaded, try to talk to me again later..."
+        "openAiCrash": "I'm a bit overloaded, try to talk to me again later...",
+        "winRoll": "You have won",
+        "lossRoll": "You haven't won anything !"
     },
     "uk": {
         "help": "Список замовлень",
@@ -142,6 +146,8 @@
         "timeDiffuse": "Час для створення образу : ",
         "timeAverage": "Середній час створення зображення : ",
         "helpError": "Помилка при відправці допомоги, розблокуйте свої DM або спробуйте пізніше",
-        "openAiCrash": "Я трохи перевантажений, спробуйте поговорити зі мною пізніше..."
+        "openAiCrash": "Я трохи перевантажений, спробуйте поговорити зі мною пізніше...",
+        "winRoll": "Ти виграв",
+        "lossRoll": "Ви нічого не виграли !"
     }
 }
