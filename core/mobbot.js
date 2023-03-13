@@ -41,7 +41,7 @@ class MobBot {
     };
 
     async onConnect() {
-        this.setCollection();
+        await this.setCollection();
 
         await this.mbClient.connect()
             .catch(console.error);
@@ -89,7 +89,7 @@ class MobBot {
         };
     };
 
-    setCollection() {
+    async setCollection() {
         const commandsPath = path.join(__dirname, './subcommands'),
             commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
 
@@ -141,7 +141,7 @@ class MobBot {
             };
 
             this._count++;
-            if (_rdm < .33 && this._count % 2 === 0 && this._count > 8) {
+            if (_rdm < .2 && this._count % 2 === 0 && this._count > 8) {
                 await this.mbCommands
                     .get('timer')
                     .execute(this.mbClient,
