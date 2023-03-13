@@ -7,7 +7,8 @@ const { ActivityType } = require('discord.js'),
 module.exports = {
     data: {
         name: 'reset',
-        description: 'a dynamic reset'
+        description: 'a dynamic reset',
+        args: false
     },
     async execute(message, client, language, args, initDateTime) {
         if (!(message.author.id === owner)) {

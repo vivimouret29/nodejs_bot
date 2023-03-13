@@ -6,7 +6,7 @@ module.exports = {
     data: {
         name: 'invit',
         description: 'a dynamic invit',
-        args: true
+        args: false
     },
     async execute(message, client, language, args, initDateTime) {
         await sendEmbed(message, language.invitMsg)

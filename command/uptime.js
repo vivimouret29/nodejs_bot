@@ -5,7 +5,8 @@ const { sendEmbed, getCurrentDatetime } = require('../core/utils.js');
 module.exports = {
     data: {
         name: 'uptime',
-        description: 'a dynamic uptime'
+        description: 'a dynamic uptime',
+        args: false
     },
     async execute(message, client, language, args, initDateTime) {
         try {

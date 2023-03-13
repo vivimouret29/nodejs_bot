@@ -5,7 +5,8 @@ const { getCurrentDatetime } = require('../core/utils.js');
 module.exports = {
     data: {
         name: 'ping',
-        description: 'a dynamic ping'
+        description: 'a dynamic ping',
+        args: false
     },
     async execute(message, client, language, args, initDateTime) {
         var wait = await message

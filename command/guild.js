@@ -6,7 +6,8 @@ const { owner } = require('../config.json'),
 module.exports = {
     data: {
         name: 'guild',
-        description: 'a dynamic guild'
+        description: 'a dynamic guild',
+        args: false
     },
     async execute(message, client, language, args, initDateTime) {
         if (!(message.author.id === owner)) {

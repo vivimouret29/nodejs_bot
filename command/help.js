@@ -9,7 +9,8 @@ const axios = require('axios'),
 module.exports = {
     data: {
         name: 'help',
-        description: 'a dynamic help'
+        description: 'a dynamic help',
+        args: false
     },
     async execute(message, client, language, args, initDateTime) {
         let twitch = 'https://twitch.tv/daftmob',

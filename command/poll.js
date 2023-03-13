@@ -6,9 +6,9 @@ const { emojis: dctmj } = require('../resx/emojis.json'),
 module.exports = {
     data: {
         name: 'poll',
-        description: 'a dynamic poll'
+        description: 'a dynamic poll',
+        args: true
     },
-    args: true,
     async execute(message, client, language, args, initDateTime) {
         Array.prototype.max = function () { return Math.max.apply(null, this); };
 

@@ -6,7 +6,8 @@ const { sendEmbed } = require('../core/utils.js'),
 module.exports = {
     data: {
         name: 'version',
-        description: 'a dynamic view version'
+        description: 'a dynamic view version',
+        args: false
     },
     async execute(message, client, language, args, initDateTime) {
         await sendEmbed(message, `daftbot ${package.version}`)
