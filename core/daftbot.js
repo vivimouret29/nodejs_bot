@@ -72,14 +72,14 @@ class DaftBot {
     };
 
     async onConnect() {
-        this.setCollection();
+        await this.setCollection();
         await this.onLogin();
         await this.onListenGuildNewMember();
         await this.onListenMessage();
         await this.setRole();
     };
 
-    setCollection() {
+    async setCollection() {
         // Command Collection
         const commandsPath = path.join(__dirname, '../command'),
             commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
