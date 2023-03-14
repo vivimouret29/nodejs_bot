@@ -1,13 +1,11 @@
 'use.strict'
 
-const { sendEmbed } = require('../core/utils.js');
+const { SlashCommandBuilder } = require('discord.js');
 
 module.exports = {
-    data: {
-        name: 'vote',
-        description: 'a dynamic view vote',
-        args: false
-    },
+    data: new SlashCommandBuilder()
+        .setName('vote')
+        .setDescription('Voter sur Top.gg pour daftbot'),
     async execute(message, client, language, args, initDateTime) {
         await message.reply({ 'content': `${language.vote}\nhttps://top.gg/bot/757955750164430980/vote`, 'ephemeral': true })
             .catch(err => {
