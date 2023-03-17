@@ -48,7 +48,14 @@
         "helpError": "Erreur lors de l\\'envoi de l\\'aide, débloques tes DM ou réessaie plus tard",
         "openAiCrash": "je suis un peu surchargé, réessaie de me parler plus tard...",
         "winRoll": "Tu as gagné",
-        "lossRoll": "Tu n'as rien gagné !"
+        "winRoll2": "Putain mais avec ça aussi petit chanceux",
+        "winRoll3": "Incroyable, 3 objets, non mais excuuuuse moi princesse",
+        "winRoll41": "Non mais je t'en pris, dépouille moi,",
+        "winRoll42": "t'es pas censé gagner autant",
+        "winRoll5": "Mais vraiment, je te donne tout au pire... voleur...",
+        "lossRoll": "Tu n'as rien gagné !",
+        "errorRoll": "Erreur lors du tirage",
+        "vote": "Daftbot et Top.gg ne sont aucunement lié et personne ne peut désactiver cette pub\n\nVote pour Daftbot afin de partager ton expérience !"
     },
     "en": {
         "help": "List of orders",
@@ -98,7 +105,14 @@
         "helpError": "Error when sending help, unblock your DMs or try again later",
         "openAiCrash": "I'm a bit overloaded, try to talk to me again later...",
         "winRoll": "You have won",
-        "lossRoll": "You haven't won anything !"
+        "winRoll2": "Damn but with this too lucky boy",
+        "winRoll3": "Incredible, 3 objects, no excuuuuse me princess",
+        "winRoll41": "Please, strip me,",
+        "winRoll42": "you're not supposed to earn that much",
+        "winRoll5": "But really, I give you everything at worst... thief...",
+        "lossRoll": "You haven't won anything !",
+        "errorRoll": "Error during the draw",
+        "vote": "Daftbot and Top.gg are not related in any way and no one can disable this ad\n\nVote for Daftbot to share your experience !"
     },
     "uk": {
         "help": "Список замовлень",
@@ -148,6 +162,13 @@
         "helpError": "Помилка при відправці допомоги, розблокуйте свої DM або спробуйте пізніше",
         "openAiCrash": "Я трохи перевантажений, спробуйте поговорити зі мною пізніше...",
         "winRoll": "Ти виграв",
-        "lossRoll": "Ви нічого не виграли !"
+        "winRoll2": "Чорт забирай, але з цим надто везучим хлопцем",
+        "winRoll3": "Неймовірно, 3 об'єкти, ні, але вибачте, принцесо.",
+        "winRoll41": "Будь ласка, роздягни мене,",
+        "winRoll42": "ти не повинен стільки заробляти",
+        "winRoll5": "Але насправді я віддаю тобі все в найгіршому випадку... злодій...",
+        "lossRoll": "Ви нічого не виграли !",
+        "errorRoll": "Помилка малювання",
+        "vote": "Daftbot і Top.gg ніяк не пов'язані між собою, і ніхто не може відключити цю рекламу\n\nГолосуйте за Daftbot, щоб поділитися своїм досвідом!"
     }
 }
