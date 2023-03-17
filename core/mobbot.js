@@ -376,6 +376,8 @@ class MobBot {
                 })
                 .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error message videoNotif() ${err}`); });
         };
+
+        console.log(`[${getCurrentDatetime('comm')}] ${channelYoutube}`);
     };
 
     async onLastVideo() {
