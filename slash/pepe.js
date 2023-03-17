@@ -47,7 +47,7 @@ module.exports = {
 
 		while (response.status != 200) {
 			countResponse++;
-			
+
 			if (countResponse > 10) {
 				message.editReply({
 					'channel_id': message.channel.channel_id,
@@ -77,8 +77,11 @@ module.exports = {
 		const data = await response.data,
 			splitted = data.data[0].split(',')[1],
 			buffer = Buffer.from(splitted, 'base64');
-		if (message.member == null) { console.log(`[${getCurrentDatetime('comm')}] ${message.user.username}'s DM # Success after ${(60 * countResponse) + data.duration} seconds - ${message.user.username} diffuse \'pepe ${args.toLowerCase()}\'`); }
-        else { console.log(`[${getCurrentDatetime('comm')}] ${message.member.guild.name} / ${message.user.username} # Success after ${(60 * countResponse) + data.duration} seconds - ${message.user.username} diffuse \'pepe ${args.toLowerCase()}\'`); };
+
+		try {
+			if (message.member == null) { console.log(`[${getCurrentDatetime('comm')}] ${message.user.username}'s DM # Success after ${(60 * countResponse) + data.duration} seconds - ${message.user.username} diffuse \'pepe ${args.toLowerCase()}\'`); }
+			else { console.log(`[${getCurrentDatetime('comm')}] ${message.member.guild.name} / ${message.user.username} # Success after ${(60 * countResponse) + data.duration} seconds - ${message.user.username} diffuse \'pepe ${args.toLowerCase()}\'`); };
+		} catch (err) { console.log(`[${getCurrentDatetime('comm')}] Error command pepe send ${err}`); };
 
 		var fetchPdp = await axios.get('https://huggingface.co/Dipl0', {
 			headers: {

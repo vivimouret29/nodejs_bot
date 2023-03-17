@@ -52,7 +52,7 @@ module.exports = {
                     .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error command pepe send ${err}`); });
                 return;
             };
-            
+
             response = await axios.post(urI, dt, { headers: headers })
                 .catch(error => { return response = error.response; });
 
@@ -71,8 +71,11 @@ module.exports = {
         const data = await response.data,
             splitted = data.data[0].split(',')[1],
             buffer = Buffer.from(splitted, 'base64');
-        if (message.guild == null && message.channel.name == undefined) { console.log(`[${getCurrentDatetime('comm')}] ${message.author.username}'s DM # Success after ${(60 * countResponse) + data.duration} seconds - ${message.author.username} diffuse \'pepe ${args.join(' ').toLowerCase()}\'`); }
-        else { console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # Success after ${(60 * countResponse) + data.duration} seconds - ${message.author.username} diffuse \'pepe ${args.join(' ').toLowerCase()}\'`); };
+
+        try {
+            if (message.guild == null && message.channel.name == undefined) { console.log(`[${getCurrentDatetime('comm')}] ${message.author.username}'s DM # Success after ${(60 * countResponse) + data.duration} seconds - ${message.author.username} diffuse \'pepe ${args.join(' ').toLowerCase()}\'`); }
+            else { console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # Success after ${(60 * countResponse) + data.duration} seconds - ${message.author.username} diffuse \'pepe ${args.join(' ').toLowerCase()}\'`); };
+        } catch (err) { console.log(`[${getCurrentDatetime('comm')}] Error command pepe send ${err}`); };
 
         var fetchPdp = await axios.get('https://huggingface.co/Dipl0', {
             headers: {
