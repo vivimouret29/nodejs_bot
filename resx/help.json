@@ -16,7 +16,9 @@
             "ping": "-  ping : permet de connaître le ping du bot\r",
             "invit": "-  invit : t'explique comment rejoindre le salon discord du daft\r",
             "guild": "-  guild : renvoie la liste de serveurs où le bot est\r",
-            "pepe": "-  pepe : permet d'imaginer une image via le bot avec ([**pepe diffuser**](https://huggingface.co/Dipl0/pepe-diffuser))\r"
+            "pepe": "-  pepe : permet d'imaginer une image via le bot avec ([**pepe diffuser**](https://huggingface.co/Dipl0/pepe-diffuser))\r",
+            "roll": "-  roll : permet de lancer une roulette d'items venant de **The Legend Of Zelda** (e.g.: !roll)\r",
+            "vote": "-  vote : fournit un lien pour lâcher un petit vote sur le site de top.gg (e.g.: !vote)\r"
         },
         "en": {
             "littleLine": "Here is the list of commands that can be used at this time\r",
@@ -34,7 +36,9 @@
             "ping": "-  ping : allows to know the ping of the bot\r",
             "invit": "-  invit : explains how to join the daft discord room\r",
             "guild": "-  guild : returns the list of guilds where the bot is located\r",
-            "pepe": "-  pepe : allows you to imagine an image via the bot with ([**pepe diffuser**](https://huggingface.co/Dipl0/pepe-diffuser))\r"
+            "pepe": "-  pepe : allows you to imagine an image via the bot with ([**pepe diffuser**](https://huggingface.co/Dipl0/pepe-diffuser))\r",
+            "roll": "-  roll : allows you to launch a wheel of items from **The Legend Of Zelda** (e.g.: !roll)\r",
+            "vote": "-  vote : provides a link to cast a small vote on the top.gg website (e.g.: !vote)\r"
         },
         "uk": {
             "littleLine": "Ось список команд, які можна використовувати в цей час\r",
@@ -43,16 +47,18 @@
             "kill": "-  kill : вбити бота\r",
             "status": "-  status : оновити статус, що відображається у бота\r",
             "mute": "-  mute [on | **off**] : увімкнути або вимкнути звук бота\r",
-            "poll": "-  poll : таким чином => !poll [питання] / [вибір] - [вибір]\rповертає діапазон варіантів, а потім обрану відповідь (наприклад: !poll what's on? **/** душ **-** фільм\r",
+            "poll": "-  poll : таким чином => !poll [питання] / [вибір] - [вибір]\rповертає діапазон варіантів, а потім обрану відповідь (приклад: !poll what's on? **/** душ **-** фільм\r",
             "uptime": "-  час безвідмовної роботи: дозволяє дізнатися час прямої трансляції\r",
             "lang": "-  мова (lang) [**fr** | en | uk] : дозволяє змінити мову бота\r",
             "version": "-  версія : дозволяє дізнатися версію бота\r",
             "purge": "-  purge : дозволяє дізнатися версію бота\r",
-            "say": "-  say: дозволяє змусити бота говорити (наприклад: !say Hello World!)\r",
+            "say": "-  say: дозволяє змусити бота говорити (приклад: !say Hello World!)\r",
             "ping": "-  ping : дозволяє дізнатися пінг бота\r",
             "invit": "-  invit : пояснює, як приєднатися до кімнати дурних розбіжностей\r",
             "guild": "-  guild : повертає список гільдій, де знаходиться бот\r",
-            "pepe": "-  pepe : дозволяє уявити зображення через бота за допомогою ([**pepe diffuser**](https://huggingface.co/Dipl0/pepe-diffuser))\r"
+            "pepe": "-  pepe : дозволяє уявити зображення через бота за допомогою ([**pepe diffuser**](https://huggingface.co/Dipl0/pepe-diffuser))\r",
+            "roll": "-  roll : дозволяє запустити рулетку елементів з **The Legend Of Zelda** (приклад: !roll)\r",
+            "vote": "-  vote : надає посилання для голосування на сайті top.gg (приклад: !vote)\r"
         }
     },
     "user": {
@@ -65,7 +71,9 @@
             "say": "-  say : permet de faire parler le bot (e.g.: !say Hello World !)\r",
             "ping": "-  ping : permet de connaître le ping du bot\r",
             "invit": "-  invit : t'explique comment rejoindre le salon discord du daft\r",
-            "pepe": "-  pepe : permet de faire imaginer une image via le bot avec ([**pepe diffuser**](https://huggingface.co/Dipl0/pepe-diffuser))\r"
+            "pepe": "-  pepe : permet de faire imaginer une image via le bot avec ([**pepe diffuser**](https://huggingface.co/Dipl0/pepe-diffuser))\r",
+            "roll": "-  roll : permet de lancer une roulette d'items venant de **The Legend Of Zelda** (e.g.: !roll)\r",
+            "vote": "-  vote : fournit un lien pour lâcher un petit vote sur le site de top.gg (e.g.: !vote)\r"
         },
         "en": {
             "littleLine": "Here is the list of commands that can be used to date\r",
@@ -76,18 +84,22 @@
             "say": "- say : allows to make the bot speak (e.g.: !say Hello World !)\r",
             "ping": "- ping : allows to know the ping of the bot\r",
             "invit": "-  invit : explains how to join the daft discord room\r",
-            "pepe": "-  pepe : allows you to imagine an image via the bot with ([**pepe diffuser**](https://huggingface.co/Dipl0/pepe-diffuser))\r"
+            "pepe": "-  pepe : allows you to imagine an image via the bot with ([**pepe diffuser**](https://huggingface.co/Dipl0/pepe-diffuser))\r",
+            "roll": "-  roll : allows you to launch a wheel of items from **The Legend Of Zelda** (e.g.: !roll)\r",
+            "vote": "-  vote : provides a link to cast a small vote on the top.gg website (e.g.: !vote)\r"
         },
         "uk": {
             "littleLine": "Ось список команд, які можна використовувати на сьогоднішній день\r",
             "uptime": "-  uptime : дозволяє дізнатися час прямої трансляції\r",
-            "poll": "-  poll : таким чином => !poll [питання] / [вибір] - [вибір]\rповертає діапазон варіантів, а потім обрану відповідь (наприклад: !poll what's on? **/** душ **-** фільм\r",
+            "poll": "-  poll : таким чином => !poll [питання] / [вибір] - [вибір]\rповертає діапазон варіантів, а потім обрану відповідь (приклад: !poll what's on? **/** душ **-** фільм\r",
             "lang": "-  language [**fr** | en | uk] : дозволяє змінити мову бота\r",
             "version": "-  версія : дозволяє дізнатися версію бота\r",
-            "say": "-  say : дозволяє змусити бота говорити (наприклад: !say Hello World !)\r",
+            "say": "-  say : дозволяє змусити бота говорити (приклад: !say Hello World !)\r",
             "ping": "-  ping : дозволяє дізнатися пінг бота\r",
             "invit": "-  invit : пояснює, як приєднатися до кімнати дурних розбіжностей\r",
-            "pepe": "-  pepe : дозволяє уявити зображення через бота за допомогою ([**pepe diffuser**](https://huggingface.co/Dipl0/pepe-diffuser))\r"
+            "pepe": "-  pepe : дозволяє уявити зображення через бота за допомогою ([**pepe diffuser**](https://huggingface.co/Dipl0/pepe-diffuser))\r",
+            "roll": "-  roll : дозволяє запустити рулетку елементів з **The Legend Of Zelda** (приклад: !roll)\r",
+            "vote": "-  vote : надає посилання для голосування на сайті top.gg (приклад: !vote)\r"
         }
     }
 }
