@@ -21,15 +21,15 @@ module.exports = {
             earnCsv = [],
             dataUser = [];
 
-        weapons.setPreRoll(client);
-
-        var sword = weapons.fiRoll,
-            claymore = weapons.seRoll,
-            shield = weapons.thRoll,
-            bow = weapons.foRoll,
-            axes = weapons.ffRoll;
-
         try {
+            weapons.setPreRoll(client);
+
+            var sword = weapons.fiRoll,
+                claymore = weapons.seRoll,
+                shield = weapons.thRoll,
+                bow = weapons.foRoll,
+                axes = weapons.ffRoll;
+
             for (let i = 0; i < 15; i++) {
                 if (roll.length < 3) {
                     roll.push(sword[randomIntFromInterval(0, (sword.length - 1))]);
