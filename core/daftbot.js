@@ -222,7 +222,7 @@ class DaftBot {
                     'tts': false,
                     'embeds': [{
                         'type': 'rich',
-                        'title': `${guild.user.username} ${language.guildJoin}`,
+                        'title': `${guild.user.username} ${this.language.guildJoin}`,
                         'description': this.language.guildJoinDesc,
                         'color': 0x890b0b,
                         'image': {
