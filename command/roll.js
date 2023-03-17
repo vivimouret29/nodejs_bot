@@ -68,37 +68,47 @@ module.exports = {
                 let data = {
                     'id': Number(message.author.id),
                     'user': String(message.author.username),
-                    'invent': String(earnCsv[i])
+                    'inventory': String(earnCsv[i])
                 };
 
                 dataUser.push(data);
             };
 
             fs.exists(filePath, (e) => {
-                fs.createReadStream(filePath)
-                    .pipe(csvParse.parse({ delimiter: ',' }))
-                    .on('error', err => `[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${message.author.username}'s inventory error save ${err}`)
-                    .on('data', function (csvrow) {
-                        if (csvrow[0] == 'id') return;
-
-                        let data = {
-                            'id': Number(csvrow[0]),
-                            'user': String(csvrow[1]),
-                            'invent': String(csvrow[2])
-                        };
-
-                        dataUser.push(data);
-
-                        fs.writeFileSync(filePath, parse(dataUser), function (err) {
-                            if (err) {
-                                message.channel.send(`${language.errorRoll}`);
-                                console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${message.author.username}'s inventory error save ${err}`);
-                                throw err;
-                            } else {
-                                console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${message.author.username}'s inventory save`);
+                if (e) {
+                    fs.createReadStream(filePath)
+                        .pipe(csvParse.parse({ headers: true, delimiter: ',' }))
+                        .on('data', row => {
+                            if (row.id != 'id') {
+                                dataUser.push({
+                                    'id': Number(row.id),
+                                    'user': String(row.user),
+                                    'inventory': String(row.inventory)
+                                });
                             };
+                        })
+                        .on('end', () => {
+                            fs.writeFileSync(filePath, parse(dataUser), function (err) {
+                                if (err) {
+                                    message.channel.send(`${language.errorRoll}`);
+                                    console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${message.author.username}'s inventory error save ${err}`);
+                                    throw err;
+                                } else {
+                                    console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${message.author.username}'s inventory save`);
+                                };
+                            });
                         });
+                } else {
+                    fs.writeFileSync(filePath, parse(dataUser), function (err) {
+                        if (err) {
+                            message.channel.send(`${language.errorRoll}`);
+                            console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${message.author.username}'s inventory error save ${err}`);
+                            throw err;
+                        } else {
+                            console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${message.author.username}'s inventory save`);
+                        };
                     });
+                };
             });
         };
 
