@@ -199,8 +199,7 @@ class MobBot {
     async onDataImport() {
         this.mbClient.on('message', (channel, userstate, message, self) => {
             if (self || userstate['username'] === 'moobot_') return;
-
-            let data = {
+            return dataToExport.push({
                 'id': Number(userstate['user-id']),
                 'date': getCurrentDatetime('date'),
                 'badges': userstate['badges'],
@@ -209,9 +208,7 @@ class MobBot {
                 'message': String(message),
                 'emotes': userstate['emotes-raw'] == null ? null : String(userstate['emotes-raw']),
                 'turbo': Boolean(userstate['turbo'])
-            };
-
-            return dataToExport.push(data);
+            });
         });
     };
 
