@@ -5,3 +5,4 @@ node_modules
 /core/oauth.txt
 /core/data/mobbot_analytics.csv
 /styles/ai/pepe-diffuser.jpg
+/data/inventory_user_roll.csv
