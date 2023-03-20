@@ -10,8 +10,8 @@ const weapons = new Weapons();
 
 module.exports = {
     data: {
-        name: 'roll',
-        description: 'a dynamic roll',
+        name: 'rw',
+        description: 'a dynamic roll weapons',
         args: false
     },
     async execute(message, client, language, args, initDateTime) {

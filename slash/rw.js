@@ -11,7 +11,7 @@ const weapons = new Weapons();
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName('roll')
+        .setName('rw')
         .setDescription('Pour lancer une roulette d\items de **The Legend Of Zelda**'),
     async execute(message, client, language, initDateTime) {
         var roll = [],
