@@ -1,9 +1,8 @@
 'use.strict'
 
 const axios = require('axios'),
-    { owner } = require('../config.json'),
-    { fr, en, uk } = require('../resx/lang.json'),
-    { master, user } = require('../resx/help.json'),
+    { fr: langFr, en: langEn, uk: langUk } = require('../resx/lang.json'),
+    { fr: helpFr, en: helpEn, uk: helpUk } = require('../resx/help.json'),
     { getCurrentDatetime } = require('../core/utils.js');
 
 module.exports = {
@@ -22,42 +21,30 @@ module.exports = {
             lang = '';
 
         switch (language) {
-            case fr:
+            case langFr:
                 lang = 'fr';
                 break;
-            case en:
+            case langEn:
                 lang = 'en';
                 break;
-            case uk:
+            case langUk:
                 lang = 'uk';
                 break;
         };
 
-        if (message.author.id === owner) {
-            switch (lang) {
-                case 'fr':
-                    descSplit = master.fr;
-                    break;
-                case 'en':
-                    descSplit = master.en;
-                    break;
-                case 'uk':
-                    descSplit = master.uk;
-                    break;
-            };
-        } else {
-            switch (lang) {
-                case 'fr':
-                    descSplit = user.fr;
-                    break;
-                case 'en':
-                    descSplit = user.en;
-                    break;
-                case 'uk':
-                    descSplit = user.uk;
-                    break;
-            };
+        switch (lang) {
+            case 'fr':
+                descSplit = helpFr;
+                break;
+            case 'en':
+                descSplit = helpEn;
+                break;
+            case 'uk':
+                descSplit = helpUk;
+                break;
         };
+
+        for (i in descSplit) { desc += descSplit[i]; };
 
         try {
             guid = await guidDot.data.split(new RegExp(`(s\/[^.]*-p)`, 'giu'))[1];
@@ -67,28 +54,34 @@ module.exports = {
             dot = dot.split('.')[1].split(' ')[0];
         } catch (err) { console.log(`[${getCurrentDatetime('comm')}] Can't get guid or dot`); };
 
-        for (i in descSplit) { desc += descSplit[i]; };
-
-        message.author
+        await message.channel
             .send({
                 'channel_id': message.channel.channel_id,
-                'content': '',
-                'tts': false,
-                'embeds': [{
-                    'type': 'rich',
-                    'title': language.help,
-                    'description': desc,
-                    'color': 0x0eb70b,
-                    'timestamp': `2023-02-06T19:20:42.000Z`,
-                    'author': {
-                        'name': client.user.username
-                    },
-                    'footer': {
-                        'text': language.helpAuthor,
-                        'icon_url': `https://static-cdn.jtvnw.net/jtv_user_pictures/${guid}-profile_image-300x300.${dot}`,
-                        'proxy_icon_url': twitch
-                    }
-                }]
+                'content': `DM ${lang === 'fr' ? 'envoyé' : 'sent'}  ${client.emojis.cache.find(emoji => emoji.name === 'spirit_orb')}`
+            })
+            .then(async () => {
+                await message.author
+                    .send({
+                        'channel_id': message.channel.channel_id,
+                        'content': '',
+                        'tts': false,
+                        'embeds': [{
+                            'type': 'rich',
+                            'title': language.help,
+                            'description': desc,
+                            'color': 0x0eb70b,
+                            'timestamp': `2023-03-29T19:20:42.000Z`,
+                            'author': {
+                                'name': client.user.username,
+                                'icon_url': 'https://cdn.discordapp.com/app-icons/757955750164430980/94a997258883caba5f553f98aea8df59.png?size=256'
+                            },
+                            'footer': {
+                                'text': language.helpAuthor,
+                                'icon_url': `https://static-cdn.jtvnw.net/jtv_user_pictures/${guid}-profile_image-300x300.${dot}`,
+                                'proxy_icon_url': twitch
+                            }
+                        }]
+                    });
             })
             .catch(err => {
                 message.channel.send(language.helpError);

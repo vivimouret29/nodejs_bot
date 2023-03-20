@@ -1,105 +1,110 @@
 {
-    "master": {
-        "fr": {
-            "littleLine": "Voici la liste des commandes utilisables à ce jour :\n\r",
-            "export": "-  export : permet d'exporter les données agglomérées par le bot sur twitch\r",
-            "reset": "-  reset : redémarre le bot\r",
-            "kill": "-  kill : tue le bot\r",
-            "status": "-  status : mets à jour le status afficher sur le bot\r",
-            "mute": "-  mute [on | **off**] : permet de couper ou de remettre les répliques du bot\r",
-            "poll": "-  poll : de cette manière => !poll [question] / [choix] - [choix]\rrenvoie une palette de choix puis la réponse choisie\r(e.g.: !poll quoi de prévue ? **/** une douche **-** un ciné\r",
-            "uptime": "-  uptime : permet de connaître le temps de diffusion en direct\r",
-            "lang": "-  language (lang) [**fr** | en | uk] : permet de changer la langue du bot\r",
-            "version": "-  version : permet de connaître la version du bot\r",
-            "purge": "-  purge : permet de supprimer un nombre de messages données\r",
-            "say": "-  say : permet de faire parler le bot (e.g.: !say Hello World !)\r",
-            "ping": "-  ping : permet de connaître le ping du bot\r",
-            "invit": "-  invit : t'explique comment rejoindre le salon discord du daft\r",
-            "guild": "-  guild : renvoie la liste de serveurs où le bot est\r",
-            "pepe": "-  pepe : permet d'imaginer une image via le bot avec ([**pepe diffuser**](https://huggingface.co/Dipl0/pepe-diffuser))\r",
-            "roll": "-  roll : permet de lancer une roulette d'items venant de **The Legend Of Zelda** (e.g.: !roll)\r",
-            "vote": "-  vote : fournit un lien pour lâcher un petit vote sur le site de top.gg (e.g.: !vote)\r"
-        },
-        "en": {
-            "littleLine": "Here is the list of commands that can be used at this time\r",
-            "export": "-  export : allows to export the data agglomerated by the bot on twitch\r",
-            "reset": "-  reset : restarts the bot\r",
-            "kill": "-  kill : kill the bot\r",
-            "status": "-  status : update the status displayed on the bot\r",
-            "mute": "-  mute [on | **off**] : mute or unmute the bot\r",
-            "poll": "- poll : in this way => !poll [question] / [choice] - [choice]\rresults in a range of choices and then the chosen answer\r(e.g.: !poll what's on? **/** a shower **-** a movie\r",
-            "uptime": "-  uptime: allows you to know the time of the live broadcast\r",
-            "lang": "-  language (lang) [**fr** | en | uk] : allows to change the language of the bot\r",
-            "version": "-  version : allows to know the version of the bot\r",
-            "purge": "-  purge : allows you to delete a given number of messages\r",
-            "say": "-  say : allows to make the bot speak (e.g.: !say Hello World !)\r",
-            "ping": "-  ping : allows to know the ping of the bot\r",
-            "invit": "-  invit : explains how to join the daft discord room\r",
-            "guild": "-  guild : returns the list of guilds where the bot is located\r",
-            "pepe": "-  pepe : allows you to imagine an image via the bot with ([**pepe diffuser**](https://huggingface.co/Dipl0/pepe-diffuser))\r",
-            "roll": "-  roll : allows you to launch a wheel of items from **The Legend Of Zelda** (e.g.: !roll)\r",
-            "vote": "-  vote : provides a link to cast a small vote on the top.gg website (e.g.: !vote)\r"
-        },
-        "uk": {
-            "littleLine": "Ось список команд, які можна використовувати в цей час\r",
-            "export": "-  export : дозволяє експортувати дані, агломеровані ботом на twitch\r",
-            "reset": "-  reset : перезапускає бота\r",
-            "kill": "-  kill : вбити бота\r",
-            "status": "-  status : оновити статус, що відображається у бота\r",
-            "mute": "-  mute [on | **off**] : увімкнути або вимкнути звук бота\r",
-            "poll": "-  poll : таким чином => !poll [питання] / [вибір] - [вибір]\rповертає діапазон варіантів, а потім обрану відповідь (приклад: !poll what's on? **/** душ **-** фільм\r",
-            "uptime": "-  час безвідмовної роботи: дозволяє дізнатися час прямої трансляції\r",
-            "lang": "-  мова (lang) [**fr** | en | uk] : дозволяє змінити мову бота\r",
-            "version": "-  версія : дозволяє дізнатися версію бота\r",
-            "purge": "-  purge : дозволяє дізнатися версію бота\r",
-            "say": "-  say: дозволяє змусити бота говорити (приклад: !say Hello World!)\r",
-            "ping": "-  ping : дозволяє дізнатися пінг бота\r",
-            "invit": "-  invit : пояснює, як приєднатися до кімнати дурних розбіжностей\r",
-            "guild": "-  guild : повертає список гільдій, де знаходиться бот\r",
-            "pepe": "-  pepe : дозволяє уявити зображення через бота за допомогою ([**pepe diffuser**](https://huggingface.co/Dipl0/pepe-diffuser))\r",
-            "roll": "-  roll : дозволяє запустити рулетку елементів з **The Legend Of Zelda** (приклад: !roll)\r",
-            "vote": "-  vote : надає посилання для голосування на сайті top.gg (приклад: !vote)\r"
-        }
+    "fr": {
+        "littleLine": "Voici la liste des commandes utilisables à ce jour :\n\n\r",
+
+        "titleZelda": "🎮 **COMMANDES ZELDA**\r",
+        "inventory": "**!inventory** : pour regarder dans ton inventaire\r",
+        "rollweapons": "**!rollweapons** : permet de lancer une roulette d'items venant du jeu **Breath Of The Wild**\n\n\r",
+
+        "titleCommand": "⛏️ **UTILITAIRES**\r",
+        "invit": "**!invit** : t'explique comment rejoindre le salon discord du daftbot\r",
+        "lang": "**!language** [**fr** | en | uk] : permet de changer la langue du bot\r",
+        "ping": "**!ping** : permet de connaître le ping du bot\r",
+        "uptime": "**!uptime** : permet de connaître le temps de diffusion en direct\r",
+        "version": "**!version** : permet de connaître la version du bot\r",
+        "vote": "**!vote** : fournit un lien pour lâcher un petit vote sur le site de top.gg\n\n\r",
+        
+        "titleAi": "🪬 **INTELLIGENCES ARTIFICIELLES**\r",
+        "openai": "**@daftbot**  OU  **\"Répondre\"** au message : permet d'entrer dans une discussion avec le bot\r",
+        "pepe": "**!pepe** : permet d'imaginer une image via le bot avec le [**diffuseur pepe**](https://huggingface.co/Dipl0/pepe-diffuser)\n\n\r",
+        
+        "titleRandom": "〽️ **UTILISATIONS ALÉATOIRES**\r",
+        "poll": "**!poll** : renvoie une palette de choix puis la réponse choisie\r(exemple : !poll [question] / [choix] - [choix])\r",
+        "say": "**!say** : permet de faire parler le bot\n\n\r",
+
+        "titleRaccourci": "🔗 RACCOURCIS\r",
+        "raccourciZelda": "**rw** (rollweapons)  |  **ra** (rollarmor)  |  **i** (inventory)\r",
+        "raccourciCommand": "**lang** (language)\n\n\r",
+
+        "titleAdmin": "⛔ **COMMANDES D'ADMINISTRATEURS**\r",
+        "export": "**!export** : permet d'exporter les données agglomérées par le bot sur twitch\r",
+        "guild": "**!guild** : renvoie la liste de serveurs où le bot est\r",
+        "kill": "**!kill** : tue le bot\r",
+        "mute": "**!mute** [on | **off**] : permet de couper ou de remettre les répliques du bot\r",
+        "purge": "**!purge** : permet de supprimer un nombre de messages données\r",
+        "reset": "**!reset** : redémarre le bot\r",
+        "status": "**!status** : mets à jour le status affiché sur le bot\n \n\r"
     },
-    "user": {
-        "fr": {
-            "littleLine": "Voici la liste des commandes utilisables à ce jour :\n\r",
-            "poll": "-  poll : de cette manière => !poll [question] / [choix] - [choix]\rrenvoie une palette de choix puis la réponse choisie\r(e.g.: !poll quoi de prévue ? **/** une douche **-** un ciné\r",
-            "uptime": "-  uptime : permet de connaître le temps de diffusion en direct\r",
-            "lang": "-  language [**fr** | en | uk] : permet de changer la langue du bot\r",
-            "version": "-  version : permet de connaître la version du bot\r",
-            "say": "-  say : permet de faire parler le bot (e.g.: !say Hello World !)\r",
-            "ping": "-  ping : permet de connaître le ping du bot\r",
-            "invit": "-  invit : t'explique comment rejoindre le salon discord du daft\r",
-            "pepe": "-  pepe : permet de faire imaginer une image via le bot avec ([**pepe diffuser**](https://huggingface.co/Dipl0/pepe-diffuser))\r",
-            "roll": "-  roll : permet de lancer une roulette d'items venant de **The Legend Of Zelda** (e.g.: !roll)\r",
-            "vote": "-  vote : fournit un lien pour lâcher un petit vote sur le site de top.gg (e.g.: !vote)\r"
-        },
-        "en": {
-            "littleLine": "Here is the list of commands that can be used to date\r",
-            "uptime": "- uptime : allows you to know the time of the live broadcast\r",
-            "poll": "- poll : in this way => !poll [question] / [choice] - [choice]\rresults in a range of choices and then the chosen answer\r(e.g.: !poll what's on? **/** a shower **-** a movie\r",
-            "lang": "- language [**fr** | en | uk] : allows to change the language of the bot\r",
-            "version": "- version : allows to know the version of the bot\r",
-            "say": "- say : allows to make the bot speak (e.g.: !say Hello World !)\r",
-            "ping": "- ping : allows to know the ping of the bot\r",
-            "invit": "-  invit : explains how to join the daft discord room\r",
-            "pepe": "-  pepe : allows you to imagine an image via the bot with ([**pepe diffuser**](https://huggingface.co/Dipl0/pepe-diffuser))\r",
-            "roll": "-  roll : allows you to launch a wheel of items from **The Legend Of Zelda** (e.g.: !roll)\r",
-            "vote": "-  vote : provides a link to cast a small vote on the top.gg website (e.g.: !vote)\r"
-        },
-        "uk": {
-            "littleLine": "Ось список команд, які можна використовувати на сьогоднішній день\r",
-            "uptime": "-  uptime : дозволяє дізнатися час прямої трансляції\r",
-            "poll": "-  poll : таким чином => !poll [питання] / [вибір] - [вибір]\rповертає діапазон варіантів, а потім обрану відповідь (приклад: !poll what's on? **/** душ **-** фільм\r",
-            "lang": "-  language [**fr** | en | uk] : дозволяє змінити мову бота\r",
-            "version": "-  версія : дозволяє дізнатися версію бота\r",
-            "say": "-  say : дозволяє змусити бота говорити (приклад: !say Hello World !)\r",
-            "ping": "-  ping : дозволяє дізнатися пінг бота\r",
-            "invit": "-  invit : пояснює, як приєднатися до кімнати дурних розбіжностей\r",
-            "pepe": "-  pepe : дозволяє уявити зображення через бота за допомогою ([**pepe diffuser**](https://huggingface.co/Dipl0/pepe-diffuser))\r",
-            "roll": "-  roll : дозволяє запустити рулетку елементів з **The Legend Of Zelda** (приклад: !roll)\r",
-            "vote": "-  vote : надає посилання для голосування на сайті top.gg (приклад: !vote)\r"
-        }
+    "en": {
+        "littleLine": "Here is a list of the commands that can be used to date :\n\n\r",
+
+        "titleZelda": "🎮 **ZELDA CONTROLS**\r",
+        "inventory": "**!inventory** : to look in your inventory\r",
+        "rollweapons": "**!rollweapons** : allows you to launch a roulette of items from the game **Breath Of The Wild**\n\n\r",
+
+        "titleCommand": "⛏️ **UTILITIES**\r",
+        "invit": "**!invit** : explains how to join the daftbot discord room\r",
+        "lang": "**!language** [**fr** | en | uk] : allows you to change the language of the bot\r",
+        "ping": "**!ping** : allows to know the ping of the bot\r",
+        "uptime": "**!uptime** : allows you to know the time of the live broadcast\r",
+        "version": "**!version** : allows to know the version of the bot\r",
+        "vote": "**!vote** : provides a link to cast a small vote on the top.gg website\n\n\r",
+        
+        "titleAi": "🪬 **ARTIFICIAL INTELLIGENCES**\r",
+        "openai": "**@daftbot**  OR  **\"Reply\"** to the message : allows you to enter into a discussion with the bot\r",
+        "pepe": "**!pepe** : allows you to imagine an image via the bot with [**pepe diffuser**](https://huggingface.co/Dipl0/pepe-diffuser)\n\n\r",
+        
+        "titleRandom": "〽️ **RANDOM USES**\r",
+        "poll": "**!poll** : returns a palette of choices and then the selected answer\r(exemple : !poll [question] / [choix] - [choix])\r",
+        "say": "**!say** : allows the bot to speak\n\n\r",
+
+        "titleRaccourci": "🔗 RACCOURCIS\r",
+        "raccourciZelda": "**i** (inventory)  |  **rw** (rollweapons)  |  **ra** (rollarmor)\r",
+        "raccourciCommand": "**lang** (language)\n\n\r",
+        
+        "titleAdmin": "⛔ **ADMINISTRATOR COMMANDS**\r",
+        "export": "**!export** : allows to export the data agglomerated by the bot on twitch\r",
+        "guild": "**!guild** : returns the list of servers where the bot is\r",
+        "kill": "**!kill** : kill the bot\r",
+        "mute": "**!mute** [on | **off**] : allows to cut or put back the replicas of the bot\r",
+        "purge": "**!purge** : allows you to delete a given number of messages\r",
+        "reset": "**!reset** : restart the bot\r",
+        "status": "**!status** : update the status displayed on the bot\n \n\r"
+    },
+    "uk": {
+        "littleLine": "Ось список команд, які можна використовувати на сьогоднішній день :\n\n\r",
+
+        "titleZelda": "🎮 **ZELDA КОНТРОЛЬ**\r",
+        "inventory": "**!inventory** : зазирнути у свій інвентар\r",
+        "rollweapons": "**!rollweapons** : дозволяє запустити рулетку предметів з гри **Breath Of The Wild**\n\n\r",
+
+        "titleCommand": "⛏️ **КОМУНАЛЬНІ ПОСЛУГИ**\r",
+        "invit": "**!invit** : пояснює, як приєднатися до кімнати розбіжностей daftbot\r",
+        "lang": "**!language** [**fr** | en | uk] : дозволяє змінити мову бота\r",
+        "ping": "**!ping** : дозволяє дізнатися пінг бота\r",
+        "uptime": "**!uptime** : дозволяє дізнатися час прямої трансляції\r",
+        "version": "**!version** : дозволяє дізнатися версію бота\r",
+        "vote": "**!vote** : надає посилання для голосування на сайті top.gg\n\n\r",
+        
+        "titleAi": "🪬 **ШТУЧНИЙ ІНТЕЛЕКТ**\r",
+        "openai": "**@daftbot**  АБО  **\"Відповісти\"** на повідомлення : дозволяє вступити в дискусію з ботом\r",
+        "pepe": "**!pepe** : дозволяє уявити зображення через бота за допомогою [**pepe дифузор**](https://huggingface.co/Dipl0/pepe-diffuser)\n\n\r",
+        
+        "titleRandom": "〽️ **ВИПАДКОВЕ ВИКОРИСТАННЯ**\r",
+        "poll": "**!poll** : повертає палітру варіантів, а потім вибрану відповідь\r(exemple : !poll [питання] / [вибір] - [вибір])\r",
+        "say": "**!say** : дозволяє боту говорити\n\n\r",
+
+        "titleRaccourci": "🔗 РАККУРСИС\r",
+        "raccourciZelda": "**rw** (rollweapons)  |  **ra** (rollarmor)  |  **i** (inventory)\r",
+        "raccourciCommand": "**lang** (language)\n\n\r",
+
+        "titleAdmin": "⛔ **КОМАНДИ АДМІНІСТРАТОРА**\r",
+        "export": "**!export** : дозволяє експортувати дані, агломеровані ботом на twitch\r",
+        "guild": "**!guild** : повертає список серверів, на яких знаходиться бот\r",
+        "kill": "**!kill** : вбити бота\r",
+        "mute": "**!mute** [on | **off**] : дозволяє вирізати або повернути назад репліки бота\r",
+        "purge": "**!purge** : дозволяє видалити задану кількість повідомлень\r",
+        "reset": "**!reset** : перезапустити бота\r",
+        "status": "**!status** : оновити статус, що відображається в боті\n \n\r"
     }
 }

@@ -1,6 +1,6 @@
 'use.strict'
 
-const { getCurrentDatetime } = require('../function.js');
+const { getCurrentDatetime } = require("../core/utils");
 
 module.exports = {
     roles: {
