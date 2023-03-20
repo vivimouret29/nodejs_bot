@@ -1,7 +1,7 @@
 {
     "fr": {
         "help": "Liste des commandes",
-        "helpAuthor": "par daftmob",
+        "helpAuthor": "daftbot par daftmob",
         "changLang": "Langue changée en Français",
         "error": "Erreur de la commande, réessaie plus tard",
         "stream": "son petit daft | !help",
@@ -55,11 +55,13 @@
         "winRoll5": "Mais vraiment, je te donne tout au pire... voleur...",
         "lossRoll": "Tu n'as rien gagné !",
         "errorRoll": "Erreur lors du tirage",
-        "vote": "Daftbot et Top.gg ne sont aucunement lié et personne ne peut désactiver cette pub\n\nVote pour Daftbot afin de partager ton expérience !"
+        "vote": "Daftbot et Top.gg ne sont aucunement lié et personne ne peut désactiver cette pub\n\nVote pour Daftbot afin de partager ton expérience !",
+        "inventError": "Récupération de l'inventaire impossible",
+        "inventEmpty": "Tu ne possèdes rien... Fais **!roll** ou j'sais pas"
     },
     "en": {
         "help": "List of orders",
-        "helpAuthor": "by daftmob",
+        "helpAuthor": "daftbot by daftmob",
         "changLang": "Language changed to English",
         "error": "Command error, try again later",
         "stream": "his little daft | !help",
@@ -112,11 +114,13 @@
         "winRoll5": "But really, I give you everything at worst... thief...",
         "lossRoll": "You haven't won anything !",
         "errorRoll": "Error during the draw",
-        "vote": "Daftbot and Top.gg are not related in any way and no one can disable this ad\n\nVote for Daftbot to share your experience !"
+        "vote": "Daftbot and Top.gg are not related in any way and no one can disable this ad\n\nVote for Daftbot to share your experience !",
+        "inventError": "Unable to retrieve inventory",
+        "inventEmpty": "You don't own anything... Do **!roll** or I don't know"
     },
     "uk": {
         "help": "Список замовлень",
-        "helpAuthor": "by daftmob",
+        "helpAuthor": "daftbot by daftmob",
         "changLang": "Мову змінено на українську",
         "error": "Помилка команди, Спробуйте пізніше",
         "stream": "його маленька дурниця | !help",
@@ -169,6 +173,8 @@
         "winRoll5": "Але насправді я віддаю тобі все в найгіршому випадку... злодій...",
         "lossRoll": "Ви нічого не виграли !",
         "errorRoll": "Помилка малювання",
-        "vote": "Daftbot і Top.gg ніяк не пов'язані між собою, і ніхто не може відключити цю рекламу\n\nГолосуйте за Daftbot, щоб поділитися своїм досвідом!"
+        "vote": "Daftbot і Top.gg ніяк не пов'язані між собою, і ніхто не може відключити цю рекламу\n\nГолосуйте за Daftbot, щоб поділитися своїм досвідом!",
+        "inventError": "Відновлення запасів неможливе",
+        "inventEmpty": "У тебе нічого немає... Зробіть **!roll** Або я не знаю"
     }
 }
