@@ -7,12 +7,13 @@ const { SlashCommandBuilder } = require('discord.js'),
     csvParse = require('fast-csv'),
     { Weapons } = require('../core/classes/weapons.js');
 
+const filePath = `./data/inventory_user_roll.csv`;
 const weapons = new Weapons();
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('rollweapons')
-        .setDescription('Pour lancer une roulette d\items de **The Legend Of Zelda**'),
+        .setDescription('Pour lancer une roulette d\items de The Legend Of Zelda'),
     async execute(message, client, language, initDateTime) {
         var roll = [],
             result = [],
@@ -66,8 +67,6 @@ module.exports = {
         };
 
         if (earnCsv.length != 0) {
-            let filePath = `./data/inventory_user_roll.csv`;
-
             for (let i = 0; i < earnCsv.length; i++) {
                 dataUser.push({
                     'id': Number(message.user.id),

@@ -6,6 +6,7 @@ const { randomIntFromInterval, getCurrentDatetime } = require('../core/utils.js'
     csvParse = require('fast-csv'),
     { Weapons } = require('../core/classes/weapons.js');
 
+const filePath = `./data/inventory_user_roll.csv`;
 const weapons = new Weapons();
 
 module.exports = {
@@ -62,8 +63,6 @@ module.exports = {
         };
 
         if (earnCsv.length != 0) {
-            let filePath = `./data/inventory_user_roll.csv`;
-
             for (let i = 0; i < earnCsv.length; i++) {
                 let data = {
                     'id': Number(message.author.id),

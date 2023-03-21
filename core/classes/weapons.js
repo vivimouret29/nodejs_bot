@@ -1,8 +1,7 @@
 'use.strict'
 
 const { DaftBot } = require("../daftbot.js"),
-    { zelda: zedIco } = require('../../resx/emojis.json'),
-    { randomIntFromInterval } = require("../utils.js");
+    { zelda: zedIco } = require('../../resx/emojis.json');
 
 class Weapons extends DaftBot {
     constructor(dbClient) {
@@ -25,7 +24,7 @@ class Weapons extends DaftBot {
 
     setPreRoll(client) {
         this.getWeapons(client);
-        
+
         // pre roll sword
         for (let i = 0; i < this.weapons[0].sword.length; i++) {
             let itemSet = this.weapons[0].sword[i].name.split('_'),
@@ -224,7 +223,7 @@ class Weapons extends DaftBot {
         this.thRoll = [];
         this.foRoll = [];
         this.ffRoll = [];
-        
+
         return this.weapons;
     };
 };
