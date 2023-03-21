@@ -6,3 +6,4 @@ node_modules
 /core/data/mobbot_analytics.csv
 /styles/ai/pepe-diffuser.jpg
 /data/inventory_user_roll.csv
+/data/user_roll.csv
