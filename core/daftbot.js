@@ -3,6 +3,7 @@
 const { Client, Collection, GatewayIntentBits, ActivityType, Events, Partials, REST, Routes } = require('discord.js'),
     axios = require('axios'),
     fs = require('node:fs'),
+    { parse } = require('json2csv'),
     csvParse = require('fast-csv'),
     path = require('node:path'),
     packageVersion = require('../package.json'),
@@ -62,8 +63,9 @@ class DaftBot {
         this.dbClient.slash = new Collection();
         this.commands = [];
 
-        this.user = new User();
+        this.userClass = new User();
         this.usersProperty = [];
+        this.user;
 
         this.date = new Date();
         this.initDateTime = `${(this.date.getUTCHours() + 1) < 10 ? `0${this.date.getUTCHours()}` : this.date.getUTCHours()}:${this.date.getUTCMinutes() < 10 ? `0${this.date.getUTCMinutes()}` : this.date.getUTCMinutes()} - ${this.date.getUTCDate() < 10 ? `0${this.date.getUTCDate()}` : this.date.getUTCDate()}/${this.date.getUTCMonth() < 10 ? `0${this.date.getUTCMonth()}` : this.date.getUTCMonth()}/${this.date.getUTCFullYear()}`;
@@ -256,7 +258,19 @@ class DaftBot {
         this.dbClient.on(Events.InteractionCreate, async interaction => {
             if (!interaction.isCommand() || interaction.user.bot) return;
 
-            const user = this.user.getUserProperty(interaction.user.id, this.usersProperty);
+            if (this.userClass.getUserProperty(interaction.user.id, this.usersProperty) == undefined) {
+                this.user = this.userClass.setUserProperty({
+                    'id': Number(interaction.user.id),
+                    'username': String(interaction.user.username),
+                    'canroll': true,
+                    'roll': 0,
+                    'lastroll': 0
+                });
+                await this.writeUserFile(this.user);
+                await new Promise(resolve => setTimeout(resolve, 2 * 1000));
+                await this.readUserFile();
+            } else { this.user = this.userClass.getUserProperty(interaction.user.id, this.usersProperty); };
+
             var checkCollection;
 
             this.dbClient.slash.has(interaction.commandName) ? checkCollection = this.dbClient.slash.get(interaction.commandName).data.name : checkCollection = false;
@@ -267,7 +281,9 @@ class DaftBot {
                     else { console.log(`[${getCurrentDatetime('comm')}] ${interaction.member.guild.name} / ${interaction.user.username} # ${interaction.commandName}${interaction.options.get("prompt") != undefined ? ` - ${interaction.options.get("prompt").value}` : ''}`); };
                     await this.dbClient.slash
                         .get(interaction.commandName)
-                        .execute(interaction, this.dbClient, this.language, user, this.initDateTime);
+                        .execute(interaction, this.dbClient, this.language, this.user, this.initDateTime);
+                    await new Promise(resolve => setTimeout(resolve, 2 * 1000));
+                    if (checkCollection == 'rw' || checkCollection == 'rollweapons') { await this.readUserFile(); };
                     break;
             };
         });
@@ -275,7 +291,19 @@ class DaftBot {
         this.dbClient.on(Events.MessageCreate, async (message) => {
             if (message.author.bot) return;
 
-            const user = this.user.getUserProperty(message.author.id, this.usersProperty);
+            if (this.userClass.getUserProperty(message.author.id, this.usersProperty) == undefined) {
+                this.user = this.userClass.setUserProperty({
+                    'id': Number(message.author.id),
+                    'username': String(message.author.username),
+                    'canroll': true,
+                    'roll': 0,
+                    'lastroll': 0
+                });
+                await this.writeUserFile(this.user);
+                await new Promise(resolve => setTimeout(resolve, 2 * 1000));
+                await this.readUserFile();
+            } else { this.user = this.userClass.getUserProperty(message.author.id, this.usersProperty); };
+
             var args = message.content.slice(prefix.length).trim().split(/ +/),
                 command = args.shift().toLowerCase(),
                 msg = message.content.toLowerCase(),
@@ -320,8 +348,9 @@ class DaftBot {
                         else { console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`); };
                         await this.dbClient.command
                             .get(command)
-                            .execute(message, this.dbClient, this.language, user, args, this.initDateTime);
-                        await this.readUserFile();
+                            .execute(message, this.dbClient, this.language, this.user, args, this.initDateTime);
+                        await new Promise(resolve => setTimeout(resolve, 2 * 1000));
+                        if (checkCollection == 'rw' || checkCollection == 'rollweapons') { await this.readUserFile(); };
                         break;
                 };
             };
@@ -628,7 +657,7 @@ class DaftBot {
                 if (row.id != 'id') {
                     let user;
                     if (new Date(Number(row.lastroll)) > new Date(Date.now())) {
-                        user = this.user.setUserProperty({
+                        user = this.userClass.setUserProperty({
                             'id': Number(row.id),
                             'username': String(row.username),
                             'canroll': false,
@@ -636,7 +665,7 @@ class DaftBot {
                             'lastroll': Number(row.lastroll)
                         });
                     } else {
-                        user = this.user.setUserProperty({
+                        user = this.userClass.setUserProperty({
                             'id': Number(row.id),
                             'username': String(row.username),
                             'canroll': true,
@@ -656,6 +685,40 @@ class DaftBot {
                     console.log(`[${getCurrentDatetime('comm')}] CSV file successfully processed with ${this.usersProperty.length} users`);
                     this.onFirstStart = false;
                 };
+            });
+    };
+
+    async writeUserFile(user) {
+        let userToSave = [{
+            'id': Number(user.id),
+            'username': String(user.username),
+            'canroll': Boolean(user.canroll),
+            'roll': Number(user.roll),
+            'lastroll': Number(user.lastroll)
+        }];
+
+        await fs.createReadStream(filePathUser)
+            .pipe(csvParse.parse({ headers: true, delimiter: ',' }))
+            .on('data', row => {
+                if (row.id != 'id') {
+                    userToSave.push({
+                        'id': Number(row.id),
+                        'username': String(row.username),
+                        'canroll': row.canroll == 'true' ? true : false,
+                        'roll': Number(row.roll),
+                        'lastroll': Number(row.lastroll)
+                    });
+                };
+            })
+            .on('end', async () => {
+                fs.writeFileSync(filePathUser, parse(userToSave), function (err) {
+                    if (err) {
+                        message.channel.send(`${language.errorRoll}`);
+                        console.log(`[${getCurrentDatetime('comm')}] # ${user.username} not added ${err}`);
+                        throw err;
+                    };
+                });
+                await this.readUserFile();
             });
     };
 };
