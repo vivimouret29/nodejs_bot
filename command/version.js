@@ -9,7 +9,7 @@ module.exports = {
         description: 'a dynamic view version',
         args: false
     },
-    async execute(message, client, language, args, initDateTime) {
+    async execute(message, client, language, user, args, initDateTime) {
         await sendEmbed(message, `daftbot ${package.version}`)
             .catch(err => {
                 message.reply({ 'content': language.error, 'ephemeral': true });

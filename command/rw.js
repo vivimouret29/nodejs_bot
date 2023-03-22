@@ -6,6 +6,7 @@ const { randomIntFromInterval, getCurrentDatetime } = require('../core/utils.js'
     csvParse = require('fast-csv'),
     { Weapons } = require('../core/classes/weapons.js');
 
+const filePathUser = `./data/user_roll.csv`;
 const filePathInventory = `./data/inventory_user_roll.csv`;
 const weapons = new Weapons();
 
@@ -15,7 +16,13 @@ module.exports = {
         description: 'a dynamic roll weapons',
         args: false
     },
-    async execute(message, client, language, args, initDateTime) {
+    async execute(message, client, language, user, args, initDateTime) {
+        if (!user.canroll) {
+            return message.channel.send(
+                `${message.author.username}: ${language.rollWait} **${String(new Date(Number(user.lastroll) - Date.now())).slice(16, -43)}**`
+            );
+        };
+
         var roll = [],
             result = [],
             earn = [],
@@ -110,6 +117,49 @@ module.exports = {
                 };
             });
         };
+
+        let usersProperty = [];
+        fs.createReadStream(filePathUser)
+            .pipe(csvParse.parse({ headers: true, delimiter: ',' }))
+            .on('data', row => {
+                if (row.id != 'id' &&
+                    Number(row.id) == Number(message.author.id)) {
+                    if ((Number(row.roll) + 1) % 3 == 0) {
+                        usersProperty.push({
+                            'id': Number(row.id),
+                            'username': String(row.username),
+                            'canroll': false,
+                            'roll': Number(row.roll) + 1,
+                            'lastroll': Date.now() + 40000000
+                        });
+                    } else {
+                        usersProperty.push({
+                            'id': Number(row.id),
+                            'username': String(row.username),
+                            'canroll': true,
+                            'roll': Number(row.roll) + 1,
+                            'lastroll': Number(row.lastroll)
+                        });
+                    };
+                } else {
+                    usersProperty.push({
+                        'id': Number(row.id),
+                        'username': String(row.username),
+                        'canroll': row.canroll == 'true' ? true : false,
+                        'roll': Number(row.roll),
+                        'lastroll': Number(row.lastroll)
+                    });
+                };
+            })
+            .on('end', () => {
+                fs.writeFileSync(filePathUser, parse(usersProperty), function (err) {
+                    if (err) {
+                        message.channel.send(`${language.errorRoll}`);
+                        console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${message.author.username}'s error save ${err}`);
+                        throw err;
+                    };
+                });
+            });
 
         var fi_line = `${roll[0]} ${roll[1]} ${roll[2]} ${result[0]}`,
             se_line = `${roll[3]} ${roll[4]} ${roll[5]} ${result[1]}`,

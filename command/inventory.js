@@ -40,7 +40,7 @@ module.exports = {
         description: 'a dynamic inventory',
         args: false
     },
-    async execute(message, client, language, args, initDateTime) {
+    async execute(message, client, language, user, args, initDateTime) {
         var dataUsers = [];
 
         fs.exists(filePath, async (e) => {

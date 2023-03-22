@@ -7,14 +7,24 @@ const { SlashCommandBuilder } = require('discord.js'),
     csvParse = require('fast-csv'),
     { Weapons } = require('../core/classes/weapons.js');
 
-const filePath = `./data/inventory_user_roll.csv`;
+const filePathUser = `./data/user_roll.csv`;
+const filePathInventory = `./data/inventory_user_roll.csv`;
 const weapons = new Weapons();
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('rollweapons')
         .setDescription('Pour lancer une roulette d\items de The Legend Of Zelda'),
-    async execute(message, client, language, initDateTime) {
+    async execute(message, client, language, user, initDateTime) {
+        if (!user.canroll) {
+            return message.reply({
+                'channel_id': message.channel.channel_id,
+                'content': `${message.user.username}: ${language.rollWait} **${String(new Date(Number(user.lastroll) - Date.now())).slice(16, -43)}**`,
+                'fetchReply': false,
+                'ephemeral': true
+            });
+        };
+
         var roll = [],
             result = [],
             earn = [],
@@ -75,9 +85,9 @@ module.exports = {
                 });
             };
 
-            fs.exists(filePath, async (e) => {
+            fs.exists(filePathInventory, async (e) => {
                 if (e) {
-                    fs.createReadStream(filePath)
+                    fs.createReadStream(filePathInventory)
                         .pipe(csvParse.parse({ headers: true, delimiter: ',' }))
                         .on('data', async row => {
                             if (row.id != 'id') {
@@ -89,7 +99,7 @@ module.exports = {
                             };
                         })
                         .on('end', () => {
-                            fs.writeFileSync(filePath, parse(dataUser), async function (err) {
+                            fs.writeFileSync(filePathInventory, parse(dataUser), async function (err) {
                                 if (err) {
                                     await message.editReply({
                                         'channel_id': message.channel.channel_id,
@@ -105,7 +115,7 @@ module.exports = {
                             });
                         });
                 } else {
-                    fs.writeFileSync(filePath, parse(dataUser), async function (err) {
+                    fs.writeFileSync(filePathInventory, parse(dataUser), async function (err) {
                         if (err) {
                             await message.editReply({
                                 'channel_id': message.channel.channel_id,
@@ -122,6 +132,49 @@ module.exports = {
                 };
             });
         };
+
+        let usersProperty = [];
+        fs.createReadStream(filePathUser)
+            .pipe(csvParse.parse({ headers: true, delimiter: ',' }))
+            .on('data', row => {
+                if (row.id != 'id' &&
+                    Number(row.id) == Number(message.author.id)) {
+                    if ((Number(row.roll) + 1) % 3 == 0) {
+                        usersProperty.push({
+                            'id': Number(row.id),
+                            'username': String(row.username),
+                            'canroll': false,
+                            'roll': Number(row.roll) + 1,
+                            'lastroll': Date.now() + 50000000
+                        });
+                    } else {
+                        usersProperty.push({
+                            'id': Number(row.id),
+                            'username': String(row.username),
+                            'canroll': true,
+                            'roll': Number(row.roll) + 1,
+                            'lastroll': Number(row.lastroll)
+                        });
+                    };
+                } else {
+                    usersProperty.push({
+                        'id': Number(row.id),
+                        'username': String(row.username),
+                        'canroll': row.canroll == 'true' ? true : false,
+                        'roll': Number(row.roll),
+                        'lastroll': Number(row.lastroll)
+                    });
+                };
+            })
+            .on('end', () => {
+                fs.writeFileSync(filePathUser, parse(usersProperty), function (err) {
+                    if (err) {
+                        message.channel.send(`${language.errorRoll}`);
+                        console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${message.author.username}'s error save ${err}`);
+                        throw err;
+                    };
+                });
+            });
 
         var fi_line = `${roll[0]} ${roll[1]} ${roll[2]} ${result[0]}`,
             se_line = `${roll[3]} ${roll[4]} ${roll[5]} ${result[1]}`,

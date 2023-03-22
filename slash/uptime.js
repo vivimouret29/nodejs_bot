@@ -7,7 +7,7 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('uptime')
         .setDescription('Pour connaître sa durée de fonctionnement'),
-    async execute(message, client, language, initDateTime) {
+    async execute(message, client, language, user, initDateTime) {
         try {
             let totalSeconds = (client.uptime / 1000),
                 days,

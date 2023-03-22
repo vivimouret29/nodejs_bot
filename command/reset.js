@@ -10,7 +10,7 @@ module.exports = {
         description: 'a dynamic reset',
         args: false
     },
-    async execute(message, client, language, args, initDateTime) {
+    async execute(message, client, language, user, args, initDateTime) {
         if (!(message.author.id === owner)) {
             return await sendEmbed(message, language.areYouOwner)
                 .catch(err => {

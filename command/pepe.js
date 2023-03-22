@@ -14,7 +14,7 @@ module.exports = {
         description: 'a dynamic pepe',
         args: true
     },
-    async execute(message, client, language, args, initDateTime) {
+    async execute(message, client, language, user, args, initDateTime) {
         if (args.length == 0) { return await sendEmbed(message, language.argsUndefined); };
 
         let msg = await message.channel

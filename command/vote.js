@@ -8,7 +8,7 @@ module.exports = {
         description: 'a dynamic view vote',
         args: false
     },
-    async execute(message, client, language, args, initDateTime) {
+    async execute(message, client, language, user, args, initDateTime) {
         await sendEmbed(message, `${language.vote}\nhttps://top.gg/bot/757955750164430980/vote`)
             .catch(err => {
                 message.reply({ 'content': language.error, 'ephemeral': true });

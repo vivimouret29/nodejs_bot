@@ -8,7 +8,7 @@ module.exports = {
         description: 'a dynamic uptime',
         args: false
     },
-    async execute(message, client, language, args, initDateTime) {
+    async execute(message, client, language, user, args, initDateTime) {
         try {
             let totalSeconds = (client.uptime / 1000),
                 days,

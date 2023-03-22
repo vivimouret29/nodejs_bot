@@ -39,7 +39,7 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('i')
         .setDescription('Pour regarder dans la tablette Sheikah ton équipement'),
-    async execute(message, client, language, args, initDateTime) {
+    async execute(message, client, language, user, initDateTime) {
         var dataUsers = [];
 
         fs.exists(filePath, async (e) => {

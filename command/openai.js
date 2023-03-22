@@ -11,7 +11,7 @@ module.exports = {
         description: 'a dynamic tchat bot from openai',
         args: true
     },
-    async execute(client, message, language, args, initDateTime) {
+    async execute(client, message, language, user, args, initDateTime) {
         var content = message.content.split(' ');
         for (let word in content) { if (content[word].includes(`<@${client.user.id}>`)) { content.splice(word, 1); }; };
 

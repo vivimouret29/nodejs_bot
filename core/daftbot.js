@@ -3,14 +3,17 @@
 const { Client, Collection, GatewayIntentBits, ActivityType, Events, Partials, REST, Routes } = require('discord.js'),
     axios = require('axios'),
     fs = require('node:fs'),
+    csvParse = require('fast-csv'),
     path = require('node:path'),
     packageVersion = require('../package.json'),
     { prefix, token, owner, client } = require('../config.json'),
     { clientId, identity, channels } = require('./config.json'),
     { fr, en, uk } = require('../resx/lang.json'),
     { memes } = require('../resx/memes.json'),
-    { sendEmbed, messageErase, getCurrentDatetime, randomIntFromInterval } = require('./utils.js');
+    { sendEmbed, messageErase, getCurrentDatetime, randomIntFromInterval } = require('./utils.js'),
+    { User } = require('../core/classes/user.js');
 
+const filePathUser = `./data/user_roll.csv`;
 const intents = [
     GatewayIntentBits.Guilds,
     GatewayIntentBits.GuildIntegrations,
@@ -59,6 +62,9 @@ class DaftBot {
         this.dbClient.slash = new Collection();
         this.commands = [];
 
+        this.user = new User();
+        this.usersProperty = [];
+
         this.date = new Date();
         this.initDateTime = `${(this.date.getUTCHours() + 1) < 10 ? `0${this.date.getUTCHours()}` : this.date.getUTCHours()}:${this.date.getUTCMinutes() < 10 ? `0${this.date.getUTCMinutes()}` : this.date.getUTCMinutes()} - ${this.date.getUTCDate() < 10 ? `0${this.date.getUTCDate()}` : this.date.getUTCDate()}/${this.date.getUTCMonth() < 10 ? `0${this.date.getUTCMonth()}` : this.date.getUTCMonth()}/${this.date.getUTCFullYear()}`;
         this.isMuted = false;
@@ -69,6 +75,8 @@ class DaftBot {
 
         this.avoidBot = ['757970907992948826', '758393470024155186', '758319298325905428'];
         this.userToCheck = ['491907126701064193'];
+
+        this.onFirstStart = true;
     };
 
     async onConnect() {
@@ -131,8 +139,11 @@ class DaftBot {
     async onLogin() {
         this.dbClient
             .login(token)
-            .then(() => console.log(`[${getCurrentDatetime('comm')}] ${this.dbClient.user.username}\'s logged
-[${getCurrentDatetime('comm')}] ${this.dbClient.user.username} v${packageVersion.version}`))
+            .then(async () => {
+                console.log(`[${getCurrentDatetime('comm')}] ${this.dbClient.user.username}\'s logged
+[${getCurrentDatetime('comm')}] ${this.dbClient.user.username} v${packageVersion.version}`);
+                await this.readUserFile();
+            })
             .catch(console.error);
 
         this.dbClient.on(Events.ClientReady, async () => {
@@ -245,6 +256,7 @@ class DaftBot {
         this.dbClient.on(Events.InteractionCreate, async interaction => {
             if (!interaction.isCommand() || interaction.user.bot) return;
 
+            const user = this.user.getUserProperty(interaction.user.id, this.usersProperty);
             var checkCollection;
 
             this.dbClient.slash.has(interaction.commandName) ? checkCollection = this.dbClient.slash.get(interaction.commandName).data.name : checkCollection = false;
@@ -255,7 +267,7 @@ class DaftBot {
                     else { console.log(`[${getCurrentDatetime('comm')}] ${interaction.member.guild.name} / ${interaction.user.username} # ${interaction.commandName}${interaction.options.get("prompt") != undefined ? ` - ${interaction.options.get("prompt").value}` : ''}`); };
                     await this.dbClient.slash
                         .get(interaction.commandName)
-                        .execute(interaction, this.dbClient, this.language, this.initDateTime);
+                        .execute(interaction, this.dbClient, this.language, user, this.initDateTime);
                     break;
             };
         });
@@ -263,6 +275,7 @@ class DaftBot {
         this.dbClient.on(Events.MessageCreate, async (message) => {
             if (message.author.bot) return;
 
+            const user = this.user.getUserProperty(message.author.id, this.usersProperty);
             var args = message.content.slice(prefix.length).trim().split(/ +/),
                 command = args.shift().toLowerCase(),
                 msg = message.content.toLowerCase(),
@@ -307,7 +320,8 @@ class DaftBot {
                         else { console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`); };
                         await this.dbClient.command
                             .get(command)
-                            .execute(message, this.dbClient, this.language, args, this.initDateTime);
+                            .execute(message, this.dbClient, this.language, user, args, this.initDateTime);
+                        await this.readUserFile();
                         break;
                 };
             };
@@ -604,6 +618,45 @@ class DaftBot {
             this.isMuted = false;
             return this.isMuted;
         };
+    };
+
+    async readUserFile() {
+        this.usersProperty = [];
+        await fs.createReadStream(filePathUser)
+            .pipe(csvParse.parse({ headers: true, delimiter: ',' }))
+            .on('data', row => {
+                if (row.id != 'id') {
+                    let user;
+                    if (new Date(Number(row.lastroll)) > new Date(Date.now())) {
+                        user = this.user.setUserProperty({
+                            'id': Number(row.id),
+                            'username': String(row.username),
+                            'canroll': false,
+                            'roll': Number(row.roll),
+                            'lastroll': Number(row.lastroll)
+                        });
+                    } else {
+                        user = this.user.setUserProperty({
+                            'id': Number(row.id),
+                            'username': String(row.username),
+                            'canroll': true,
+                            'roll': Number(row.roll),
+                            'lastroll': Number(row.lastroll)
+                        });
+                    };
+
+                    this.usersProperty.push({
+                        "key": Number(user.id),
+                        "value": user
+                    });
+                };
+            })
+            .on('end', () => {
+                if (this.onFirstStart) {
+                    console.log(`[${getCurrentDatetime('comm')}] CSV file successfully processed with ${this.usersProperty.length} users`);
+                    this.onFirstStart = false;
+                };
+            });
     };
 };
 

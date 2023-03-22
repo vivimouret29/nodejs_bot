@@ -18,7 +18,7 @@ module.exports = {
 				.setDescription('what you want to see')
 				.setRequired(true)
 		}),
-	async execute(message, client, language, initDateTime) {
+	async execute(message, client, language, user, initDateTime) {
 		let args = message.options.get("prompt").value;
 
 		await message.reply({

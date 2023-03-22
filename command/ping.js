@@ -8,7 +8,7 @@ module.exports = {
         description: 'a dynamic ping',
         args: false
     },
-    async execute(message, client, language, args, initDateTime) {
+    async execute(message, client, language, user, args, initDateTime) {
         var wait = await message
             .reply(language.pingWait)
             .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error send command ping ${err}`); });

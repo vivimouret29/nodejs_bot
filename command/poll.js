@@ -9,7 +9,7 @@ module.exports = {
         description: 'a dynamic poll',
         args: true
     },
-    async execute(message, client, language, args, initDateTime) {
+    async execute(message, client, language, user, args, initDateTime) {
         Array.prototype.max = function () { return Math.max.apply(null, this); };
 
         try {

@@ -57,7 +57,8 @@
         "errorRoll": "Erreur lors du tirage",
         "vote": "Daftbot et Top.gg ne sont aucunement lié et personne ne peut désactiver cette pub\n\nVote pour Daftbot afin de partager ton expérience !",
         "inventError": "Récupération de l'inventaire impossible",
-        "inventEmpty": "Tu ne possèdes rien... Fais **!roll** ou j'sais pas"
+        "inventEmpty": "Tu ne possèdes rien... Fais **!roll** ou j'sais pas",
+        "rollWait": "tu dois encore attendre un ptit moment :"
     },
     "en": {
         "help": "List of orders",
@@ -116,7 +117,8 @@
         "errorRoll": "Error during the draw",
         "vote": "Daftbot and Top.gg are not related in any way and no one can disable this ad\n\nVote for Daftbot to share your experience !",
         "inventError": "Unable to retrieve inventory",
-        "inventEmpty": "You don't own anything... Do **!roll** or I don't know"
+        "inventEmpty": "You don't own anything... Do **!roll** or I don't know",
+        "rollWait": "you still have to wait a little while :"
     },
     "uk": {
         "help": "Список замовлень",
@@ -175,6 +177,7 @@
         "errorRoll": "Помилка малювання",
         "vote": "Daftbot і Top.gg ніяк не пов'язані між собою, і ніхто не може відключити цю рекламу\n\nГолосуйте за Daftbot, щоб поділитися своїм досвідом!",
         "inventError": "Відновлення запасів неможливе",
-        "inventEmpty": "У тебе нічого немає... Зробіть **!roll** Або я не знаю"
+        "inventEmpty": "У тебе нічого немає... Зробіть **!roll** Або я не знаю",
+        "rollWait": "вам доведеться почекати ще трохи :"
     }
 }

@@ -11,7 +11,7 @@ module.exports = {
         description: 'a dynamic help',
         args: false
     },
-    async execute(message, client, language, args, initDateTime) {
+    async execute(message, client, language, user, args, initDateTime) {
         let twitch = 'https://twitch.tv/daftmob',
             guidDot = await axios.get(twitch),
             guid = '',

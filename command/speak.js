@@ -8,7 +8,7 @@ module.exports = {
         description: 'a dynamic tchat',
         args: true
     },
-    async execute(message, client, language, args, initDateTime) {
+    async execute(message, client, language, user, args, initDateTime) {
         if (message.guildId == null) {
             return await sendEmbed(message, language.restricted)
                 .catch(err => {
