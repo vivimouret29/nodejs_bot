@@ -25,6 +25,8 @@ module.exports = {
             });
 
         new Promise(resolve => setTimeout(resolve, 3 * 1000));
+        
         client.destroy();
+        process.kill(process.pid);
     }
 };
