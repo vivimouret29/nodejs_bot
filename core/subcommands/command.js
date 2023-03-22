@@ -15,7 +15,7 @@ module.exports = {
 
         for (let file of commandFiles) { commands.push(file.split('.')[0]) };
 
-        client.reply(channel, `toutes les commandes : ${commands.join(', ')} !`, userstate.id)
+        client.reply(channel, `toutes les commandes : !${commands.join(', !')} !`, userstate.id)
             .catch(e => console.log(e));
     }
 };
