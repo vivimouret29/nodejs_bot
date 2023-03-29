@@ -263,7 +263,7 @@ class MobBot {
             dot = guidDot.split(new RegExp(`(ge-[.]*...........)`, 'giu'))[1];
             dot = dot.split('.')[1].split(' ')[0];
         } catch (err) {
-            console.log(`[${getCurrentDatetime('comm')}] Can't get guid and dot : `, err);
+            console.log(`[${getCurrentDatetime('comm')}] LIVENOTIFRROR Can't get guid and dot : `, err);
         };
 
         for (let chan in channelTwitch) {
@@ -286,7 +286,7 @@ class MobBot {
                             'value': axios.data.data[0].title
                         }],
                         'image': {
-                            'url': `https://static-cdn.jtvnw.net/previews-ttv/live_user_${axios.data.data[0].user_login}-320x180.jpg`,
+                            'url': `https://static-cdn.jtvnw.net/previews-ttv/live_user_${axios.data.data[0].user_login}-320x180.jpg?r=554274`,
                             'proxy_url': `https://twitch.tv/${axios.data.data[0].user_login}`
                         },
                         'thumbnail': {
@@ -339,7 +339,7 @@ class MobBot {
             thumbnail = video[6].split(new RegExp(`(\"[^.]*?\")`, 'giu'))[8];
             descp = video[6].split(new RegExp(`(\"[^.]*?\")`, 'giu'))[12].split(new RegExp(`(\>[^.]*?\:)`, 'giu'))[3].slice(1, -9);
         } catch (err) {
-            console.log(`[${getCurrentDatetime('comm')}] Can't get video's information : `, err);
+            console.log(`[${getCurrentDatetime('comm')}] VIDEONOTIFRROR Can't get video's information : `, err);
         };
 
         for (let chan in channelYoutube) {
