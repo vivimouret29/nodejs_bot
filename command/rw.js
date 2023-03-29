@@ -97,7 +97,6 @@ module.exports = {
                     'user': String(message.author.username),
                     'inventory': String(earnCsv[i])
                 };
-
                 dataUser.push(data);
             };
 

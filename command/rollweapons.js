@@ -32,24 +32,45 @@ module.exports = {
         try {
             weapons.setPreRoll(client);
 
-            var sword = weapons.fiRoll,
-                claymore = weapons.seRoll,
-                shield = weapons.thRoll,
-                bow = weapons.foRoll,
-                axes = weapons.ffRoll;
+            var sword = weapons.roll.sword,
+                clubs = weapons.roll.clubs,
+                spear = weapons.roll.spear,
+                twohands = weapons.roll.twohands,
+                axes = weapons.roll.axes,
+                boomerang = weapons.roll.boomerang,
+                shield = weapons.roll.shield,
+                bow = weapons.roll.bow;
 
             for (let i = 0; i < 15; i++) {
                 if (roll.length < 3) {
-                    roll.push(sword[randomIntFromInterval(0, (sword.length - 1))]);
+                    switch (randomIntFromInterval(0, 1)) {
+                        case 0:
+                            roll.push(sword[randomIntFromInterval(0, (sword.length - 1))].cache);
+                            break;
+                        case 1:
+                            roll.push(clubs[randomIntFromInterval(0, (clubs.length - 1))].cache);
+                            break;
+                    };
                 } else if (3 <= roll.length && roll.length < 6) {
-                    roll.push(claymore[randomIntFromInterval(0, (claymore.length - 1))]);
+                    switch (randomIntFromInterval(0, 1)) {
+                        case 0:
+                            roll.push(twohands[randomIntFromInterval(0, (twohands.length - 1))].cache);
+                            break;
+                        case 1:
+                            roll.push(spear[randomIntFromInterval(0, (spear.length - 1))].cache);
+                            break;
+                    };
                 } else if (6 <= roll.length && roll.length < 9) {
-                    roll.push(shield[randomIntFromInterval(0, (shield.length - 1))]);
-                } else if (9 <= roll.length && roll.length < 12) {
-                    roll.push(bow[randomIntFromInterval(0, (bow.length - 1))]);
-                } else if (12 <= roll.length && roll.length < 15) {
-                    roll.push(axes[randomIntFromInterval(0, (axes.length - 1))]);
-                };
+                    switch (randomIntFromInterval(0, 1)) {
+                        case 0:
+                            roll.push(boomerang[randomIntFromInterval(0, (boomerang.length - 1))].cache);
+                            break;
+                        case 1:
+                            roll.push(axes[randomIntFromInterval(0, (axes.length - 1))].cache);
+                            break;
+                    };
+                } else if (9 <= roll.length && roll.length < 12) { roll.push(shield[randomIntFromInterval(0, (shield.length - 1))].cache); }
+                else if (12 <= roll.length && roll.length < 15) { roll.push(bow[randomIntFromInterval(0, (bow.length - 1))].cache); };
 
                 if (roll.length % 3 == 0) {
                     let y = i - 1,
@@ -76,7 +97,6 @@ module.exports = {
                     'user': String(message.author.username),
                     'inventory': String(earnCsv[i])
                 };
-
                 dataUser.push(data);
             };
 
@@ -130,7 +150,7 @@ module.exports = {
                             'username': String(row.username),
                             'canroll': false,
                             'roll': Number(row.roll) + 1,
-                            'lastroll': Date.now() + 50000000
+                            'lastroll': Date.now() + 40000000
                         });
                     } else {
                         usersProperty.push({
