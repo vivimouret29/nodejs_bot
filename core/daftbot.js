@@ -165,7 +165,7 @@ class DaftBot {
             console.log(`[${getCurrentDatetime('comm')}] ${this.dbClient.user.username} connect on irc-ws.chat.twitch.tv:443`);
 
             await new Promise(resolve => setTimeout(resolve, 5 * 1000));
-            // if (this.dbClient.user.id == this.avoidBot[1]) return;
+            if (this.dbClient.user.id == this.avoidBot[1]) return;
 
             let checkLive = true,
                 gameMemory = '',
@@ -181,7 +181,7 @@ class DaftBot {
                         console.log(`[${getCurrentDatetime('comm')}] Error GET AXIOS ${err}`);
                     });
 
-                if (ax == undefined) { break; }
+                if (ax == undefined) { break; };
 
                 if (!checkLive || ax.data.data.length == 0) {
                     gameMemory = '';
