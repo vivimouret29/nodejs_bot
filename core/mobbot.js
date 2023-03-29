@@ -66,6 +66,8 @@ class MobBot {
                     console.log(`[${getCurrentDatetime('comm')}] Error GET AXIOS ${err}`);
                 });
 
+            if (ax == undefined) { break; };
+
             if (!checkLive || ax.data.data.length == 0) {
                 gameMemory = '';
             } else {
