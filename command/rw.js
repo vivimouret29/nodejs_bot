@@ -7,7 +7,7 @@ const { randomIntFromInterval, getCurrentDatetime } = require('../core/utils.js'
     { Weapons } = require('../core/classes/weapons.js');
 
 const filePathUser = `./data/user_roll.csv`;
-const filePathInventory = `./data/inventory_user_roll.csv`;
+const filePathInventory = `./data/weap_inventory_user_roll.csv`;
 const weapons = new Weapons();
 
 module.exports = {

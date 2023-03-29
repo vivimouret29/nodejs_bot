@@ -7,7 +7,7 @@ const { randomIntFromInterval, getCurrentDatetime } = require('../core/utils.js'
     { Weapons } = require('../core/classes/weapons.js');
 
 const filePathUser = `./data/user_roll.csv`;
-const filePath = `./data/inventory_user_roll.csv`;
+const filePathInventory = `./data/weap_inventory_user_roll.csv`;
 const weapons = new Weapons();
 
 module.exports = {
@@ -80,9 +80,9 @@ module.exports = {
                 dataUser.push(data);
             };
 
-            fs.exists(filePath, (e) => {
+            fs.exists(filePathInventory, (e) => {
                 if (e) {
-                    fs.createReadStream(filePath)
+                    fs.createReadStream(filePathInventory)
                         .pipe(csvParse.parse({ headers: true, delimiter: ',' }))
                         .on('data', row => {
                             if (row.id != 'id') {
@@ -94,7 +94,7 @@ module.exports = {
                             };
                         })
                         .on('end', () => {
-                            fs.writeFileSync(filePath, parse(dataUser), function (err) {
+                            fs.writeFileSync(filePathInventory, parse(dataUser), function (err) {
                                 if (err) {
                                     message.channel.send(`${language.errorRoll}`);
                                     console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${message.author.username}'s inventory error save ${err}`);
@@ -105,7 +105,7 @@ module.exports = {
                             });
                         });
                 } else {
-                    fs.writeFileSync(filePath, parse(dataUser), function (err) {
+                    fs.writeFileSync(filePathInventory, parse(dataUser), function (err) {
                         if (err) {
                             message.channel.send(`${language.errorRoll}`);
                             console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${message.author.username}'s inventory error save ${err}`);
