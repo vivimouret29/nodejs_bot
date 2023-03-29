@@ -95,6 +95,10 @@ node main.js
     <a href="https://discord.com/api/oauth2/authorize?client_id=757955750164430980&permissions=4398046511095&scope=bot"> 
         lien
     </a>
+    ou pour rejoindre le serveur discord, clique sur
+    <a href="https://discord.gg/ucwnMKKxZe">
+    lien là
+    </a>
     <br>
     Voici un petit lien du projet 
     <a href="https://github.com/users/vivimouret29/projects/1">
