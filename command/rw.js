@@ -41,36 +41,97 @@ module.exports = {
                 shield = weapons.roll.shield,
                 bow = weapons.roll.bow;
 
+            let trueOrFalse = randomIntFromInterval(0, 1) == 0 ? true : false;
+
             for (let i = 0; i < 15; i++) {
                 if (roll.length < 3) {
-                    switch (randomIntFromInterval(0, 1)) {
-                        case 0:
-                            roll.push(sword[randomIntFromInterval(0, (sword.length - 1))].cache);
+                    switch (trueOrFalse) {
+                        case true:
+                            if (sword.length > 0) {
+                                if (sword.length >= 5) {
+                                    roll.push(await sword[randomIntFromInterval(0, 4)].cache);
+                                } else {
+                                    roll.push(await sword[randomIntFromInterval(0, (sword.length - 1))].cache);
+                                };
+                            } else {
+                                roll.push(await clubs[randomIntFromInterval(0, (clubs.length - 1))].cache);
+                            };
                             break;
-                        case 1:
-                            roll.push(clubs[randomIntFromInterval(0, (clubs.length - 1))].cache);
+                        case false:
+                            if (clubs.length > 0) {
+                                if (clubs.length >= 5) {
+                                    roll.push(await clubs[randomIntFromInterval(0, 4)].cache);
+                                } else {
+                                    roll.push(await clubs[randomIntFromInterval(0, (clubs.length - 1))].cache);
+                                };
+                            } else {
+                                roll.push(await sword[randomIntFromInterval(0, (sword.length - 1))].cache);
+                            };
                             break;
                     };
                 } else if (3 <= roll.length && roll.length < 6) {
-                    switch (randomIntFromInterval(0, 1)) {
-                        case 0:
-                            roll.push(twohands[randomIntFromInterval(0, (twohands.length - 1))].cache);
+                    switch (trueOrFalse) {
+                        case true:
+                            if (twohands.length > 0) {
+                                if (twohands.length >= 5) {
+                                    roll.push(await twohands[randomIntFromInterval(0, 4)].cache);
+                                } else {
+                                    roll.push(await twohands[randomIntFromInterval(0, (twohands.length - 1))].cache);
+                                };
+                            } else {
+                                roll.push(await spear[randomIntFromInterval(0, (spear.length - 1))].cache);
+                            };
                             break;
-                        case 1:
-                            roll.push(spear[randomIntFromInterval(0, (spear.length - 1))].cache);
+                        case false:
+                            if (spear.length > 0) {
+                                if (spear.length >= 5) {
+                                    roll.push(await spear[randomIntFromInterval(0, 4)].cache);
+                                } else {
+                                    roll.push(await spear[randomIntFromInterval(0, (spear.length - 1))].cache);
+                                };
+                            } else {
+                                roll.push(await twohands[randomIntFromInterval(0, (twohands.length - 1))].cache);
+                            };
                             break;
                     };
                 } else if (6 <= roll.length && roll.length < 9) {
-                    switch (randomIntFromInterval(0, 1)) {
-                        case 0:
-                            roll.push(boomerang[randomIntFromInterval(0, (boomerang.length - 1))].cache);
+                    switch (trueOrFalse) {
+                        case true:
+                            if (boomerang.length > 0) {
+                                if (boomerang.length >= 5) {
+                                    roll.push(await boomerang[randomIntFromInterval(0, 4)].cache);
+                                } else {
+                                    roll.push(await boomerang[randomIntFromInterval(0, (boomerang.length - 1))].cache);
+                                };
+                            } else {
+                                roll.push(await axes[randomIntFromInterval(0, (axes.length - 1))].cache);
+                            };
                             break;
-                        case 1:
-                            roll.push(axes[randomIntFromInterval(0, (axes.length - 1))].cache);
+                        case false:
+                            if (axes.length > 0) {
+                                if (axes.length >= 5) {
+                                    roll.push(await axes[randomIntFromInterval(0, 4)].cache);
+                                } else {
+                                    roll.push(await axes[randomIntFromInterval(0, (axes.length - 1))].cache);
+                                };
+                            } else {
+                                roll.push(await boomerang[randomIntFromInterval(0, (boomerang.length - 1))].cache);
+                            };
                             break;
                     };
-                } else if (9 <= roll.length && roll.length < 12) { roll.push(shield[randomIntFromInterval(0, (shield.length - 1))].cache); }
-                else if (12 <= roll.length && roll.length < 15) { roll.push(bow[randomIntFromInterval(0, (bow.length - 1))].cache); };
+                } else if (9 <= roll.length && roll.length < 12) {
+                    if (shield.length >= 9) {
+                        roll.push(await shield[randomIntFromInterval(0, 7)].cache);
+                    } else {
+                        roll.push(await shield[randomIntFromInterval(0, (shield.length - 1))].cache);
+                    }
+                } else if (12 <= roll.length && roll.length < 15) {
+                    if (bow.length >= 9) {
+                        roll.push(await bow[randomIntFromInterval(0, 7)].cache);
+                    } else {
+                        roll.push(await bow[randomIntFromInterval(0, (bow.length - 1))].cache);
+                    };
+                };
 
                 if (roll.length % 3 == 0) {
                     let y = i - 1,
