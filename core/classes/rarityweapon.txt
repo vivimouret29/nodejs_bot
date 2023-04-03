@@ -1,0 +1,20 @@
+leg: hylian, goddess, fierce, master, light, 
+ages, twilight, skyward, wind, duality
+
+rare: hero, golden, moonlight, golden, seven, 
+captain, sea, ancient, guardian, daybreaker, mind,
+royalequip
+
+epic: throwing, steel, lynel, thunderblade, smasher, 
+gerudo, giant, frostblade, flameblade, thunderspear,
+flamespear, emblazoned, biggoron, tri, sledgehammer,
+novelty, zora, demon, windcleaver, duplex, serpentine,
+eightfold, phrenic, royalguard, rito
+
+uncom: double, lizal, reinforced, fisherman, 
+drillshaft, spiked, forked, koh, traveler, soldier, sickle,
+broadsword
+
+com: dragonbone, wooden, woodcutter, cobble, 
+boulder, breaker, bokoblin, torch, simple, mop, oar,
+harpoon, hoe, pitchfork, soup, arm, hunter, rusty

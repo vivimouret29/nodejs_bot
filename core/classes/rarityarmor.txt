@@ -1,0 +1,9 @@
+leg: hylian, wild, korok, midna, majora, zant, hero, wind, time, twilight, ruta, naboris, medoh, rudania
+
+rare: ancient, tingle, phantom, lobster, thunder, lynel, champion
+
+epic: dark, gerudo, radient, sheikah, zora, royalguard, lizalfos
+
+uncom: desert, flamebreaker, snowquill, soldier, ravio, salvager, moblin
+
+com: barbarian, climbing, rubber, well-worn, old, warm, bokoblin

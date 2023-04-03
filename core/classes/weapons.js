@@ -1,7 +1,7 @@
 'use.strict'
 
 const { DaftBot } = require("../daftbot.js"),
-    { zelda: zedIco } = require('../../resx/emojis.json');
+    { zeldaWeapons: zedIco } = require('../../resx/emojis.json');
 
 class Weapons extends DaftBot {
     constructor(dbClient) {
@@ -17,6 +17,29 @@ class Weapons extends DaftBot {
         };
 
         this.roll = {};
+        this.setRar = {
+            lengendary: ['hylian', 'goddess', 'fierce', 'master', 'light', 'ages', 'twilight', 'skyward', 'wind', 'duality'],
+            rare: [
+                'hero', 'golden', 'moonlight', 'golden', 'seven', 'captain', 'sea', 'ancient', 'guardian',
+                'daybreaker', 'mind', 'royalequip'
+            ],
+            epic: [
+                'throwing', 'steel', 'lynel', 'thunderblade', 'smasher', 'gerudo', 'giant', 'frostblade',
+                'flameblade', 'thunderspear', 'flamespear', 'emblazoned', 'biggoron', 'tri', 'sledgehammer',
+                'novelty', 'zora', 'demon', 'windcleaver', 'duplex', 'serpentine', 'eightfold', 'phrenic',
+                'royalguard', 'rito', 'frostspear'
+            ],
+            uncommon: [
+                'double', 'lizal', 'reinforced', 'fisherman',
+                'drillshaft', 'spiked', 'forked', 'koh', 'traveler',
+                'soldier', 'sickle', 'broadsword', 'moblin'
+            ],
+            common: [
+                'dragonbone', 'wooden', 'woodcutter', 'cobble',
+                'boulder', 'breaker', 'bokoblin', 'torch', 'simple', 'mop', 'oar',
+                'harpoon', 'hoe', 'pitchfork', 'soup', 'arm', 'hunter', 'rusty'
+            ]
+        };
     };
 
     setPreRoll(client) {
@@ -53,31 +76,31 @@ class Weapons extends DaftBot {
 
             switch (type) {
                 case 'sw':
-                    rarity = this.setSwordRarity(name, rarity);
+                    rarity = this.setRarity(name);
                     break;
                 case 'cl':
-                    rarity = this.setSwordRarity(name, rarity);
+                    rarity = this.setRarity(name);
                     break;
                 case 'sp':
-                    rarity = this.setSpearRarity(name, rarity);
+                    rarity = this.setRarity(name);
                     break;
                 case 'th':
-                    rarity = this.setSpearRarity(name, rarity);
+                    rarity = this.setRarity(name);
                     break;
                 case 'sh':
-                    rarity = this.setShieldRarity(name, rarity);
+                    rarity = this.setRarity(name);
                     break;
                 case 'bw':
-                    rarity = this.setBowRarity(name, rarity);
+                    rarity = this.setRarity(name);
                     break;
                 // case 'ha':
-                //     rarity = this.setAxesRarity(name, rarity);
+                //     rarity = this.setRarity(name);
                 //     break;
                 case 'ax':
-                    rarity = this.setAxesRarity(name, rarity);
+                    rarity = this.setRarity(name);
                     break;
                 case 'bo':
-                    rarity = this.setAxesRarity(name, rarity);
+                    rarity = this.setRarity(name);
                     break;
             };
 
@@ -106,74 +129,26 @@ class Weapons extends DaftBot {
         });
     };
 
-    setSwordRarity(itemName) {
-        if (itemName.includes('goddess') || itemName.includes('master') || itemName.includes('fierce') || itemName.includes('ages') || itemName.includes('eightfold') || itemName.includes('royalequip')) {
-            return this.rarity.legendary;
-        } else if (itemName.includes('lynel') || itemName.includes('ancient') || itemName.includes('royalguard')) {
-            return this.rarity.epic;
-        } else if (itemName.includes('moonlight') || itemName.includes('guardian') || itemName.includes('scythe') || itemName.includes('soldier')) {
-            return this.rarity.rare;
-        } else if (itemName.includes('flameblade') || itemName.includes('frostblade') || itemName.includes('thunderblade') || itemName.includes('rito') || itemName.includes('koh') || itemName.includes('demon') || itemName.includes('gerudo')) {
-            return this.rarity.uncommon;
-        } else {
-            return this.rarity.common;
+    setRarity(itemName) {
+        for (let rar in this.setRar) {
+            for (let i = 0; i < this.setRar[rar].length; i++) {
+                if (itemName.includes(this.setRar[rar][i])) {
+                    switch (rar) {
+                        case 'lengendary':
+                            return this.rarity.legendary;
+                        case 'rare':
+                            return this.rarity.rare;
+                        case 'epic':
+                            return this.rarity.epic;
+                        case 'uncommon':
+                            return this.rarity.uncommon;
+                        case 'common':
+                            return this.rarity.common;
+                    };
+                };
+            };
         };
-    };
-
-    setSpearRarity(itemName) {
-        if (itemName.includes('master') || itemName.includes('duality') || itemName.includes('ages') || itemName.includes('eightfold') || itemName.includes('royalequip')) {
-            return this.rarity.legendary;
-        } else if (itemName.includes('lynel') || itemName.includes('ancient') || itemName.includes('royalguard')) {
-            return this.rarity.epic;
-        } else if (itemName.includes('windcleaver') || itemName.includes('guardian') || itemName.includes('scythe') || itemName.includes('flameblade') || itemName.includes('frostblade') || itemName.includes('thunderblade') || itemName.includes('soldier')) {
-            return this.rarity.rare;
-        } else if (itemName.includes('flamespear') || itemName.includes('frostspear') || itemName.includes('thunderspear') || itemName.includes('rito') || itemName.includes('koh') || itemName.includes('demon') || itemName.includes('gerudo') || itemName.includes('biggoron')) {
-            return this.rarity.uncommon;
-        } else {
-            return this.rarity.common;
-        };
-    };
-
-    setShieldRarity(itemName) {
-        if (itemName.includes('hylian') || itemName.includes('hero') || itemName.includes('royalequip')) {
-            return this.rarity.legendary;
-        } else if (itemName.includes('lynel') || itemName.includes('ancient') || itemName.includes('royalguard') || itemName.includes('daybreaker')) {
-            return this.rarity.epic;
-        } else if (itemName.includes('guardian') || itemName.includes('soldier')) {
-            return this.rarity.rare;
-        } else if (itemName.includes('rito') || itemName.includes('koh') || itemName.includes('demon') || itemName.includes('gerudo') || itemName.includes('biggoron')) {
-            return this.rarity.uncommon;
-        } else {
-            return this.rarity.common;
-        };
-    };
-
-    setBowRarity(itemName) {
-        if (itemName.includes('light') || itemName.includes('twilight') || itemName.includes('skyward') || itemName.includes('royalequip')) {
-            return this.rarity.legendary;
-        } else if (itemName.includes('lynel') || itemName.includes('ancient') || itemName.includes('royalguard')) {
-            return this.rarity.epic;
-        } else if (itemName.includes('eagle') || itemName.includes('guardian') || itemName.includes('soldier')) {
-            return this.rarity.rare;
-        } else if (itemName.includes('falcon') || itemName.includes('koh') || itemName.includes('demon') || itemName.includes('gerudo') || itemName.includes('biggoron')) {
-            return this.rarity.uncommon;
-        } else {
-            return this.rarity.common;
-        };
-    };
-
-    setAxesRarity(itemName) {
-        if (itemName.includes('wind')) {
-            return this.rarity.legendary;
-        } else if (itemName.includes('giant') || itemName.includes('novelty')) {
-            return this.rarity.epic;
-        } else if (itemName.includes('guardian') || itemName.includes('tri')) {
-            return this.rarity.rare;
-        } else if (itemName.includes('forked') || itemName.includes('sledgehammer')) {
-            return this.rarity.uncommon;
-        } else {
-            return this.rarity.common;
-        };
+        console.log('Error: ' + itemName);
     };
 };
 
