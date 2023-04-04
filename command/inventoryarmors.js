@@ -1,15 +1,14 @@
 'use.strict'
 
-const { SlashCommandBuilder } = require('discord.js'),
-    { sendEmbed, getCurrentDatetime, randomColor } = require('../core/utils.js'),
+const { sendEmbed, getCurrentDatetime, randomColor } = require('../core/utils.js'),
     fs = require('node:fs'),
     csvParse = require('fast-csv');
 
-const filePath = `./data/inventory_user_roll.csv`;
+const filePath = `./data/arm_inventory_user_roll.csv`;
 
 async function messageEmbed(message, content) {
-    var messageToSend = await message
-        .reply({
+    var messageToSend = await message.channel
+        .send({
             'channel_id': message.channel.channel_id,
             'content': '',
             'tts': false,
@@ -19,8 +18,8 @@ async function messageEmbed(message, content) {
                 'description': content,
                 'color': randomColor(),
                 'author': {
-                    'name': message.user.username,
-                    'icon_url': message.user.avatarURL({ format: 'png', dynamic: true, size: 1024 })
+                    'name': message.author.username,
+                    'icon_url': message.author.avatarURL({ format: 'png', dynamic: true, size: 1024 })
                 },
                 'thumbnail': { 'url': 'https://www.zelda.com/breath-of-the-wild/assets/img/features/sheikah.png' },
                 'footer': {
@@ -36,10 +35,12 @@ async function messageEmbed(message, content) {
 };
 
 module.exports = {
-    data: new SlashCommandBuilder()
-        .setName('inventory')
-        .setDescription('Pour regarder dans la tablette Sheikah ton équipement'),
-    async execute(message, client, language, user, initDateTime) {
+    data: {
+        name: 'inventoryarmors',
+        description: 'a dynamic armors inventory',
+        args: false
+    },
+    async execute(message, client, language, user, args, initDateTime) {
         var dataUsers = [];
 
         fs.exists(filePath, async (e) => {
@@ -58,7 +59,7 @@ module.exports = {
                     .on('end', async () => {
                         let invent = '',
                             userInvent = [];
-                        dataUsers.forEach(element => { if (element.id === Number(message.user.id)) { userInvent.push(element); }; });
+                        dataUsers.forEach(element => { if (element.id === Number(message.author.id)) { userInvent.push(element); }; });
 
                         try {
                             if (userInvent.length != 0) {

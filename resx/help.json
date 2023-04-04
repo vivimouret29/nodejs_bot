@@ -3,8 +3,10 @@
         "littleLine": "Voici la liste des commandes utilisables à ce jour :\n\n\r",
 
         "titleZelda": "🎮 **COMMANDES ZELDA**\r",
-        "inventory": "**!inventory** : pour regarder dans ton inventaire\r",
-        "rollweapons": "**!rollweapons** : permet de lancer une roulette d'items venant du jeu **Breath Of The Wild**\n\n\r",
+        "inventoryArmors": "**!inventoryarmors** : pour regarder dans ton inventaire d'armures\r",
+        "inventoryWeapons": "**!inventoryweapons** : pour regarder dans ton inventaire d'armes\r",
+        "rollWeapons": "**!rollweapons** : permet de lancer une roulette d'armes venant du jeu **Breath Of The Wild**\r",
+        "rollArmors": "**!rollarmors** : permet de lancer une roulette d'armures venant du jeu **Breath Of The Wild**\n\n\r",
 
         "titleCommand": "⛏️ **UTILITAIRES**\r",
         "invit": "**!invit** : t'explique comment rejoindre le salon discord du daftbot\r",
@@ -23,8 +25,8 @@
         "say": "**!say** : permet de faire parler le bot\n\n\r",
 
         "titleRaccourci": "🔗 RACCOURCIS\r",
-        "raccourciZelda": "**rw** (rollweapons)  |  **ra** (rollarmor)  |  **i** (inventory)\r",
-        "raccourciCommand": "**lang** (language)\n\n\r",
+        "raccourciZelda": "**!rw** (rollweapons)  |  **!ra** (rollarmors)  |  **!iw** (inventoryweapons)  |  **!ia** (inventoryarmors)\r",
+        "raccourciCommand": "**!lang** (language)\n\n\r",
 
         "titleAdmin": "⛔ **COMMANDES D'ADMINISTRATEURS**\r",
         "export": "**!export** : permet d'exporter les données agglomérées par le bot sur twitch\r",
@@ -39,8 +41,10 @@
         "littleLine": "Here is a list of the commands that can be used to date :\n\n\r",
 
         "titleZelda": "🎮 **ZELDA CONTROLS**\r",
-        "inventory": "**!inventory** : to look in your inventory\r",
-        "rollweapons": "**!rollweapons** : allows you to launch a roulette of items from the game **Breath Of The Wild**\n\n\r",
+        "inventoryArmors": "**!inventoryarmors** : to look through your armour inventory\r",
+        "inventoryWeapons": "**!inventoryweapons** : to look through your weapons inventory\r",
+        "rollWeapons": "**!rollweapons** : allows you to launch a roulette of weapons from the game **Breath Of The Wild**\r",
+        "rollArmors": "**!rollarmors** : allows you to launch an armour wheel from the game **Breath Of The Wild**\n\n\r",
 
         "titleCommand": "⛏️ **UTILITIES**\r",
         "invit": "**!invit** : explains how to join the daftbot discord room\r",
@@ -59,8 +63,8 @@
         "say": "**!say** : allows the bot to speak\n\n\r",
 
         "titleRaccourci": "🔗 RACCOURCIS\r",
-        "raccourciZelda": "**i** (inventory)  |  **rw** (rollweapons)  |  **ra** (rollarmor)\r",
-        "raccourciCommand": "**lang** (language)\n\n\r",
+        "raccourciZelda": "**!rw** (rollweapons)  |  **!ra** (rollarmors)  |  **!iw** (inventoryweapons)  |  **!ia** (inventoryarmors)\r",
+        "raccourciCommand": "**!lang** (language)\n\n\r",
         
         "titleAdmin": "⛔ **ADMINISTRATOR COMMANDS**\r",
         "export": "**!export** : allows to export the data agglomerated by the bot on twitch\r",
@@ -75,8 +79,10 @@
         "littleLine": "Ось список команд, які можна використовувати на сьогоднішній день :\n\n\r",
 
         "titleZelda": "🎮 **ZELDA КОНТРОЛЬ**\r",
-        "inventory": "**!inventory** : зазирнути у свій інвентар\r",
-        "rollweapons": "**!rollweapons** : дозволяє запустити рулетку предметів з гри **Breath Of The Wild**\n\n\r",
+        "inventoryArmors": "**!inventoryarmors** : переглянути інвентар своєї броні\r",
+        "inventoryWeapons": "**!inventoryweapons** : переглянути свій арсенал зброї\r",
+        "rollWeapons": "**!rollweapons** : дозволяє запускати колесо зброї з гри **Breath Of The Wild**\r",
+        "rollArmors": "**!rollarmors** : дозволяє кидати рулетку обладунків, що надходять з гри **Breath Of The Wild**\n\n\r",
 
         "titleCommand": "⛏️ **КОМУНАЛЬНІ ПОСЛУГИ**\r",
         "invit": "**!invit** : пояснює, як приєднатися до кімнати розбіжностей daftbot\r",
@@ -95,8 +101,8 @@
         "say": "**!say** : дозволяє боту говорити\n\n\r",
 
         "titleRaccourci": "🔗 РАККУРСИС\r",
-        "raccourciZelda": "**rw** (rollweapons)  |  **ra** (rollarmor)  |  **i** (inventory)\r",
-        "raccourciCommand": "**lang** (language)\n\n\r",
+        "raccourciZelda": "**!rw** (rollweapons)  |  **!ra** (rollarmors)  |  **!iw** (inventoryweapons)  |  **!ia** (inventoryarmors)\r",
+        "raccourciCommand": "**!lang** (language)\n\n\r",
 
         "titleAdmin": "⛔ **КОМАНДИ АДМІНІСТРАТОРА**\r",
         "export": "**!export** : дозволяє експортувати дані, агломеровані ботом на twitch\r",

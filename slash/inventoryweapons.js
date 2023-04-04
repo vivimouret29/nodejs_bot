@@ -5,7 +5,7 @@ const { SlashCommandBuilder } = require('discord.js'),
     fs = require('node:fs'),
     csvParse = require('fast-csv');
 
-const filePath = `./data/inventory_user_roll.csv`;
+const filePath = `./data/weap_inventory_user_roll.csv`;
 
 async function messageEmbed(message, content) {
     var messageToSend = await message
@@ -37,8 +37,8 @@ async function messageEmbed(message, content) {
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName('i')
-        .setDescription('Pour regarder dans la tablette Sheikah ton équipement'),
+        .setName('inventoryweapons')
+        .setDescription('Pour regarder dans la tablette Sheikah ton équipement d\'armes'),
     async execute(message, client, language, user, initDateTime) {
         var dataUsers = [];
 
