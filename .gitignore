@@ -7,3 +7,4 @@ node_modules
 /styles/ai/pepe-diffuser.jpg
 /data/user_roll.csv
 /data/weap_inventory_user_roll.csv
+/data/arm_inventory_user_roll.csv
