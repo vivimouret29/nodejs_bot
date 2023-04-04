@@ -251,7 +251,12 @@ module.exports = {
             .on('end', () => {
                 fs.writeFileSync(filePathUser, parse(usersProperty), function (err) {
                     if (err) {
-                        message.channel.send(`${language.errorRoll}`);
+                        message.reply({
+                            'channel_id': message.channel.channel_id,
+                            'content': `${language.errorRoll}`,
+                            'fetchReply': false,
+                            'ephemeral': true
+                        });
                         console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${message.author.username}'s error save ${err}`);
                         throw err;
                     };
