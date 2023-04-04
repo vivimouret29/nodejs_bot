@@ -175,7 +175,7 @@ class DaftBot {
                 message;
 
             while (true) {
-                if (channels[0] == undefined) { break; };
+                if (channels[0] == undefined) { continue; };
 
                 let ax = await axios.get(`http://api.twitch.tv/helix/streams?user_login=` + channels[0].slice(1), params)
                     .catch(err => {
@@ -183,7 +183,7 @@ class DaftBot {
                         console.log(`[${getCurrentDatetime('comm')}] Error GET AXIOS ${err}`);
                     });
 
-                if (ax == undefined) { break; };
+                if (ax == undefined) { continue; };
 
                 if (!checkLive || ax.data.data.length == 0) {
                     gameMemory = '';
