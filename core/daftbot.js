@@ -175,6 +175,8 @@ class DaftBot {
                 message;
 
             while (true) {
+                if (channels[0] == undefined) { break; };
+
                 let ax = await axios.get(`http://api.twitch.tv/helix/streams?user_login=` + channels[0].slice(1), params)
                     .catch(err => {
                         checkLive = false;
