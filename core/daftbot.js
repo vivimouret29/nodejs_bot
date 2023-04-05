@@ -387,6 +387,11 @@ class DaftBot {
                 try {
                     if (message.guild == null && message.channel.name == undefined) { console.log(`[${getCurrentDatetime('comm')}] ${author}'s DM # ${message.content}`); }
                     else { console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author}'s message '${message.content}' deleted`); };
+                    await sendEmbed(message, `**${author}** a écrit ${message.content}`)
+                        .catch(err => {
+                            message.reply({ 'content': language.error, 'ephemeral': true });
+                            console.log(`[${getCurrentDatetime('comm')}] Error sending message SEERROR ${err}`);
+                        });
                     await messageErase(message);
                 } catch (err) {
                     if (message.guild == null && message.channel.name == undefined) { console.log(`[${getCurrentDatetime('comm')}] ${author}'s DM # Can't delete ${author}'s message : ${err}`); }
