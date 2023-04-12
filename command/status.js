@@ -1,7 +1,7 @@
 'use.strict'
 
 const { ActivityType } = require('discord.js'),
-    { prefix, owner } = require('../config.json'),
+    { prefix } = require('../config.json'),
     { sendEmbed } = require('../core/utils.js');
 
 module.exports = {
@@ -11,8 +11,6 @@ module.exports = {
         args: true
     },
     async execute(message, client, language, user, args, initDateTime) {
-        if (!(message.author.id === owner)) { return await sendEmbed(message, language.areYouOwner); };
-
         let typeThings = args[0],
             stOnOff = args[1],
             contenText = args[2],

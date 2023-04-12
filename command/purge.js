@@ -1,7 +1,6 @@
 'use.strict'
 
-const { owner } = require('../config.json'),
-    { sendEmbed, messageErase } = require('../core/utils.js');
+const { sendEmbed, messageErase } = require('../core/utils.js');
 
 module.exports = {
     data: {
@@ -10,14 +9,6 @@ module.exports = {
         args: true
     },
     async execute(message, client, language, user, args, initDateTime) {
-        if (!(message.author.id == owner) || message.guildId == null) {
-            return await sendEmbed(message, language.restricted)
-                .catch(err => {
-                    message.reply({ 'content': language.error, 'ephemeral': true });
-                    console.log(`[${getCurrentDatetime('comm')}] Error sending message SEERROR ${err}`);
-                });
-        };
-
         var amount = parseInt(args[0]);
 
         if (isNaN(amount)) {

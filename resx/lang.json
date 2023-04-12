@@ -58,7 +58,10 @@
         "vote": "Daftbot et Top.gg ne sont aucunement lié et personne ne peut désactiver cette pub\n\nVote pour Daftbot afin de partager ton expérience !",
         "inventError": "Récupération de l'inventaire impossible",
         "inventEmpty": "Tu ne possèdes rien... Fais **!roll** ou j'sais pas",
-        "rollWait": "tu dois encore attendre un ptit moment :"
+        "rollWait": "tu dois encore attendre un ptit moment :",
+        "adminRestricted": "Tu n'es un pas un admin pour tenter cette commande",
+        "adminGuildRestricted": "Tu utilises cette commande admin dans le mauvais salon",
+        "adminCommandRestricted": "Ce n'est pas une commande accordée aux admins"
     },
     "en": {
         "help": "List of orders",
@@ -118,7 +121,10 @@
         "vote": "Daftbot and Top.gg are not related in any way and no one can disable this ad\n\nVote for Daftbot to share your experience !",
         "inventError": "Unable to retrieve inventory",
         "inventEmpty": "You don't own anything... Do **!roll** or I don't know",
-        "rollWait": "you still have to wait a little while :"
+        "rollWait": "you still have to wait a little while :",
+        "adminRestricted": "You are not an admin to attempt this command",
+        "adminGuildRestricted": "You are using this admin command in the wrong room",
+        "adminCommandRestricted": "This is not a command given to admins"
     },
     "uk": {
         "help": "Список замовлень",
@@ -178,6 +184,9 @@
         "vote": "Daftbot і Top.gg ніяк не пов'язані між собою, і ніхто не може відключити цю рекламу\n\nГолосуйте за Daftbot, щоб поділитися своїм досвідом!",
         "inventError": "Відновлення запасів неможливе",
         "inventEmpty": "У тебе нічого немає... Зробіть **!roll** Або я не знаю",
-        "rollWait": "вам доведеться почекати ще трохи :"
+        "rollWait": "вам доведеться почекати ще трохи :",
+        "adminRestricted": "Ви не є адміністратором, щоб спробувати цю команду",
+        "adminGuildRestricted": "Ви використовуєте цю команду адміністратора не в тій кімнаті",
+        "adminCommandRestricted": "Це не команда, дана адміністраторам"
     }
 }

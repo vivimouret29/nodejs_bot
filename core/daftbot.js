@@ -12,9 +12,11 @@ const { Client, Collection, GatewayIntentBits, ActivityType, Events, Partials, R
     { fr, en, uk } = require('../resx/lang.json'),
     { memes } = require('../resx/memes.json'),
     { sendEmbed, messageErase, getCurrentDatetime, randomIntFromInterval } = require('./utils.js'),
+    { Admin } = require('../core/classes/admin.js'),
     { User } = require('../core/classes/user.js');
 
 const filePathUser = `./data/user_roll.csv`;
+const filePathAdmin = `./data/admin.csv`;
 const intents = [
     GatewayIntentBits.Guilds,
     GatewayIntentBits.GuildIntegrations,
@@ -62,6 +64,13 @@ class DaftBot {
         this.dbClient.response = new Collection();
         this.dbClient.slash = new Collection();
         this.commands = [];
+
+        this.ownerCommands = ['export', 'kill', 'reset'];
+
+        this.adminClass = new Admin();
+        this.adminsProperty = [];
+        this.admin;
+        this.adminsCommands = ['guild', 'mute', 'purge', 'status'];
 
         this.userClass = new User();
         this.usersProperty = [];
@@ -145,6 +154,7 @@ class DaftBot {
                 console.log(`[${getCurrentDatetime('comm')}] ${this.dbClient.user.username}\'s logged
 [${getCurrentDatetime('comm')}] ${this.dbClient.user.username} v${packageVersion.version}`);
                 await this.readUserFile();
+                await this.readAdminFile();
             })
             .catch(console.error);
 
@@ -275,6 +285,10 @@ class DaftBot {
                 await this.readUserFile();
             } else { this.user = this.userClass.getUserProperty(interaction.user.id, this.usersProperty); };
 
+            if (this.adminClass.getAdminProperty(interaction.user.id, this.adminsProperty) != undefined) {
+                this.admin = this.adminClass.getAdminProperty(interaction.user.id, this.adminsProperty);
+            } else { this.admin = null; };
+
             var checkCollection;
 
             this.dbClient.slash.has(interaction.commandName) ? checkCollection = this.dbClient.slash.get(interaction.commandName).data.name : checkCollection = false;
@@ -308,6 +322,10 @@ class DaftBot {
                 await this.readUserFile();
             } else { this.user = this.userClass.getUserProperty(message.author.id, this.usersProperty); };
 
+            if (this.adminClass.getAdminProperty(message.author.id, this.adminsProperty) != undefined) {
+                this.admin = this.adminClass.getAdminProperty(message.author.id, this.adminsProperty);
+            } else { this.admin = null; };
+
             var args = message.content.slice(prefix.length).trim().split(/ +/),
                 command = args.shift().toLowerCase(),
                 msg = message.content.toLowerCase(),
@@ -320,6 +338,33 @@ class DaftBot {
             this.dbClient.command.has(command) ? checkCollection = this.dbClient.command.get(command).data.name : checkCollection = false;
 
             if (message.content.startsWith(prefix)) {
+                if (message.author.id != owner) {
+                    if (this.admin == null && this.adminsCommands.includes(command)) return await sendEmbed(message, this.language.adminRestricted)
+                        .catch(err => {
+                            message.reply({ 'content': language.error, 'ephemeral': true });
+                            console.log(`[${getCurrentDatetime('comm')}] Error sending message SEERROR ${err}`);
+                        });
+
+                    if (this.admin.guild != Number(message.guildId)) return await sendEmbed(message, this.language.adminGuildRestricted)
+                        .catch(err => {
+                            message.reply({ 'content': language.error, 'ephemeral': true });
+                            console.log(`[${getCurrentDatetime('comm')}] Error sending message SEERROR ${err}`);
+                        });
+
+                    if (this.admin != null && this.ownerCommands.includes(command)) return await sendEmbed(message, this.language.adminCommandRestricted)
+                        .catch(err => {
+                            message.reply({ 'content': language.error, 'ephemeral': true });
+                            console.log(`[${getCurrentDatetime('comm')}] Error sending message SEERROR ${err}`);
+                        });
+
+                    if ((!(message.author.id === owner) && this.ownerCommands.includes(command))
+                        || (!(message.author.id === owner) && this.adminsCommands.includes(command) && this.admin == null)) return await sendEmbed(message, this.language.restricted)
+                            .catch(err => {
+                                message.reply({ 'content': language.error, 'ephemeral': true });
+                                console.log(`[${getCurrentDatetime('comm')}] Error sending message SEERROR ${err}`);
+                            });
+                };
+
                 switch (command) {
                     case 'lang':
                         await this.setLanguage(this.dbClient, message, args);
@@ -328,11 +373,6 @@ class DaftBot {
                         await this.setLanguage(this.dbClient, message, args);
                         break;
                     case 'mute':
-                        if (!(message.author.id === owner)) return await sendEmbed(message, this.language.restricted)
-                            .catch(err => {
-                                message.reply({ 'content': language.error, 'ephemeral': true });
-                                console.log(`[${getCurrentDatetime('comm')}] Error sending message SEERROR ${err}`);
-                            });
                         await this.setMute(message, args);
                         break;
                     case checkMobbotCollection:
@@ -692,7 +732,6 @@ class DaftBot {
             .on('end', () => {
                 if (this.onFirstStart) {
                     console.log(`[${getCurrentDatetime('comm')}] CSV file successfully processed with ${this.usersProperty.length} users`);
-                    this.onFirstStart = false;
                 };
             });
     };
@@ -728,6 +767,32 @@ class DaftBot {
                     };
                 });
                 await this.readUserFile();
+            });
+    };
+
+    async readAdminFile() {
+        this.adminsProperty = [];
+        await fs.createReadStream(filePathAdmin)
+            .pipe(csvParse.parse({ headers: true, delimiter: ',' }))
+            .on('data', row => {
+                if (row.id != 'id') {
+                    let admin = this.adminClass.setAdminProperty({
+                        'id': Number(row.id),
+                        'username': String(row.username),
+                        'guild': Number(row.guild)
+                    });
+
+                    this.adminsProperty.push({
+                        "key": Number(admin.id),
+                        "value": admin
+                    });
+                };
+            })
+            .on('end', () => {
+                if (this.onFirstStart) {
+                    console.log(`[${getCurrentDatetime('comm')}] CSV file successfully processed with ${this.adminsProperty.length} admins`);
+                    this.onFirstStart = false;
+                };
             });
     };
 };
