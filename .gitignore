@@ -2,9 +2,8 @@ node_modules
 .vscode
 /config.json
 /core/config.json
-/core/oauth.txt
+/core/*.txt
 /core/data/mobbot_analytics.csv
 /styles/ai/pepe-diffuser.jpg
-/data/user_roll.csv
-/data/weap_inventory_user_roll.csv
-/data/arm_inventory_user_roll.csv
+/data/*.csv
+/data/logs/*.log
