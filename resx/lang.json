@@ -59,10 +59,12 @@
         "inventError": "Récupération de l'inventaire impossible",
         "inventEmpty": "Tu ne possèdes rien... Fais **!roll** ou j'sais pas",
         "rollWait": "tu dois encore attendre un ptit moment :",
-        "adminRestricted": "Tu n'es un pas un admin pour tenter cette commande",
+        "adminRestricted": "Tu n'es pas un admin pour tenter cette commande",
         "adminGuildRestricted": "Tu utilises cette commande admin dans le mauvais salon",
         "adminCommandRestricted": "Ce n'est pas une commande accordée aux admins",
-        "csvError": "Erreur lors lecture du utilisateur .csv"
+        "csvError": "Erreur lors lecture du utilisateur .csv",
+        "adminCreated": "Administrateur créé avec succès",
+        "adminExisting": "Cet utilisateur est déjà admin de ce salon"
     },
     "en": {
         "help": "List of orders",
@@ -126,7 +128,9 @@
         "adminRestricted": "You are not an admin to attempt this command",
         "adminGuildRestricted": "You are using this admin command in the wrong room",
         "adminCommandRestricted": "This is not a command given to admins",
-        "csvError": "Error reading .csv user"
+        "csvError": "Error reading .csv user",
+        "adminCreated": "Administrator successfully created",
+        "adminExisting": "This user is already an admin of this exhibition"
     },
     "uk": {
         "help": "Список замовлень",
@@ -190,6 +194,8 @@
         "adminRestricted": "Ви не є адміністратором, щоб спробувати цю команду",
         "adminGuildRestricted": "Ви використовуєте цю команду адміністратора не в тій кімнаті",
         "adminCommandRestricted": "Це не команда, дана адміністраторам",
-        "csvError": "Помилка читання .csv користувача"
+        "csvError": "Помилка читання .csv користувача",
+        "adminCreated": "Адміністратора успішно створено",
+        "adminExisting": "Цей користувач вже є адміністратором цієї виставки"
     }
 }

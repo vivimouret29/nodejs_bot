@@ -1,6 +1,6 @@
 'use.strict'
 
-const { Client, Collection, GatewayIntentBits, ActivityType, Events, Partials, REST, Routes } = require('discord.js'),
+const { Client, Collection, GatewayIntentBits, PermissionsBitField, ActivityType, Events, Partials, REST, Routes } = require('discord.js'),
     axios = require('axios'),
     fs = require('node:fs'),
     { parse } = require('json2csv'),
@@ -70,7 +70,7 @@ class DaftBot {
         this.adminClass = new Admin();
         this.adminsProperty = [];
         this.admin;
-        this.adminsCommands = ['guild', 'mute', 'purge', 'status'];
+        this.adminsCommands = ['guild', 'mute', 'purge', 'status', 'removeadmin'];
 
         this.userClass = new User();
         this.usersProperty = [];
@@ -339,19 +339,21 @@ class DaftBot {
 
             if (message.content.startsWith(prefix)) {
                 if (message.author.id != owner) {
-                    if (this.admin == null && this.adminsCommands.includes(command)) return await sendEmbed(message, this.language.adminRestricted)
-                        .catch(err => {
-                            message.reply({ 'content': language.error, 'ephemeral': true });
-                            console.log(`[${getCurrentDatetime('comm')}] Error sending message SEERROR ${err}`);
-                        });
-
-                    if (this.admin.guild != Number(message.guildId)) return await sendEmbed(message, this.language.adminGuildRestricted)
-                        .catch(err => {
-                            message.reply({ 'content': language.error, 'ephemeral': true });
-                            console.log(`[${getCurrentDatetime('comm')}] Error sending message SEERROR ${err}`);
-                        });
-
-                    if (this.admin != null && this.ownerCommands.includes(command)) return await sendEmbed(message, this.language.adminCommandRestricted)
+                    if (this.admin == null && this.adminsCommands.includes(command)) {
+                        return await sendEmbed(message, this.language.adminRestricted)
+                            .catch(err => {
+                                message.reply({ 'content': language.error, 'ephemeral': true });
+                                console.log(`[${getCurrentDatetime('comm')}] Error sending message SEERROR ${err}`);
+                            });
+                    } else if (this.admin == null && !(this.adminsCommands.includes(command))) {
+                        // do nothing, you can pass
+                    } else if (this.admin.guild != Number(message.guildId)) {
+                        return await sendEmbed(message, this.language.adminGuildRestricted)
+                            .catch(err => {
+                                message.reply({ 'content': language.error, 'ephemeral': true });
+                                console.log(`[${getCurrentDatetime('comm')}] Error sending message SEERROR ${err}`);
+                            });
+                    } else if (this.admin != null && this.ownerCommands.includes(command)) return await sendEmbed(message, this.language.adminCommandRestricted)
                         .catch(err => {
                             message.reply({ 'content': language.error, 'ephemeral': true });
                             console.log(`[${getCurrentDatetime('comm')}] Error sending message SEERROR ${err}`);
@@ -374,6 +376,16 @@ class DaftBot {
                         break;
                     case 'mute':
                         await this.setMute(message, args);
+                        break;
+                    case 'setadmin':
+                        await this.setAdmin(message, args);
+                        if (message.guild == null && message.channel.name == undefined) { console.log(`[${getCurrentDatetime('comm')}] ${author}'s DM # ${msg}`); }
+                        else { console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`); };
+                        break;
+                    case 'removeadmin':
+                        await this.removeAdmin(message, args);
+                        if (message.guild == null && message.channel.name == undefined) { console.log(`[${getCurrentDatetime('comm')}] ${author}'s DM # ${msg}`); }
+                        else { console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`); };
                         break;
                     case checkMobbotCollection:
                         if (!(message.author.id === owner)) return await sendEmbed(message, this.language.restricted)
@@ -571,6 +583,43 @@ class DaftBot {
         };
     };
 
+    async setAdmin(message, args) {
+        let canSet = false;
+        let userRole = message.guild.members.cache.get(message.author.id).roles.cache.map(role => role);
+
+        userRole.forEach(async element => {
+            if (element.permissions.has(PermissionsBitField.Flags.Administrator)) { canSet = true; };
+        });
+
+        if (canSet) {
+            if (this.adminClass.getAdminProperty(message.author.id, this.adminsProperty) == undefined) {
+                let thisUser = message.guild.members.cache.get(args[0].slice(2, -1));
+                this.writeAdminFile(thisUser);
+                await sendEmbed(message, this.language.adminCreated)
+                    .catch(err => {
+                        message.reply({ 'content': language.error, 'ephemeral': true });
+                        console.log(`[${getCurrentDatetime('comm')}] Error sending message SEERROR ${err}`);
+                    });
+            } else {
+                await sendEmbed(message, this.language.adminExisting)
+                    .catch(err => {
+                        message.reply({ 'content': language.error, 'ephemeral': true });
+                        console.log(`[${getCurrentDatetime('comm')}] Error sending message SEERROR ${err}`);
+                    });
+            };
+        } else {
+            await sendEmbed(message, this.language.adminRestricted)
+                .catch(err => {
+                    message.reply({ 'content': language.error, 'ephemeral': true });
+                    console.log(`[${getCurrentDatetime('comm')}] Error sending message SEERROR ${err}`);
+                });
+        }
+    };
+
+    async removeAdmin(message, args) {
+        // TODO remove here this.admin (it's the good one trust the old me)
+    };
+
     async setLanguage(client, message, args) {
         let msg = message.content.toLowerCase(),
             author = message.author.username;
@@ -761,7 +810,7 @@ class DaftBot {
             .on('end', async () => {
                 fs.writeFileSync(filePathUser, parse(userToSave), function (err) {
                     if (err) {
-                        message.channel.send(`${language.errorRoll}`);
+                        message.channel.send(`${language.csvError}`);
                         console.log(`[${getCurrentDatetime('comm')}] # ${user.username} not added ${err}`);
                         throw err;
                     };
@@ -793,6 +842,36 @@ class DaftBot {
                     console.log(`[${getCurrentDatetime('comm')}] CSV file successfully processed with ${this.adminsProperty.length} admins`);
                     this.onFirstStart = false;
                 };
+            });
+    };
+
+    async writeAdminFile(admin) {
+        let adminToSave = [{
+            'id': Number(admin.id),
+            'username': String(admin.user.username),
+            'guild': Number(admin.guild.id)
+        }];
+
+        await fs.createReadStream(filePathAdmin)
+            .pipe(csvParse.parse({ headers: true, delimiter: ',' }))
+            .on('data', row => {
+                if (row.id != 'id') {
+                    adminToSave.push({
+                        'id': Number(row.id),
+                        'username': String(row.username),
+                        'guild': Number(row.guild)
+                    });
+                };
+            })
+            .on('end', async () => {
+                fs.writeFileSync(filePathAdmin, parse(adminToSave), function (err) {
+                    if (err) {
+                        message.channel.send(`${language.csvError}`);
+                        console.log(`[${getCurrentDatetime('comm')}] # ${admin.username} not added ${err}`);
+                        throw err;
+                    };
+                });
+                await this.readAdminFile();
             });
     };
 };
