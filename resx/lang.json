@@ -61,7 +61,8 @@
         "rollWait": "tu dois encore attendre un ptit moment :",
         "adminRestricted": "Tu n'es un pas un admin pour tenter cette commande",
         "adminGuildRestricted": "Tu utilises cette commande admin dans le mauvais salon",
-        "adminCommandRestricted": "Ce n'est pas une commande accordée aux admins"
+        "adminCommandRestricted": "Ce n'est pas une commande accordée aux admins",
+        "csvError": "Erreur lors lecture du utilisateur .csv"
     },
     "en": {
         "help": "List of orders",
@@ -124,7 +125,8 @@
         "rollWait": "you still have to wait a little while :",
         "adminRestricted": "You are not an admin to attempt this command",
         "adminGuildRestricted": "You are using this admin command in the wrong room",
-        "adminCommandRestricted": "This is not a command given to admins"
+        "adminCommandRestricted": "This is not a command given to admins",
+        "csvError": "Error reading .csv user"
     },
     "uk": {
         "help": "Список замовлень",
@@ -187,6 +189,7 @@
         "rollWait": "вам доведеться почекати ще трохи :",
         "adminRestricted": "Ви не є адміністратором, щоб спробувати цю команду",
         "adminGuildRestricted": "Ви використовуєте цю команду адміністратора не в тій кімнаті",
-        "adminCommandRestricted": "Це не команда, дана адміністраторам"
+        "adminCommandRestricted": "Це не команда, дана адміністраторам",
+        "csvError": "Помилка читання .csv користувача"
     }
 }
