@@ -36,7 +36,7 @@
         "purge": "**!purge** : permet de supprimer un nombre de messages données\r",
         "reset": "**!reset** : redémarre le bot\r",
         "removeadmin": "**!removeadmin** : supprime un administrateur de la guilde actuelle\r",
-        "setadmin": "**!removeadmin** : ajoute un administrateur dans la guilde actuelle\r",
+        "setadmin": "**!setadmin** : ajoute un administrateur dans la guilde actuelle\r",
         "exsetadmin": "Il vous faut les droits administrateurs de la guilde pour utiliser cette commande et y ajouter des admins\r",
         "status": "**!status** : mets à jour le status affiché sur le bot\n \n\r"
     },
@@ -77,7 +77,7 @@
         "purge": "**!purge** : allows you to delete a given number of messages\r",
         "reset": "**!reset** : restart the bot\r",
         "removeadmin": "**!removeadmin** : removes an administrator from the current guild\r",
-        "setadmin": "**!removeadmin** : adds an administrator to the current guild\r",
+        "setadmin": "**!setadmin** : adds an administrator to the current guild\r",
         "exsetadmin": "You need guild admin rights to use this command and add admins to it\r",
         "status": "**!status** : update the status displayed on the bot\n \n\r"
     },
@@ -118,7 +118,7 @@
         "purge": "**!purge** : дозволяє видалити задану кількість повідомлень\r",
         "reset": "**!reset** : перезапустити бота\r",
         "removeadmin": "**!removeadmin** : видаляє адміністратора з поточної гільдії\r",
-        "setadmin": "**!removeadmin** : додає адміністратора до поточної гільдії\r",
+        "setadmin": "**!setadmin** : додає адміністратора до поточної гільдії\r",
         "exsetadmin": "Вам потрібні права адміністратора гільдії, щоб використовувати цю команду і додавати до неї адміністраторів\r",
         "status": "**!status** : оновити статус, що відображається в боті\n \n\r"
     }
