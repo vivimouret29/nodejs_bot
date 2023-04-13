@@ -406,7 +406,8 @@ class DaftBot {
                             .get(command)
                             .execute(message, this.dbClient, this.language, this.user, args, this.initDateTime);
                         await new Promise(resolve => setTimeout(resolve, 2 * 1000));
-                        if (checkCollection == 'rw' || checkCollection == 'rollweapons') { await this.readUserFile(); };
+                        if (checkCollection == 'rw' || checkCollection == 'rollweapons'
+                            || checkCollection == 'ra' || checkCollection == 'rollarmors') { await this.readUserFile(); };
                         break;
                 };
             };
