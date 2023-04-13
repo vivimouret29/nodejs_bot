@@ -584,17 +584,17 @@ class DaftBot {
     };
 
     async setAdmin(message, args) {
-        let canSet = false;
-        let userRole = message.guild.members.cache.get(message.author.id).roles.cache.map(role => role);
+        let canSet = false,
+            userRole = message.guild.members.cache.get(message.author.id).roles.cache.map(role => role),
+            user = message.guild.members.cache.get(args[0].slice(2, -1));
 
         userRole.forEach(async element => {
             if (element.permissions.has(PermissionsBitField.Flags.Administrator)) { canSet = true; };
         });
 
         if (canSet) {
-            if (this.adminClass.getAdminProperty(message.author.id, this.adminsProperty) == undefined) {
-                let thisUser = message.guild.members.cache.get(args[0].slice(2, -1));
-                this.writeAdminFile(thisUser);
+            if (this.adminClass.getAdminProperty(user.id, this.adminsProperty) == undefined) {
+                this.writeAdminFile(user, false);
                 await sendEmbed(message, this.language.adminCreated)
                     .catch(err => {
                         message.reply({ 'content': language.error, 'ephemeral': true });
@@ -613,11 +613,26 @@ class DaftBot {
                     message.reply({ 'content': language.error, 'ephemeral': true });
                     console.log(`[${getCurrentDatetime('comm')}] Error sending message SEERROR ${err}`);
                 });
-        }
+        };
     };
 
     async removeAdmin(message, args) {
-        // TODO remove here this.admin (it's the good one trust the old me)
+        let user = message.guild.members.cache.get(args[0].slice(2, -1));
+
+        if (this.adminClass.getAdminProperty(user.id, this.adminsProperty) == undefined) {
+            await sendEmbed(message, this.language.adminNotExisting)
+                .catch(err => {
+                    message.reply({ 'content': language.error, 'ephemeral': true });
+                    console.log(`[${getCurrentDatetime('comm')}] Error sending message SEERROR ${err}`);
+                });
+        } else {
+            this.writeAdminFile(user, true);
+            await sendEmbed(message, this.language.adminDeleted)
+                .catch(err => {
+                    message.reply({ 'content': language.error, 'ephemeral': true });
+                    console.log(`[${getCurrentDatetime('comm')}] Error sending message SEERROR ${err}`);
+                });
+        };
     };
 
     async setLanguage(client, message, args) {
@@ -845,22 +860,43 @@ class DaftBot {
             });
     };
 
-    async writeAdminFile(admin) {
-        let adminToSave = [{
-            'id': Number(admin.id),
-            'username': String(admin.user.username),
-            'guild': Number(admin.guild.id)
-        }];
+    async writeAdminFile(admin, addorremove) {
+        let adminToSave = [];
+
+        switch (addorremove) {
+            case false:
+                adminToSave = [{
+                    'id': Number(admin.id),
+                    'username': String(admin.user.username),
+                    'guild': Number(admin.guild.id)
+                }];
+                break;
+            case true:
+                adminToSave = [];
+                break;
+        };
 
         await fs.createReadStream(filePathAdmin)
             .pipe(csvParse.parse({ headers: true, delimiter: ',' }))
             .on('data', row => {
                 if (row.id != 'id') {
-                    adminToSave.push({
-                        'id': Number(row.id),
-                        'username': String(row.username),
-                        'guild': Number(row.guild)
-                    });
+                    switch (addorremove) {
+                        case false:
+                            adminToSave.push({
+                                'id': Number(row.id),
+                                'username': String(row.username),
+                                'guild': Number(row.guild)
+                            });
+                            break;
+                        case true:
+                            if (Number(admin.id) != Number(row.id)) {
+                                adminToSave.push({
+                                    'id': Number(row.id),
+                                    'username': String(row.username),
+                                    'guild': Number(row.guild)
+                                });
+                            };
+                    };
                 };
             })
             .on('end', async () => {

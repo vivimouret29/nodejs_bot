@@ -64,7 +64,9 @@
         "adminCommandRestricted": "Ce n'est pas une commande accordée aux admins",
         "csvError": "Erreur lors lecture du utilisateur .csv",
         "adminCreated": "Administrateur créé avec succès",
-        "adminExisting": "Cet utilisateur est déjà admin de ce salon"
+        "adminExisting": "Cet utilisateur est déjà admin de ce salon",
+        "adminDeleted": "Administrateur supprimé avec succès",
+        "adminNotExisting": "Cet utilisateur n'est pas admin de ce salon, vérifie ta commande"
     },
     "en": {
         "help": "List of orders",
@@ -130,7 +132,9 @@
         "adminCommandRestricted": "This is not a command given to admins",
         "csvError": "Error reading .csv user",
         "adminCreated": "Administrator successfully created",
-        "adminExisting": "This user is already an admin of this exhibition"
+        "adminExisting": "This user is already an admin of this exhibition",
+        "adminDeleted": "Administrator successfully deleted",
+        "adminNotExisting": "This user is not an admin of this guild, check your order"
     },
     "uk": {
         "help": "Список замовлень",
@@ -196,6 +200,8 @@
         "adminCommandRestricted": "Це не команда, дана адміністраторам",
         "csvError": "Помилка читання .csv користувача",
         "adminCreated": "Адміністратора успішно створено",
-        "adminExisting": "Цей користувач вже є адміністратором цієї виставки"
+        "adminExisting": "Цей користувач вже є адміністратором цієї виставки",
+        "adminDeleted": "Адміністратора успішно видалено",
+        "adminNotExisting": "Цей користувач не є адміністратором цього шоу, перевірте своє замовлення"
     }
 }
