@@ -19,7 +19,7 @@ module.exports = {
         if (!user.canroll) {
             return message.reply({
                 'channel_id': message.channel.channel_id,
-                'content': `${message.user.username}: ${language.rollWait} **${String(new Date(Number(user.lastroll) - Date.now())).slice(16, -43)}**`,
+                'content': `${message.user.username}: ${language.rollWait} **${String(new Date(Number(user.lastroll) - Date.now())).slice(16, -38)}**`,
                 'fetchReply': false,
                 'ephemeral': true
             });

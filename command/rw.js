@@ -19,7 +19,7 @@ module.exports = {
     async execute(message, client, language, user, args, initDateTime) {
         if (!user.canroll) {
             return message.channel.send(
-                `${message.author.username}: ${language.rollWait} **${String(new Date(Number(user.lastroll) - Date.now())).slice(16, -43)}**`
+                `${message.author.username}: ${language.rollWait} **${String(new Date(Number(user.lastroll) - Date.now())).slice(16, -38)}**`
             );
         };
 
