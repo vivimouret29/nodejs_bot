@@ -1,7 +1,7 @@
 'use.strict'
 
 const { emojis: dctmj } = require('../resx/emojis.json'),
-    { sendEmbed, messageErase, getCurrentDatetime, randomColor } = require('../core/utils.js');
+    { sendEmbed, getCurrentDatetime, randomColor } = require('../core/utils.js');
 
 module.exports = {
     data: {
@@ -80,7 +80,5 @@ module.exports = {
         message
             .reply(`${wt}${ctm[postSurvey]}`)
             .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error command poll result ${err}`); });
-
-        await messageErase(message);
     }
 };
