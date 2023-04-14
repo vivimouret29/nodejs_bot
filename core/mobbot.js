@@ -320,7 +320,7 @@ class MobBot {
             status: 'online'
         });
 
-        console.log(`[${getCurrentDatetime('comm')}] ${channelTwitch}`);
+        console.log(`[${getCurrentDatetime('comm')}] LIVETWT ${axios.data.data[0].game_name} | ${axios.data.data[0].title} / ${channelTwitch}`);
     };
 
     async onVideoPublish(message, client, language) {
@@ -378,7 +378,7 @@ class MobBot {
                 .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error message videoNotif() ${err}`); });
         };
 
-        console.log(`[${getCurrentDatetime('comm')}] ${channelYoutube}`);
+        console.log(`[${getCurrentDatetime('comm')}] YTBVIDEO ${title} / ${channelYoutube}`);
     };
 
     async onLastVideo() {
