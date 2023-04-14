@@ -440,11 +440,7 @@ class DaftBot {
                 try {
                     if (message.guild == null && message.channel.name == undefined) { console.log(`[${getCurrentDatetime('comm')}] ${author}'s DM # ${message.content}`); }
                     else { console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author}'s message '${message.content}' deleted`); };
-                    await sendEmbed(message, `**${author}** a écrit ${message.content}`)
-                        .catch(err => {
-                            message.reply({ 'content': language.error, 'ephemeral': true });
-                            console.log(`[${getCurrentDatetime('comm')}] Error sending message SEERROR ${err}`);
-                        });
+                    message.channel.send({ 'channel_id': message.channel.channel_id, 'content': `**${author}** a écrit ${message.content}`, 'tts': false });
                     await messageErase(message);
                 } catch (err) {
                     if (message.guild == null && message.channel.name == undefined) { console.log(`[${getCurrentDatetime('comm')}] ${author}'s DM # Can't delete ${author}'s message : ${err}`); }
@@ -454,7 +450,7 @@ class DaftBot {
 
             for (let word in msgSplit) {
                 if (this.dbClient.response.has(msgSplit[word])) {
-                    if (Math.random() > .15) return;
+                    if (Math.random() > .05) return;
                     try {
                         this.dbClient.response
                             .get(msgSplit[word])
