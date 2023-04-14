@@ -238,7 +238,7 @@ class DaftBot {
 
     async onListenGuildNewMember() {
         this.dbClient.on(Events.GuildMemberAdd, async (guild) => {
-            if (this.dbClient.user.id == this.avoidBot[1]) return;
+            if (this.dbClient.user.id == this.avoidBot[1] || guild.user.bot) return;
             console.log(`[${getCurrentDatetime('comm')}] New member \'${guild.user.username}\' join server : ${guild.guild.name}`);
 
             this.dbClient.channels.cache
