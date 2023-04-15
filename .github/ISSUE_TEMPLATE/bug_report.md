@@ -1,7 +1,7 @@
 ---
 name: Bug report
 about: Créer un rapport pour nous aider à nous améliorer
-title: ''
+title: Explique en quelques mots (EN ANGLAIS)
 labels: bug
 assignees: ''
 
