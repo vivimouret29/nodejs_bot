@@ -229,16 +229,12 @@ class MobBot {
                 message
                     .react(emoji)
                     .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error react ${err}`); });
-                if (message.guild == null && message.channel.name == undefined) { console.log(`[${getCurrentDatetime('comm')}] ${message.author.username}'s DM # ${message.content.toLowerCase()}`); }
-                else { console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${message.author.username} : ${message.content.toLowerCase()}`); };
                 throw err;
             } else {
                 let emoji = client.emojis.cache.find(emoji => emoji.name === 'linkbadass');
                 message
                     .react(emoji)
                     .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error react ${err}`); });
-                if (message.guild == null && message.channel.name == undefined) { console.log(`[${getCurrentDatetime('comm')}] ${message.author.username}'s DM # ${message.content.toLowerCase()}`); }
-                else { console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${message.author.username} : ${message.content.toLowerCase()}`); };
             };
         });
 
