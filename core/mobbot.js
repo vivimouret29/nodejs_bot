@@ -254,7 +254,7 @@ class MobBot {
         };
 
         let guidDot = gD,
-            channelTwitch = ['twitch', '🎦-fox-stream-🎦', 'twitch-support-🎥'],
+            channelTwitch = ['🟣twitch', '🎦-fox-stream-🎦', 'twitch-support-🎥'],
             guid = '',
             dot = '';
 
@@ -327,7 +327,7 @@ class MobBot {
         let fe = await fetch(`https://www.youtube.com/feeds/videos.xml?channel_id=UCreItrEewfO6IPZYPu4C7pA`)
             .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error GET AXIOS ${err}`); }),
             fetched = await fe.text(),
-            channelYoutube = ['youtube'],
+            channelYoutube = ['🔴youtube'],
             video = [],
             urI,
             title,
