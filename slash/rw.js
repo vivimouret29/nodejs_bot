@@ -220,7 +220,7 @@ module.exports = {
             .pipe(csvParse.parse({ headers: true, delimiter: ',' }))
             .on('data', row => {
                 if (row.id != 'id' &&
-                    Number(row.id) == Number(message.author.id)) {
+                    Number(row.id) == Number(message.user.id)) {
                     if ((Number(row.roll) + 1) % 3 == 0) {
                         usersProperty.push({
                             'id': Number(row.id),
@@ -257,7 +257,7 @@ module.exports = {
                             'fetchReply': false,
                             'ephemeral': true
                         });
-                        console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${message.author.username}'s error save ${err}`);
+                        console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${message.user.username}'s error save ${err}`);
                         throw err;
                     };
                 });
