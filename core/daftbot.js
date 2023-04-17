@@ -175,6 +175,7 @@ class DaftBot {
             console.log(`[${getCurrentDatetime('comm')}] ${this.dbClient.user.username} connect on irc-ws.chat.twitch.tv:443`);
 
             await new Promise(resolve => setTimeout(resolve, 5 * 1000));
+            this.onFirstStart = false;
             if (this.dbClient.user.id == this.avoidBot[1]) return;
 
             let checkLive = true,
@@ -852,7 +853,6 @@ class DaftBot {
             .on('end', () => {
                 if (this.onFirstStart) {
                     console.log(`[${getCurrentDatetime('comm')}] CSV file successfully processed with ${this.adminsProperty.length} admins`);
-                    this.onFirstStart = false;
                 };
             });
     };
