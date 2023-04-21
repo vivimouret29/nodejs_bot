@@ -66,7 +66,12 @@
         "adminCreated": "Administrateur créé avec succès",
         "adminExisting": "Cet utilisateur est déjà admin de ce salon",
         "adminDeleted": "Administrateur supprimé avec succès",
-        "adminNotExisting": "Cet utilisateur n'est pas admin de ce salon, vérifie ta commande"
+        "adminNotExisting": "Cet utilisateur n'est pas admin de ce salon, vérifie ta commande",
+        "newGuildMsg": "Message d'acceuil aléatoire lorsque quelqu'un rejoint le serveur",
+        "alrdGuildMsg": "J'envoie déjà des messages de bienvenue dans ce serveur",
+        "nomoreGuildMsg": "Je n'enverrai plus de message d'acceuil dans ce serveur",
+        "newGuildMsgError": "Aucun message de bienvenue est envoyé dans ce serveur",
+        "needGuild": "Tu dois être administrateur dans un serveur pour utiliser cette commande"
     },
     "en": {
         "help": "List of orders",
@@ -134,7 +139,12 @@
         "adminCreated": "Administrator successfully created",
         "adminExisting": "This user is already an admin of this exhibition",
         "adminDeleted": "Administrator successfully deleted",
-        "adminNotExisting": "This user is not an admin of this guild, check your order"
+        "adminNotExisting": "This user is not an admin of this guild, check your order",
+        "newGuildMsg": "Random welcome message when someone joins the server",
+        "alrdGuildMsg": "I already send welcome messages to this server",
+        "nomoreGuildMsg": "I will no longer send a welcome message to this server",
+        "newGuildMsgError": "No welcome message is sent in this server",
+        "needGuild": "You have to be an administrator in a server to use this command"
     },
     "uk": {
         "help": "Список замовлень",
@@ -202,6 +212,11 @@
         "adminCreated": "Адміністратора успішно створено",
         "adminExisting": "Цей користувач вже є адміністратором цієї виставки",
         "adminDeleted": "Адміністратора успішно видалено",
-        "adminNotExisting": "Цей користувач не є адміністратором цього шоу, перевірте своє замовлення"
+        "adminNotExisting": "Цей користувач не є адміністратором цього шоу, перевірте своє замовлення",
+        "newGuildMsg": "Випадкове привітальне повідомлення, коли хтось приєднується до сервера",
+        "alrdGuildMsg": "Я вже надсилаю привітальні повідомлення на цей сервер",
+        "nomoreGuildMsg": "Я більше не надсилатиму привітальне повідомлення на цей сервер",
+        "newGuildMsgError": "На цьому сервері не надсилається привітальне повідомлення",
+        "needGuild": "Ви повинні бути адміністратором на сервері, щоб використовувати цю команду"
     }
 }

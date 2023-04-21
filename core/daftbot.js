@@ -70,7 +70,7 @@ class DaftBot {
         this.adminClass = new Admin();
         this.adminsProperty = [];
         this.admin;
-        this.adminsCommands = ['guild', 'mute', 'purge', 'status', 'removeadmin'];
+        this.adminsCommands = ['guild', 'mute', 'purge', 'status', 'removeadmin', 'messageguild', 'mgg'];
 
         this.userClass = new User();
         this.usersProperty = [];
@@ -86,6 +86,8 @@ class DaftBot {
 
         this.avoidBot = ['757970907992948826', '758393470024155186', '758319298325905428'];
         this.userToCheck = ['491907126701064193'];
+
+        this.welcomeMessage = [948894919878123570];
 
         this.onFirstStart = true;
     };
@@ -239,7 +241,7 @@ class DaftBot {
 
     async onListenGuildNewMember() {
         this.dbClient.on(Events.GuildMemberAdd, async (guild) => {
-            if (this.dbClient.user.id == this.avoidBot[1] || guild.user.bot) return;
+            if (this.dbClient.user.id == this.avoidBot[1] || guild.user.bot || !this.welcomeMessage.includes(Number(guild.id))) return;
             console.log(`[${getCurrentDatetime('comm')}] New member \'${guild.user.username}\' join server : ${guild.guild.name}`);
 
             this.dbClient.channels.cache
@@ -369,6 +371,22 @@ class DaftBot {
                 };
 
                 switch (command) {
+                    case 'messageguild':
+                        if (message.guild == null || message.guild.id == undefined) {
+                            await sendEmbed(message, this.language.needGuild)
+                                .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error sending message SEERROR ${err}`); });
+                        };
+                        await this.newMessageGuild(message, args);
+                        console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
+                        break;
+                    case 'mgg':
+                        if (message.guild == null || message.guild.id == undefined) {
+                            await sendEmbed(message, this.language.needGuild)
+                                .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error sending message SEERROR ${err}`); });
+                        };
+                        await this.newMessageGuild(message, args);
+                        console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
+                        break;
                     case 'lang':
                         await this.setLanguage(this.dbClient, message, args);
                         break;
@@ -630,6 +648,36 @@ class DaftBot {
                     message.reply({ 'content': language.error, 'ephemeral': true });
                     console.log(`[${getCurrentDatetime('comm')}] Error sending message SEERROR ${err}`);
                 });
+        };
+    };
+
+    async newMessageGuild(message, args) {
+        if (args == undefined) {
+            await sendEmbed(message, this.language.error)
+                .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error sending message SEERROR ${err}`); });
+        };
+
+        switch (args[0]) {
+            case 'on':
+                if (this.welcomeMessage.includes(Number(message.guild.id))) {
+                    await sendEmbed(message, this.language.alrdGuildMsg)
+                        .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error sending message SEERROR ${err}`); });
+                    break;
+                };
+                this.welcomeMessage.push(Number(message.guild.id));
+                await sendEmbed(message, this.language.newGuildMsg)
+                    .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error sending message SEERROR ${err}`); });
+                break;
+            case 'off':
+                if (!this.welcomeMessage.includes(Number(message.guild.id))) {
+                    await sendEmbed(message, this.language.newGuildMsgError)
+                        .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error sending message SEERROR ${err}`); });
+                    break;
+                };
+                this.welcomeMessage.pop(Number(message.guild.id));
+                await sendEmbed(message, this.language.nomoreGuildMsg)
+                    .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error sending message SEERROR ${err}`); });
+                break;
         };
     };
 

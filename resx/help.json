@@ -26,12 +26,14 @@
 
         "titleRaccourci": "🔗 RACCOURCIS\r",
         "raccourciZelda": "**!rw** (rollweapons)  |  **!ra** (rollarmors)  |  **!iw** (inventoryweapons)  |  **!ia** (inventoryarmors)\r",
-        "raccourciCommand": "**!lang** (language)\n\n\r",
+        "raccourciCommand": "**!lang** (language)\r",
+        "raccourciadmin": "**!mgg** [on | **off**] (messageguild)\n\n\r",
 
         "titleAdmin": "⛔ **COMMANDES D'ADMINISTRATEURS**\r",
         "export": "**!export** : permet d'exporter les données agglomérées par le bot sur twitch\r",
         "guild": "**!guild** : renvoie la liste de serveurs où le bot est\r",
         "kill": "**!kill** : tue le bot\r",
+        "messageGuild": "**!messageguild** [on | **off**] : permet d'envoyer un message d'acceuil dans le salon de bienvenue aux noueavux membres du serveur\r",
         "mute": "**!mute** [on | **off**] : permet de couper ou de remettre les répliques du bot\r",
         "purge": "**!purge** : permet de supprimer un nombre de messages données\r",
         "reset": "**!reset** : redémarre le bot\r",
@@ -67,12 +69,14 @@
 
         "titleRaccourci": "🔗 RACCOURCIS\r",
         "raccourciZelda": "**!rw** (rollweapons)  |  **!ra** (rollarmors)  |  **!iw** (inventoryweapons)  |  **!ia** (inventoryarmors)\r",
-        "raccourciCommand": "**!lang** (language)\n\n\r",
+        "raccourciCommand": "**!lang** (language)\r",
+        "raccourciadmin": "**!mgg** [on | **off**] (messageguild)\n\n\r",
         
         "titleAdmin": "⛔ **ADMINISTRATOR COMMANDS**\r",
         "export": "**!export** : allows to export the data agglomerated by the bot on twitch\r",
         "guild": "**!guild** : returns the list of servers where the bot is\r",
         "kill": "**!kill** : kill the bot\r",
+        "messageGuild": "**!messageguild** [on | **off**] : allows you to send a welcome message to new server members in the welcome room\r",
         "mute": "**!mute** [on | **off**] : allows to cut or put back the replicas of the bot\r",
         "purge": "**!purge** : allows you to delete a given number of messages\r",
         "reset": "**!reset** : restart the bot\r",
@@ -108,12 +112,14 @@
 
         "titleRaccourci": "🔗 РАККУРСИС\r",
         "raccourciZelda": "**!rw** (rollweapons)  |  **!ra** (rollarmors)  |  **!iw** (inventoryweapons)  |  **!ia** (inventoryarmors)\r",
-        "raccourciCommand": "**!lang** (language)\n\n\r",
+        "raccourciCommand": "**!lang** (language)\r",
+        "raccourciadmin": "**!mgg** [on | **off**] (messageguild)\n\n\r",
 
         "titleAdmin": "⛔ **КОМАНДИ АДМІНІСТРАТОРА**\r",
         "export": "**!export** : дозволяє експортувати дані, агломеровані ботом на twitch\r",
         "guild": "**!guild** : повертає список серверів, на яких знаходиться бот\r",
         "kill": "**!kill** : вбити бота\r",
+        "messageGuild": "**!messageguild** [on | **off**] : дозволяє надсилати вітальне повідомлення новим користувачам сервера у вітальній кімнаті\r",
         "mute": "**!mute** [on | **off**] : дозволяє вирізати або повернути назад репліки бота\r",
         "purge": "**!purge** : дозволяє видалити задану кількість повідомлень\r",
         "reset": "**!reset** : перезапустити бота\r",
