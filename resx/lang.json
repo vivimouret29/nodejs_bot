@@ -71,7 +71,8 @@
         "alrdGuildMsg": "J'envoie déjà des messages de bienvenue dans ce serveur",
         "nomoreGuildMsg": "Je n'enverrai plus de message d'acceuil dans ce serveur",
         "newGuildMsgError": "Aucun message de bienvenue est envoyé dans ce serveur",
-        "needGuild": "Tu dois être administrateur dans un serveur pour utiliser cette commande"
+        "needGuild": "Tu dois être administrateur dans un serveur pour utiliser cette commande",
+        "adminList": "Liste des admins"
     },
     "en": {
         "help": "List of orders",
@@ -144,7 +145,8 @@
         "alrdGuildMsg": "I already send welcome messages to this server",
         "nomoreGuildMsg": "I will no longer send a welcome message to this server",
         "newGuildMsgError": "No welcome message is sent in this server",
-        "needGuild": "You have to be an administrator in a server to use this command"
+        "needGuild": "You have to be an administrator in a server to use this command",
+        "adminList": "List of admins"
     },
     "uk": {
         "help": "Список замовлень",
@@ -217,6 +219,7 @@
         "alrdGuildMsg": "Я вже надсилаю привітальні повідомлення на цей сервер",
         "nomoreGuildMsg": "Я більше не надсилатиму привітальне повідомлення на цей сервер",
         "newGuildMsgError": "На цьому сервері не надсилається привітальне повідомлення",
-        "needGuild": "Ви повинні бути адміністратором на сервері, щоб використовувати цю команду"
+        "needGuild": "Ви повинні бути адміністратором на сервері, щоб використовувати цю команду",
+        "adminList": "Список адміністраторів"
     }
 }

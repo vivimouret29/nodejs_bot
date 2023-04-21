@@ -70,7 +70,7 @@ class DaftBot {
         this.adminClass = new Admin();
         this.adminsProperty = [];
         this.admin;
-        this.adminsCommands = ['guild', 'mute', 'purge', 'status', 'removeadmin', 'messageguild', 'mgg'];
+        this.adminsCommands = ['guild', 'mute', 'purge', 'status', 'removeadmin', 'messageguild', 'mgg', 'adlist'];
 
         this.userClass = new User();
         this.usersProperty = [];
@@ -304,7 +304,8 @@ class DaftBot {
                         .get(interaction.commandName)
                         .execute(interaction, this.dbClient, this.language, this.user, this.initDateTime);
                     await new Promise(resolve => setTimeout(resolve, 2 * 1000));
-                    if (checkCollection == 'rw' || checkCollection == 'rollweapons') { await this.readUserFile(); };
+                    if (checkCollection == 'rw' || checkCollection == 'rollweapons'
+                        || checkCollection == 'ra' || checkCollection == 'rollarmors') { await this.readUserFile(); };
                     break;
             };
         });
@@ -395,6 +396,11 @@ class DaftBot {
                         break;
                     case 'mute':
                         await this.setMute(message, args);
+                        break;
+                    case 'adlist':
+                        await this.adminList(message);
+                        if (message.guild == null && message.channel.name == undefined) { console.log(`[${getCurrentDatetime('comm')}] ${author}'s DM # ${msg}`); }
+                        else { console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`); };
                         break;
                     case 'setadmin':
                         await this.setAdmin(message, args);
@@ -649,6 +655,18 @@ class DaftBot {
                     console.log(`[${getCurrentDatetime('comm')}] Error sending message SEERROR ${err}`);
                 });
         };
+    };
+
+    async adminList(message) {
+        let listAd = '';
+        this.adminsProperty.forEach(element => {
+            if (Number(message.guild.id) == element.value.guild) {
+                listAd += `${element.value.username}\n`;
+            };
+        });
+
+        await sendEmbed(message, `${this.language.adminList}:\n${listAd}\n(${this.adminsProperty.length})`)
+            .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error sending message SEERROR ${err}`); });
     };
 
     async newMessageGuild(message, args) {

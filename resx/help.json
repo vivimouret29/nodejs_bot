@@ -30,6 +30,7 @@
         "raccourciadmin": "**!mgg** [on | **off**] (messageguild)\n\n\r",
 
         "titleAdmin": "⛔ **COMMANDES D'ADMINISTRATEURS**\r",
+        "adminList": "**!adlist** : renvoie la liste des administrateurs de la guilde actuelle\r",
         "export": "**!export** : permet d'exporter les données agglomérées par le bot sur twitch\r",
         "guild": "**!guild** : renvoie la liste de serveurs où le bot est\r",
         "kill": "**!kill** : tue le bot\r",
@@ -73,6 +74,7 @@
         "raccourciadmin": "**!mgg** [on | **off**] (messageguild)\n\n\r",
         
         "titleAdmin": "⛔ **ADMINISTRATOR COMMANDS**\r",
+        "adminList": "**!adlist** : returns the list of administrators of the current guild\r",
         "export": "**!export** : allows to export the data agglomerated by the bot on twitch\r",
         "guild": "**!guild** : returns the list of servers where the bot is\r",
         "kill": "**!kill** : kill the bot\r",
@@ -116,6 +118,7 @@
         "raccourciadmin": "**!mgg** [on | **off**] (messageguild)\n\n\r",
 
         "titleAdmin": "⛔ **КОМАНДИ АДМІНІСТРАТОРА**\r",
+        "adminList": "**!adlist** : повертає список адміністраторів поточної гільдії\r",
         "export": "**!export** : дозволяє експортувати дані, агломеровані ботом на twitch\r",
         "guild": "**!guild** : повертає список серверів, на яких знаходиться бот\r",
         "kill": "**!kill** : вбити бота\r",
