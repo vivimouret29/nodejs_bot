@@ -437,7 +437,7 @@ class DaftBot {
             };
 
             if (this.userToCheck.includes(message.author.id)) {
-                if (Math.random() > .05) return;
+                if (Math.random() > .01) return;
                 try {
                     if (message.guild == null && message.channel.name == undefined) { console.log(`[${getCurrentDatetime('comm')}] ${author}'s DM # ${message.content}`); }
                     else { console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author}'s message '${message.content}' deleted`); };
