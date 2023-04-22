@@ -155,7 +155,7 @@ class DaftBot {
             .then(async () => {
                 console.log(`[${getCurrentDatetime('comm')}] ${this.dbClient.user.username}\'s logged
 [${getCurrentDatetime('comm')}] ${this.dbClient.user.username} v${packageVersion.version}`);
-                await this.readUserFile();
+                await this.readCsvFile();
                 await this.readAdminFile();
             })
             .catch(console.error);
@@ -164,8 +164,7 @@ class DaftBot {
             this.dbClient.user.setPresence({
                 activities: [{
                     name: this.language.activities,
-                    type: ActivityType.Streaming,
-                    url: 'https://twitch.tv/daftmob'
+                    type: ActivityType.Watching
                 }],
                 status: 'online'
             });
@@ -283,9 +282,9 @@ class DaftBot {
                     'roll': 0,
                     'lastroll': 0
                 });
-                await this.writeUserFile(this.user);
+                await this.writeCsvFile(this.user);
                 await new Promise(resolve => setTimeout(resolve, 2 * 1000));
-                await this.readUserFile();
+                await this.readCsvFile();
             } else { this.user = this.userClass.getUserProperty(interaction.user.id, this.usersProperty); };
 
             if (this.adminClass.getAdminProperty(interaction.user.id, this.adminsProperty) != undefined) {
@@ -305,7 +304,7 @@ class DaftBot {
                         .execute(interaction, this.dbClient, this.language, this.user, this.initDateTime);
                     await new Promise(resolve => setTimeout(resolve, 2 * 1000));
                     if (checkCollection == 'rw' || checkCollection == 'rollweapons'
-                        || checkCollection == 'ra' || checkCollection == 'rollarmors') { await this.readUserFile(); };
+                        || checkCollection == 'ra' || checkCollection == 'rollarmors') { await this.readCsvFile(); };
                     break;
             };
         });
@@ -321,9 +320,9 @@ class DaftBot {
                     'roll': 0,
                     'lastroll': 0
                 });
-                await this.writeUserFile(this.user);
+                await this.writeCsvFile(this.user);
                 await new Promise(resolve => setTimeout(resolve, 2 * 1000));
-                await this.readUserFile();
+                await this.readCsvFile();
             } else { this.user = this.userClass.getUserProperty(message.author.id, this.usersProperty); };
 
             if (this.adminClass.getAdminProperty(message.author.id, this.adminsProperty) != undefined) {
@@ -432,7 +431,7 @@ class DaftBot {
                             .execute(message, this.dbClient, this.language, this.user, args, this.initDateTime);
                         await new Promise(resolve => setTimeout(resolve, 2 * 1000));
                         if (checkCollection == 'rw' || checkCollection == 'rollweapons'
-                            || checkCollection == 'ra' || checkCollection == 'rollarmors') { await this.readUserFile(); };
+                            || checkCollection == 'ra' || checkCollection == 'rollarmors') { await this.readCsvFile(); };
                         break;
                 };
             };
@@ -712,15 +711,6 @@ class DaftBot {
                         console.log(`[${getCurrentDatetime('comm')}] Error sending message SEERROR ${err}`);
                     });
 
-                client.user.setPresence({
-                    activities: [{
-                        name: this.language.activities,
-                        type: ActivityType.Streaming,
-                        url: 'https://twitch.tv/daftmob'
-                    }],
-                    status: 'online'
-                });
-
                 if (message.guild == null && message.channel.name == undefined) { console.log(`[${getCurrentDatetime('comm')}] ${author}'s DM # ${msg}`); }
                 else { console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`); };
                 break;
@@ -732,15 +722,6 @@ class DaftBot {
                         console.log(`[${getCurrentDatetime('comm')}] Error sending message SEERROR ${err}`);
                     });
 
-                client.user.setPresence({
-                    activities: [{
-                        name: this.language.activities,
-                        type: ActivityType.Streaming,
-                        url: 'https://twitch.tv/daftmob'
-                    }],
-                    status: 'online'
-                });
-
                 if (message.guild == null && message.channel.name == undefined) { console.log(`[${getCurrentDatetime('comm')}] ${author}'s DM # ${msg}`); }
                 else { console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`); };
                 break;
@@ -751,15 +732,6 @@ class DaftBot {
                         message.reply({ 'content': language.error, 'ephemeral': true });
                         console.log(`[${getCurrentDatetime('comm')}] Error sending message SEERROR ${err}`);
                     });
-
-                client.user.setPresence({
-                    activities: [{
-                        name: this.language.activities,
-                        type: ActivityType.Streaming,
-                        url: 'https://twitch.tv/daftmob'
-                    }],
-                    status: 'online'
-                });
 
                 if (message.guild == null && message.channel.name == undefined) { console.log(`[${getCurrentDatetime('comm')}] ${author}'s DM # ${msg}`); }
                 else { console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`); };
@@ -826,7 +798,7 @@ class DaftBot {
         };
     };
 
-    async readUserFile() {
+    async readCsvFile() {
         this.usersProperty = [];
         await fs.createReadStream(filePathUser)
             .pipe(csvParse.parse({ headers: true, delimiter: ',' }))
@@ -839,7 +811,9 @@ class DaftBot {
                             'username': String(row.username),
                             'canroll': false,
                             'roll': Number(row.roll),
-                            'lastroll': Number(row.lastroll)
+                            'lastroll': Number(row.lastroll),
+                            'guildId': String(row.guildId),
+                            'lang': String(row.lang)
                         });
                     } else {
                         user = this.userClass.setUserProperty({
@@ -847,7 +821,9 @@ class DaftBot {
                             'username': String(row.username),
                             'canroll': true,
                             'roll': Number(row.roll),
-                            'lastroll': Number(row.lastroll)
+                            'lastroll': Number(row.lastroll),
+                            'guildId': String(row.guildId),
+                            'lang': String(row.lang)
                         });
                     };
 
@@ -864,13 +840,15 @@ class DaftBot {
             });
     };
 
-    async writeUserFile(user) {
+    async writeCsvFile(user) {
         let userToSave = [{
             'id': Number(user.id),
             'username': String(user.username),
             'canroll': Boolean(user.canroll),
             'roll': Number(user.roll),
-            'lastroll': Number(user.lastroll)
+            'lastroll': Number(user.lastroll),
+            'guildId': String(user.guildId),
+            'lang': String(user.lang)
         }];
 
         await fs.createReadStream(filePathUser)
@@ -882,7 +860,9 @@ class DaftBot {
                         'username': String(row.username),
                         'canroll': row.canroll == 'true' ? true : false,
                         'roll': Number(row.roll),
-                        'lastroll': Number(row.lastroll)
+                        'lastroll': Number(row.lastroll),
+                        'guildId': String(row.guildId),
+                        'lang': String(row.lang)
                     });
                 };
             })
@@ -894,7 +874,7 @@ class DaftBot {
                         throw err;
                     };
                 });
-                await this.readUserFile();
+                await this.readCsvFile();
             });
     };
 
