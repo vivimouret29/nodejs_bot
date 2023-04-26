@@ -272,7 +272,7 @@ class MobBot {
                 .get(channelSend.id)
                 .send({
                     'channel_id': channelSend.id,
-                    'content': channelTwitch[chan] == 'twitch' ? '<@&1071048787738497084>' : '',
+                    'content': channelTwitch[chan] == '🟣twitch' ? '<@&1071048787738497084>' : '',
                     'tts': false,
                     'embeds': [{
                         'type': 'rich',
