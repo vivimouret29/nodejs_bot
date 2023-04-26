@@ -1,6 +1,7 @@
 'use.strict'
 
 const config = require("../config.json"),
+    { getCurrentDatetime } = require("../core/utils"),
     { Configuration, OpenAIApi } = require("openai"),
     configuration = new Configuration({ apiKey: config.openAI }),
     openaiAPI = new OpenAIApi(configuration);
