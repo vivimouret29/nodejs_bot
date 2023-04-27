@@ -70,7 +70,7 @@ class DaftBot {
         this.adminClass = new Admin();
         this.adminsProperty = [];
         this.admin;
-        this.adminsCommands = ['guild', 'mute', 'purge', 'status', 'removeadmin'];
+        this.adminsCommands = ['guild', 'mute', 'purge', 'status', 'removeadmin', 'messageguild', 'mgg', 'adlist'];
 
         this.userClass = new User();
         this.usersProperty = [];
@@ -86,6 +86,8 @@ class DaftBot {
 
         this.avoidBot = ['757970907992948826', '758393470024155186', '758319298325905428'];
         this.userToCheck = ['491907126701064193'];
+
+        this.welcomeMessage = [948894919878123570];
 
         this.onFirstStart = true;
     };
@@ -153,7 +155,7 @@ class DaftBot {
             .then(async () => {
                 console.log(`[${getCurrentDatetime('comm')}] ${this.dbClient.user.username}\'s logged
 [${getCurrentDatetime('comm')}] ${this.dbClient.user.username} v${packageVersion.version}`);
-                await this.readUserFile();
+                await this.readCsvFile();
                 await this.readAdminFile();
             })
             .catch(console.error);
@@ -162,8 +164,7 @@ class DaftBot {
             this.dbClient.user.setPresence({
                 activities: [{
                     name: this.language.activities,
-                    type: ActivityType.Streaming,
-                    url: 'https://twitch.tv/daftmob'
+                    type: ActivityType.Watching
                 }],
                 status: 'online'
             });
@@ -175,6 +176,7 @@ class DaftBot {
             console.log(`[${getCurrentDatetime('comm')}] ${this.dbClient.user.username} connect on irc-ws.chat.twitch.tv:443`);
 
             await new Promise(resolve => setTimeout(resolve, 5 * 1000));
+            this.onFirstStart = false;
             if (this.dbClient.user.id == this.avoidBot[1]) return;
 
             let checkLive = true,
@@ -238,7 +240,7 @@ class DaftBot {
 
     async onListenGuildNewMember() {
         this.dbClient.on(Events.GuildMemberAdd, async (guild) => {
-            if (this.dbClient.user.id == this.avoidBot[1] || guild.user.bot) return;
+            if (this.dbClient.user.id == this.avoidBot[1] || guild.user.bot || !this.welcomeMessage.includes(Number(guild.id))) return;
             console.log(`[${getCurrentDatetime('comm')}] New member \'${guild.user.username}\' join server : ${guild.guild.name}`);
 
             this.dbClient.channels.cache
@@ -280,9 +282,9 @@ class DaftBot {
                     'roll': 0,
                     'lastroll': 0
                 });
-                await this.writeUserFile(this.user);
+                await this.writeCsvFile(this.user);
                 await new Promise(resolve => setTimeout(resolve, 2 * 1000));
-                await this.readUserFile();
+                await this.readCsvFile();
             } else { this.user = this.userClass.getUserProperty(interaction.user.id, this.usersProperty); };
 
             if (this.adminClass.getAdminProperty(interaction.user.id, this.adminsProperty) != undefined) {
@@ -301,7 +303,8 @@ class DaftBot {
                         .get(interaction.commandName)
                         .execute(interaction, this.dbClient, this.language, this.user, this.initDateTime);
                     await new Promise(resolve => setTimeout(resolve, 2 * 1000));
-                    if (checkCollection == 'rw' || checkCollection == 'rollweapons') { await this.readUserFile(); };
+                    if (checkCollection == 'rw' || checkCollection == 'rollweapons'
+                        || checkCollection == 'ra' || checkCollection == 'rollarmors') { await this.readCsvFile(); };
                     break;
             };
         });
@@ -317,9 +320,9 @@ class DaftBot {
                     'roll': 0,
                     'lastroll': 0
                 });
-                await this.writeUserFile(this.user);
+                await this.writeCsvFile(this.user);
                 await new Promise(resolve => setTimeout(resolve, 2 * 1000));
-                await this.readUserFile();
+                await this.readCsvFile();
             } else { this.user = this.userClass.getUserProperty(message.author.id, this.usersProperty); };
 
             if (this.adminClass.getAdminProperty(message.author.id, this.adminsProperty) != undefined) {
@@ -368,6 +371,22 @@ class DaftBot {
                 };
 
                 switch (command) {
+                    case 'messageguild':
+                        if (message.guild == null || message.guild.id == undefined) {
+                            await sendEmbed(message, this.language.needGuild)
+                                .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error sending message SEERROR ${err}`); });
+                        };
+                        await this.newMessageGuild(message, args);
+                        console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
+                        break;
+                    case 'mgg':
+                        if (message.guild == null || message.guild.id == undefined) {
+                            await sendEmbed(message, this.language.needGuild)
+                                .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error sending message SEERROR ${err}`); });
+                        };
+                        await this.newMessageGuild(message, args);
+                        console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
+                        break;
                     case 'lang':
                         await this.setLanguage(this.dbClient, message, args);
                         break;
@@ -376,6 +395,11 @@ class DaftBot {
                         break;
                     case 'mute':
                         await this.setMute(message, args);
+                        break;
+                    case 'adlist':
+                        await this.adminList(message);
+                        if (message.guild == null && message.channel.name == undefined) { console.log(`[${getCurrentDatetime('comm')}] ${author}'s DM # ${msg}`); }
+                        else { console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`); };
                         break;
                     case 'setadmin':
                         await this.setAdmin(message, args);
@@ -407,7 +431,7 @@ class DaftBot {
                             .execute(message, this.dbClient, this.language, this.user, args, this.initDateTime);
                         await new Promise(resolve => setTimeout(resolve, 2 * 1000));
                         if (checkCollection == 'rw' || checkCollection == 'rollweapons'
-                            || checkCollection == 'ra' || checkCollection == 'rollarmors') { await this.readUserFile(); };
+                            || checkCollection == 'ra' || checkCollection == 'rollarmors') { await this.readCsvFile(); };
                         break;
                 };
             };
@@ -436,7 +460,7 @@ class DaftBot {
             };
 
             if (this.userToCheck.includes(message.author.id)) {
-                if (Math.random() > .05) return;
+                if (Math.random() > .01) return;
                 try {
                     if (message.guild == null && message.channel.name == undefined) { console.log(`[${getCurrentDatetime('comm')}] ${author}'s DM # ${message.content}`); }
                     else { console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author}'s message '${message.content}' deleted`); };
@@ -632,6 +656,48 @@ class DaftBot {
         };
     };
 
+    async adminList(message) {
+        let listAd = '';
+        this.adminsProperty.forEach(element => {
+            if (Number(message.guild.id) == element.value.guild) {
+                listAd += `${element.value.username}\n`;
+            };
+        });
+
+        await sendEmbed(message, `${this.language.adminList}:\n${listAd}\n(${this.adminsProperty.length})`)
+            .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error sending message SEERROR ${err}`); });
+    };
+
+    async newMessageGuild(message, args) {
+        if (args == undefined) {
+            await sendEmbed(message, this.language.error)
+                .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error sending message SEERROR ${err}`); });
+        };
+
+        switch (args[0]) {
+            case 'on':
+                if (this.welcomeMessage.includes(Number(message.guild.id))) {
+                    await sendEmbed(message, this.language.alrdGuildMsg)
+                        .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error sending message SEERROR ${err}`); });
+                    break;
+                };
+                this.welcomeMessage.push(Number(message.guild.id));
+                await sendEmbed(message, this.language.newGuildMsg)
+                    .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error sending message SEERROR ${err}`); });
+                break;
+            case 'off':
+                if (!this.welcomeMessage.includes(Number(message.guild.id))) {
+                    await sendEmbed(message, this.language.newGuildMsgError)
+                        .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error sending message SEERROR ${err}`); });
+                    break;
+                };
+                this.welcomeMessage.pop(Number(message.guild.id));
+                await sendEmbed(message, this.language.nomoreGuildMsg)
+                    .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error sending message SEERROR ${err}`); });
+                break;
+        };
+    };
+
     async setLanguage(client, message, args) {
         let msg = message.content.toLowerCase(),
             author = message.author.username;
@@ -645,15 +711,6 @@ class DaftBot {
                         console.log(`[${getCurrentDatetime('comm')}] Error sending message SEERROR ${err}`);
                     });
 
-                client.user.setPresence({
-                    activities: [{
-                        name: this.language.activities,
-                        type: ActivityType.Streaming,
-                        url: 'https://twitch.tv/daftmob'
-                    }],
-                    status: 'online'
-                });
-
                 if (message.guild == null && message.channel.name == undefined) { console.log(`[${getCurrentDatetime('comm')}] ${author}'s DM # ${msg}`); }
                 else { console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`); };
                 break;
@@ -665,15 +722,6 @@ class DaftBot {
                         console.log(`[${getCurrentDatetime('comm')}] Error sending message SEERROR ${err}`);
                     });
 
-                client.user.setPresence({
-                    activities: [{
-                        name: this.language.activities,
-                        type: ActivityType.Streaming,
-                        url: 'https://twitch.tv/daftmob'
-                    }],
-                    status: 'online'
-                });
-
                 if (message.guild == null && message.channel.name == undefined) { console.log(`[${getCurrentDatetime('comm')}] ${author}'s DM # ${msg}`); }
                 else { console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`); };
                 break;
@@ -684,15 +732,6 @@ class DaftBot {
                         message.reply({ 'content': language.error, 'ephemeral': true });
                         console.log(`[${getCurrentDatetime('comm')}] Error sending message SEERROR ${err}`);
                     });
-
-                client.user.setPresence({
-                    activities: [{
-                        name: this.language.activities,
-                        type: ActivityType.Streaming,
-                        url: 'https://twitch.tv/daftmob'
-                    }],
-                    status: 'online'
-                });
 
                 if (message.guild == null && message.channel.name == undefined) { console.log(`[${getCurrentDatetime('comm')}] ${author}'s DM # ${msg}`); }
                 else { console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`); };
@@ -759,7 +798,7 @@ class DaftBot {
         };
     };
 
-    async readUserFile() {
+    async readCsvFile() {
         this.usersProperty = [];
         await fs.createReadStream(filePathUser)
             .pipe(csvParse.parse({ headers: true, delimiter: ',' }))
@@ -772,7 +811,9 @@ class DaftBot {
                             'username': String(row.username),
                             'canroll': false,
                             'roll': Number(row.roll),
-                            'lastroll': Number(row.lastroll)
+                            'lastroll': Number(row.lastroll),
+                            'guildId': String(row.guildId),
+                            'lang': String(row.lang)
                         });
                     } else {
                         user = this.userClass.setUserProperty({
@@ -780,7 +821,9 @@ class DaftBot {
                             'username': String(row.username),
                             'canroll': true,
                             'roll': Number(row.roll),
-                            'lastroll': Number(row.lastroll)
+                            'lastroll': Number(row.lastroll),
+                            'guildId': String(row.guildId),
+                            'lang': String(row.lang)
                         });
                     };
 
@@ -797,13 +840,15 @@ class DaftBot {
             });
     };
 
-    async writeUserFile(user) {
+    async writeCsvFile(user) {
         let userToSave = [{
             'id': Number(user.id),
             'username': String(user.username),
             'canroll': Boolean(user.canroll),
             'roll': Number(user.roll),
-            'lastroll': Number(user.lastroll)
+            'lastroll': Number(user.lastroll),
+            'guildId': String(user.guildId),
+            'lang': String(user.lang)
         }];
 
         await fs.createReadStream(filePathUser)
@@ -815,7 +860,9 @@ class DaftBot {
                         'username': String(row.username),
                         'canroll': row.canroll == 'true' ? true : false,
                         'roll': Number(row.roll),
-                        'lastroll': Number(row.lastroll)
+                        'lastroll': Number(row.lastroll),
+                        'guildId': String(row.guildId),
+                        'lang': String(row.lang)
                     });
                 };
             })
@@ -827,7 +874,7 @@ class DaftBot {
                         throw err;
                     };
                 });
-                await this.readUserFile();
+                await this.readCsvFile();
             });
     };
 
@@ -852,7 +899,6 @@ class DaftBot {
             .on('end', () => {
                 if (this.onFirstStart) {
                     console.log(`[${getCurrentDatetime('comm')}] CSV file successfully processed with ${this.adminsProperty.length} admins`);
-                    this.onFirstStart = false;
                 };
             });
     };

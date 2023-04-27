@@ -6,7 +6,7 @@
         "error": "Erreur de la commande, réessaie plus tard",
         "stream": "son petit daft | !help",
         "uptime": "En ligne depuis",
-        "activities": "tout twitch | !help",
+        "activities": "son intégrité | !help",
         "areYouOwner": "T\\'as pas le droit d\\'y toucher",
         "invitation": "Aucun invitation éternel",
         "mobbotConnect": "mobbot se connecte sur irc-ws.chat.twitch.tv:443",
@@ -66,7 +66,13 @@
         "adminCreated": "Administrateur créé avec succès",
         "adminExisting": "Cet utilisateur est déjà admin de ce salon",
         "adminDeleted": "Administrateur supprimé avec succès",
-        "adminNotExisting": "Cet utilisateur n'est pas admin de ce salon, vérifie ta commande"
+        "adminNotExisting": "Cet utilisateur n'est pas admin de ce salon, vérifie ta commande",
+        "newGuildMsg": "Message d'acceuil aléatoire lorsque quelqu'un rejoint le serveur",
+        "alrdGuildMsg": "J'envoie déjà des messages de bienvenue dans ce serveur",
+        "nomoreGuildMsg": "Je n'enverrai plus de message d'acceuil dans ce serveur",
+        "newGuildMsgError": "Aucun message de bienvenue est envoyé dans ce serveur",
+        "needGuild": "Tu dois être administrateur dans un serveur pour utiliser cette commande",
+        "adminList": "Liste des admins"
     },
     "en": {
         "help": "List of orders",
@@ -75,7 +81,7 @@
         "error": "Command error, try again later",
         "stream": "his little daft | !help",
         "uptime": "Online since",
-        "activities": "all twitch | !help",
+        "activities": "its integrity | !help",
         "areYouOwner": "You can\\'t touch it",
         "invitation": "No eternal invitation",
         "restricted": "Order Restriction",
@@ -134,7 +140,13 @@
         "adminCreated": "Administrator successfully created",
         "adminExisting": "This user is already an admin of this exhibition",
         "adminDeleted": "Administrator successfully deleted",
-        "adminNotExisting": "This user is not an admin of this guild, check your order"
+        "adminNotExisting": "This user is not an admin of this guild, check your order",
+        "newGuildMsg": "Random welcome message when someone joins the server",
+        "alrdGuildMsg": "I already send welcome messages to this server",
+        "nomoreGuildMsg": "I will no longer send a welcome message to this server",
+        "newGuildMsgError": "No welcome message is sent in this server",
+        "needGuild": "You have to be an administrator in a server to use this command",
+        "adminList": "List of admins"
     },
     "uk": {
         "help": "Список замовлень",
@@ -143,7 +155,7 @@
         "error": "Помилка команди, Спробуйте пізніше",
         "stream": "його маленька дурниця | !help",
         "uptime": "Онлайн з тих пір, як",
-        "activities": "весь Сіпатися | !help",
+        "activities": "його цілісність | !help",
         "areYouOwner": "Ти не можеш до нього доторкнутися",
         "invitation": "Немає вічного запрошення",
         "restricted": "Обмеження замовлення",
@@ -202,6 +214,12 @@
         "adminCreated": "Адміністратора успішно створено",
         "adminExisting": "Цей користувач вже є адміністратором цієї виставки",
         "adminDeleted": "Адміністратора успішно видалено",
-        "adminNotExisting": "Цей користувач не є адміністратором цього шоу, перевірте своє замовлення"
+        "adminNotExisting": "Цей користувач не є адміністратором цього шоу, перевірте своє замовлення",
+        "newGuildMsg": "Випадкове привітальне повідомлення, коли хтось приєднується до сервера",
+        "alrdGuildMsg": "Я вже надсилаю привітальні повідомлення на цей сервер",
+        "nomoreGuildMsg": "Я більше не надсилатиму привітальне повідомлення на цей сервер",
+        "newGuildMsgError": "На цьому сервері не надсилається привітальне повідомлення",
+        "needGuild": "Ви повинні бути адміністратором на сервері, щоб використовувати цю команду",
+        "adminList": "Список адміністраторів"
     }
 }
