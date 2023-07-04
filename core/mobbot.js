@@ -250,7 +250,7 @@ class MobBot {
         };
 
         let guidDot = gD,
-            channelTwitch = ['🖥️incoming', '🎦-fox-stream-🎦', 'twitch-support-🎥'],
+            channelTwitch = ['💻incoming', '🎦-fox-stream-🎦', 'twitch-support-🎥'],
             guid = '',
             dot = '';
 
@@ -272,7 +272,7 @@ class MobBot {
                 .get(channelSend.id)
                 .send({
                     'channel_id': channelSend.id,
-                    'content': channelTwitch[chan] == '🖥️incoming' ? 'je suis en live <@&1071048787738497084>, venez me retrouver !' : '',
+                    'content': channelTwitch[chan] == '💻incoming' ? 'je suis en live <@&1071048787738497084>, venez me retrouver !' : '',
                     'tts': false,
                     'embeds': [{
                         'type': 'rich',
