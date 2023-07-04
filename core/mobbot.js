@@ -143,7 +143,7 @@ class MobBot {
             };
 
             this._count++;
-            if (_rdm < .2 && this._count % 2 === 0 && this._count > 8) {
+            if (_rdm < .175 && this._count % 2 === 0 && this._count > 8) {
                 await this.mbCommands
                     .get('timer')
                     .execute(this.mbClient,
@@ -250,7 +250,7 @@ class MobBot {
         };
 
         let guidDot = gD,
-            channelTwitch = ['🟣twitch', '🎦-fox-stream-🎦', 'twitch-support-🎥'],
+            channelTwitch = ['🖥️incoming', '🎦-fox-stream-🎦', 'twitch-support-🎥'],
             guid = '',
             dot = '';
 
@@ -272,7 +272,7 @@ class MobBot {
                 .get(channelSend.id)
                 .send({
                     'channel_id': channelSend.id,
-                    'content': channelTwitch[chan] == '🟣twitch' ? '<@&1071048787738497084>' : '',
+                    'content': channelTwitch[chan] == '🖥️incoming' ? 'je suis en live <@&1071048787738497084>, venez me retrouver !' : '',
                     'tts': false,
                     'embeds': [{
                         'type': 'rich',
@@ -323,7 +323,7 @@ class MobBot {
         let fe = await fetch(`https://www.youtube.com/feeds/videos.xml?channel_id=UCreItrEewfO6IPZYPu4C7pA`)
             .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error GET AXIOS ${err}`); }),
             fetched = await fe.text(),
-            channelYoutube = ['🔴youtube'],
+            channelYoutube = ['📺video'],
             video = [],
             urI,
             title,
@@ -348,7 +348,7 @@ class MobBot {
                 .get(channelSend.id)
                 .send({
                     'channel_id': channelSend.id,
-                    'content': '<@&1071049081910210661>',
+                    'content': 'je viens de pondre une vidéo <@&1071049081910210661> !',
                     'tts': false,
                     'embeds': [{
                         'type': 'rich',
