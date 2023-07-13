@@ -192,7 +192,7 @@ class MobBot {
                     .catch(e => console.log(e));
             };
 
-            if (_rdm < .2) {
+            if (_rdm < .05 && !this.live) {
                 this.mbClient.reply(channel, `ALL SYSTEMS ARE OFFLINE MrDestructoid`, userstate.id)
                     .catch(e => console.log(e));
             };
