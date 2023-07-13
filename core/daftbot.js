@@ -161,6 +161,7 @@ class DaftBot {
             .catch(console.error);
 
         this.dbClient.on(Events.ClientReady, async () => {
+            // this.dbClient.user.avatarURL('https://cdn.discordapp.com/app-icons/758393470024155186/0511369d46276b2ba6eb6c380ea52df1.png?size=480');
             this.dbClient.user.setPresence({
                 activities: [{
                     name: this.language.activities,
@@ -225,7 +226,7 @@ class DaftBot {
                 checkLive = true;
                 oldUrIMemory = urIMemory;
                 oldGameMemory = gameMemory;
-                await new Promise(resolve => setTimeout(resolve, 600 * 1000));
+                await new Promise(resolve => setTimeout(resolve, 3600000)); // 1 heure
             };
         });
 
