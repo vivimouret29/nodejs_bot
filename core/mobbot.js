@@ -6,6 +6,8 @@ const { Client } = require('tmi.js'),
     axios = require('axios'),
     fs = require('node:fs'),
     path = require('node:path'),
+    WebSocketClient = require('websocket').client,
+    webSocket = new WebSocketClient(),
     { clientId, identity, channels } = require('./config.json'),
     { getCurrentDatetime, randomColor } = require('./utils.js'),
     { users: regular_users } = require('../resx/regular_users.json');
@@ -37,14 +39,13 @@ class MobBot {
 
         this.mbCommands = new Map();
 
+        this.live = false | this.live;
         this._count = 0 | this._count;
     };
 
     async onConnect() {
         await this.setCollection();
 
-        await this.mbClient.connect()
-            .catch(console.error);
         this.mbClient.on('connected', this.onConnectedHandler);
 
         await this.onDataImport();
@@ -53,7 +54,22 @@ class MobBot {
         await this.onGiftSubscription();
         await this.onReSubsciption();
         await this.onCheers();
+
+        this.mbClient.on('connectFailed', function(error) {
+            console.log('Connect Error: ' + error.toString());
+        });
+
+        this.mbClient.on('connect', async function (connection) {
+            console.log('// WebSocket Client Connected \\\\');
+
+            connection.sendUTF('CAP REQ :twitch.tv/membership twitch.tv/tags twitch.tv/commands');
+            connection.sendUTF('PASS oauth:hgxc5wouzsmdsqxaqgdmql9bk4awun');
+            connection.sendUTF('NICK mobbot_');
+        });
+
         await this.onYeeetTheChild();
+
+        await this.mbClient.connect('ws://irc-ws.chat.twitch.tv:443').catch(console.error);
 
         let checkLive = true,
             gameMemory = '',
@@ -70,8 +86,10 @@ class MobBot {
 
             if (!checkLive || ax.data.data.length == 0) {
                 gameMemory = '';
+                this.live = false;
             } else {
                 gameMemory = ax.data.data[0].game_name;
+                this.live = true;
                 if (gameMemory != oldGameMemory && ax.data.data.length == 1) {
                     this.mbCommands
                         .get('timer')
@@ -87,7 +105,7 @@ class MobBot {
 
             checkLive = true;
             oldGameMemory = gameMemory;
-            await new Promise(resolve => setTimeout(resolve, 600 * 1000));
+            await new Promise(resolve => setTimeout(resolve, 600000)); // 10 minutes
         };
     };
 
@@ -107,6 +125,20 @@ class MobBot {
         this.mbClient.on('message', async (channel, userstate, message, self) => {
             if (self || userstate.username === 'mobbot_') return;
             var _rdm = Math.random();
+            // https://clips.twitch.tv/SplendidDiligentTortoisePJSalt-AykamFt8TXjjdEiI
+
+            if (message.includes('https://')) {
+                if (message.includes('https://clips.twitch.tv/')) {
+                    this.mbClient.reply(channel, `@${userstate.username} viens de partager un clip dans le chat, merci à toi !`, userstate.id)
+                } else {
+                    this.mbClient.deletemessage(channel, userstate.id)
+                        .then((data) => {
+                            console.log(data)
+                        }).catch((err) => {
+                            console.log(err)
+                        });
+                };
+            };
 
             if (message.startsWith('!')) {
                 let msg = message.trim().toLowerCase(),
@@ -143,7 +175,7 @@ class MobBot {
             };
 
             this._count++;
-            if (_rdm < .2 && this._count % 2 === 0 && this._count > 8) {
+            if (_rdm < .175 && this._count % 2 === 0 && this._count > 8) {
                 await this.mbCommands
                     .get('timer')
                     .execute(this.mbClient,
@@ -155,8 +187,13 @@ class MobBot {
                         true);
             };
 
-            if (regular_users.includes(userstate.username) && _rdm < .05) {
-                this.mbClient.reply(channel, `salu twa PixelBob`, userstate.id)
+            if (regular_users.includes(userstate.username) && _rdm < .005) {
+                this.mbClient.reply(channel, `salu ${userstate.username} PixelBob`, userstate.id)
+                    .catch(e => console.log(e));
+            };
+
+            if (_rdm < .2) {
+                this.mbClient.reply(channel, `ALL SYSTEMS ARE OFFLINE MrDestructoid`, userstate.id)
                     .catch(e => console.log(e));
             };
         });
@@ -179,7 +216,7 @@ class MobBot {
 
     async onCheers() {
         this.mbClient.on("cheer", (channel, userstate, message) => {
-            this.mbClient.say(channel, `trop généreux !! @${username} m'envoie ${userstate.bits} bits RyuChamp`)
+            this.mbClient.say(channel, `trop généreux !! @${userstate.username} m'envoie ${userstate.bits} bits RyuChamp`)
                 .catch(e => console.log(e));
         });
     };
@@ -250,7 +287,7 @@ class MobBot {
         };
 
         let guidDot = gD,
-            channelTwitch = ['🟣twitch', '🎦-fox-stream-🎦', 'twitch-support-🎥'],
+            channelTwitch = ['💻incoming', '🎦-fox-stream-🎦', 'twitch-support-🎥'],
             guid = '',
             dot = '';
 
@@ -272,7 +309,7 @@ class MobBot {
                 .get(channelSend.id)
                 .send({
                     'channel_id': channelSend.id,
-                    'content': channelTwitch[chan] == '🟣twitch' ? '<@&1071048787738497084>' : '',
+                    'content': channelTwitch[chan] == '💻incoming' ? 'je suis en live <@&1071048787738497084>, venez me retrouver !' : '',
                     'tts': false,
                     'embeds': [{
                         'type': 'rich',
@@ -323,7 +360,7 @@ class MobBot {
         let fe = await fetch(`https://www.youtube.com/feeds/videos.xml?channel_id=UCreItrEewfO6IPZYPu4C7pA`)
             .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error GET AXIOS ${err}`); }),
             fetched = await fe.text(),
-            channelYoutube = ['🔴youtube'],
+            channelYoutube = ['📺video'],
             video = [],
             urI,
             title,
@@ -348,7 +385,7 @@ class MobBot {
                 .get(channelSend.id)
                 .send({
                     'channel_id': channelSend.id,
-                    'content': '<@&1071049081910210661>',
+                    'content': 'je viens de pondre une vidéo <@&1071049081910210661> !',
                     'tts': false,
                     'embeds': [{
                         'type': 'rich',
