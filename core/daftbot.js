@@ -70,7 +70,7 @@ class DaftBot {
         this.adminClass = new Admin();
         this.adminsProperty = [];
         this.admin;
-        this.adminsCommands = ['guild', 'mute', 'purge', 'status', 'removeadmin', 'messageguild', 'mgg', 'adlist'];
+        this.adminsCommands = ['guild', 'mute', 'purge', 'status', 'removeadmin', 'messageguild', 'mgg', 'adlist', 'rolesetup'];
 
         this.userClass = new User();
         this.usersProperty = [];
@@ -176,16 +176,16 @@ class DaftBot {
                 .execute();
             console.log(`[${getCurrentDatetime('comm')}] ${this.dbClient.user.username} connect on irc-ws.chat.twitch.tv:443`);
 
-            await new Promise(resolve => setTimeout(resolve, 5 * 1000));
+            await new Promise(resolve => setTimeout(resolve, 5 * 1000)); // 5 secondes
             this.onFirstStart = false;
-            if (this.dbClient.user.id == this.avoidBot[1]) return;
 
             let checkLive = true,
                 gameMemory = '',
                 urIMemory = '',
                 oldGameMemory = '',
                 oldUrIMemory = '',
-                message;
+                message,
+                ping = true;
 
             while (true) {
                 if (channels[0] == undefined) { continue; };
@@ -200,13 +200,16 @@ class DaftBot {
 
                 if (!checkLive || ax.data.data.length == 0) {
                     gameMemory = '';
+                    ping = true;
                 } else {
                     gameMemory = ax.data.data[0].game_name;
                     if (gameMemory != oldGameMemory && ax.data.data.length == 1) {
+                        if (this.dbClient.user.id == this.avoidBot[1]) { continue; };
                         let guiDot = await axios.get(`https://twitch.tv/${ax.data.data[0].user_login}`);
                         this.dbClient.mobbot
                             .get('livenotif')
                             .execute(message, this.dbClient, this.language, guiDot.data, ax);
+                        ping = false;
                     };
                 };
 
@@ -218,6 +221,7 @@ class DaftBot {
 
                 urIMemory = fetched.split(new RegExp(`(\:[^.]*\<\/)`, 'giu'))[3].split(new RegExp(`(\<[^.]*?\>)`, 'giu'))[10];
                 if (new Date(new Date().setHours(new Date().getHours() - 2)) < pubDate && urIMemory != oldUrIMemory) {
+                    if (this.dbClient.user.id == this.avoidBot[1]) { continue; };
                     this.dbClient.mobbot
                         .get('videonotif')
                         .execute(message, this.dbClient, this.language);
@@ -226,7 +230,11 @@ class DaftBot {
                 checkLive = true;
                 oldUrIMemory = urIMemory;
                 oldGameMemory = gameMemory;
-                await new Promise(resolve => setTimeout(resolve, 3600000)); // 1 heure
+                if (ping) await new Promise(resolve => setTimeout(resolve, 600 * 1000)); // 10 minutes
+                else {
+                    await new Promise(resolve => setTimeout(resolve, 3600 * 1000)); // 1 heure
+                    ping = true;
+                };
             };
         });
 
@@ -378,7 +386,8 @@ class DaftBot {
                                 .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error sending message SEERROR ${err}`); });
                         };
                         await this.newMessageGuild(message, args);
-                        console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
+                        if (message.guild == null && message.channel.name == undefined) { console.log(`[${getCurrentDatetime('comm')}] ${author}'s DM # ${msg}`); }
+                        else { console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`); };
                         break;
                     case 'mgg':
                         if (message.guild == null || message.guild.id == undefined) {
@@ -386,7 +395,8 @@ class DaftBot {
                                 .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error sending message SEERROR ${err}`); });
                         };
                         await this.newMessageGuild(message, args);
-                        console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`);
+                        if (message.guild == null && message.channel.name == undefined) { console.log(`[${getCurrentDatetime('comm')}] ${author}'s DM # ${msg}`); }
+                        else { console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`); };
                         break;
                     case 'lang':
                         await this.setLanguage(this.dbClient, message, args);
