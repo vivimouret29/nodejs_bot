@@ -13,9 +13,8 @@ module.exports = {
                 'passes rejoindre son discord https://discord.gg/ucwnMKKxZe PixelBob',
                 `PogChamp penses à aller voir la dernière vidéo https://www.youtube.com/watch?v=${urI} PogChamp`,
                 'check quand je passe en live avec le twitter https://twitter.com/daftm0b Kappa',
-                `avec le courage de ta CB, deviens le chevalier qu'il faut en suivant le lien : https://www.twitch.tv/products/daftmob daftmo1Gotanitem, sinon Terry prends le Prime gratuitement`,
-                `rejoins l\'ordre de daft en donnant ton Prime ou en trouvant le chemin vers la force : https://www.twitch.tv/products/daftmob daftmo1Gotanitem`,
-                'ALL SYSTEMS ARE ONLINE MrDestructoid',
+                `Terry t'offre une montagne de réduction sur Instant-Gaming en utilisant ce lien https://www.instant-gaming.com/?igr=daftmob daftmo1Gotanitem`,
+                `rejoins l\'ordre de daft en lâchant ton Prime ou en trouvant le chemin de la force https://www.twitch.tv/products/daftmob daftmo1Gotanitem`,
                 'avec le discord du daft https://discord.gg/ucwnMKKxZe et/ou avec son twitter https://twitter.com/daftm0b daftmo1Whaaa, tiens-toi au courant des prochains lives !'
             ];
 
