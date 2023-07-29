@@ -22,7 +22,9 @@ module.exports = {
                 prompt: content.join(' '),
                 max_tokens: 1024,
                 n: 1,
-                stop: undefined,
+                stream: false,
+                logprobs: null,
+                stop: "\n",
                 temperature: 0.9
             })
             .then((data) => {
