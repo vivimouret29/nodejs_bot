@@ -55,7 +55,7 @@ class MobBot {
         await this.onReSubsciption();
         await this.onCheers();
 
-        this.mbClient.on('connectFailed', function(error) {
+        this.mbClient.on('connectFailed', function (error) {
             console.log('Connect Error: ' + error.toString());
         });
 
@@ -169,13 +169,13 @@ class MobBot {
 
             for (let i in message.split(' ')) {
                 if (message.split(' ')[i].toLowerCase() === '@mobbot_') {
-                    this.mbClient.reply(channel, 'qu\'est-ce ?', userstate.id)
+                    this.mbClient.reply(channel, 'yes, sir ?', userstate.id)
                         .catch(e => console.log(e));
                 };
             };
 
             this._count++;
-            if (_rdm < .175 && this._count % 2 === 0 && this._count > 8) {
+            if (this.live && this._count % 2 === 0 && this._count >= 8) {
                 await this.mbCommands
                     .get('timer')
                     .execute(this.mbClient,
@@ -195,6 +195,19 @@ class MobBot {
             if (_rdm < .05 && !this.live) {
                 this.mbClient.reply(channel, `ALL SYSTEMS ARE OFFLINE MrDestructoid`, userstate.id)
                     .catch(e => console.log(e));
+            };
+
+            while (this.live) {
+                await this.mbCommands
+                    .get('timer')
+                    .execute(this.mbClient,
+                        channel,
+                        message,
+                        userstate,
+                        await this.onLastVideo(),
+                        await this.onTimeStamp(),
+                        true);
+                await new Promise(resolve => setTimeout(resolve, 600000)); // 10 minutes
             };
         });
     };
