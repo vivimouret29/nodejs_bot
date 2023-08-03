@@ -174,30 +174,8 @@ class MobBot {
                 };
             };
 
-            this._count++;
-            if (this.live && this._count % 2 === 0 && this._count >= 8) {
-                await this.mbCommands
-                    .get('timer')
-                    .execute(this.mbClient,
-                        channel,
-                        message,
-                        userstate,
-                        await this.onLastVideo(),
-                        await this.onTimeStamp(),
-                        true);
-            };
 
-            if (regular_users.includes(userstate.username) && _rdm < .005) {
-                this.mbClient.reply(channel, `salu ${userstate.username} PixelBob`, userstate.id)
-                    .catch(e => console.log(e));
-            };
-
-            if (_rdm < .05 && !this.live) {
-                this.mbClient.reply(channel, `ALL SYSTEMS ARE OFFLINE MrDestructoid`, userstate.id)
-                    .catch(e => console.log(e));
-            };
-
-            while (this.live) {
+            if (this.live && this._rdm < .05) {
                 await this.mbCommands
                     .get('timer')
                     .execute(this.mbClient,
@@ -208,6 +186,16 @@ class MobBot {
                         await this.onTimeStamp(),
                         true);
                 await new Promise(resolve => setTimeout(resolve, 600000)); // 10 minutes
+            };
+
+            if (regular_users.includes(userstate.username) && _rdm < .005) {
+                this.mbClient.reply(channel, `salu ${userstate.username} PixelBob`, userstate.id)
+                    .catch(e => console.log(e));
+            };
+
+            if (_rdm < .05 && !this.live) {
+                this.mbClient.reply(channel, `ALL SYSTEMS ARE OFFLINE MrDestructoid`, userstate.id)
+                    .catch(e => console.log(e));
             };
         });
     };
