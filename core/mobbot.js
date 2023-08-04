@@ -40,10 +40,12 @@ class MobBot {
         this.mbCommands = new Map();
 
         this.live = false | this.live;
-        this._count = 0 | this._count;
+        this._count = 1 | this._count;
+        this.date;
     };
 
     async onConnect() {
+        this.date = new Date();
         await this.setCollection();
 
         this.mbClient.on('connected', this.onConnectedHandler);
@@ -127,18 +129,18 @@ class MobBot {
             var _rdm = Math.random();
             // https://clips.twitch.tv/SplendidDiligentTortoisePJSalt-AykamFt8TXjjdEiI
 
-            if (message.includes('https://')) {
-                if (message.includes('https://clips.twitch.tv/')) {
-                    this.mbClient.reply(channel, `@${userstate.username} viens de partager un clip dans le chat, merci à toi !`, userstate.id)
-                } else {
-                    this.mbClient.deletemessage(channel, userstate.id)
-                        .then((data) => {
-                            console.log(data)
-                        }).catch((err) => {
-                            console.log(err)
-                        });
-                };
-            };
+            // if (message.includes('https://')) {
+            //     if (message.includes('https://clips.twitch.tv/')) {
+            //         this.mbClient.reply(channel, `@${userstate.username} viens de partager un clip dans le chat, merci à toi !`, userstate.id)
+            //     } else {
+            //         this.mbClient.deletemessage(channel, userstate.id)
+            //             .then((data) => {
+            //                 console.log(data)
+            //             }).catch((err) => {
+            //                 console.log(err)
+            //             });
+            //     };
+            // };
 
             if (message.startsWith('!')) {
                 let msg = message.trim().toLowerCase(),
@@ -159,10 +161,12 @@ class MobBot {
                                 await this.onLastVideo(),
                                 await this.onTimeStamp(),
                                 false);
+                        this._count++;
                         break;
                     case 'test':
                         this.mbClient.reply(channel, 'Can not send message (-&?. undefined)', userstate.id)
                             .catch(e => console.log(e));
+                        this._count++;
                         break;
                 };
             };
@@ -171,26 +175,33 @@ class MobBot {
                 if (message.split(' ')[i].toLowerCase() === '@mobbot_') {
                     this.mbClient.reply(channel, 'yes, sir ?', userstate.id)
                         .catch(e => console.log(e));
+                    this._count++;
                 };
-            };
-
-
-            if (this.live && this._rdm < .05) {
-                await this.mbCommands
-                    .get('timer')
-                    .execute(this.mbClient,
-                        channel,
-                        message,
-                        userstate,
-                        await this.onLastVideo(),
-                        await this.onTimeStamp(),
-                        true);
-                await new Promise(resolve => setTimeout(resolve, 600000)); // 10 minutes
             };
 
             if (regular_users.includes(userstate.username) && _rdm < .005) {
                 this.mbClient.reply(channel, `salu ${userstate.username} PixelBob`, userstate.id)
                     .catch(e => console.log(e));
+                this._count++;
+            };
+
+            if (this.live) {
+                const tenMinutesLater = new Date(this.date.getTime() + 30 * 60 * 1000), // 30 minutes
+                    hasTenMinutesPassed = new Date() >= tenMinutesLater;
+
+                if (this._count % 20 === 0 || hasTenMinutesPassed) {
+                    await this.mbCommands
+                        .get('timer')
+                        .execute(this.mbClient,
+                            channel,
+                            message,
+                            userstate,
+                            await this.onLastVideo(),
+                            await this.onTimeStamp(),
+                            true);
+                };
+                this._count++;
+                hasTenMinutesPassed ? this.date = new Date() : null;
             };
 
             if (_rdm < .05 && !this.live) {
