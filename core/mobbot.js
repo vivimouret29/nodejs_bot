@@ -59,15 +59,16 @@ class MobBot {
         await this.onCheers();
 
         this.mbClient.on('connectFailed', function (error) {
-            console.log('Connect Error: ' + error.toString());
+            console.log('Connect Error ' + error.toString());
         });
 
-        this.mbClient.on('connect', async function (connection) {
+        this.mbClient.on('connect', function (connection) {
             console.log('// WebSocket Client Connected \\\\');
 
             connection.sendUTF('CAP REQ :twitch.tv/membership twitch.tv/tags twitch.tv/commands');
-            connection.sendUTF('PASS oauth:hgxc5wouzsmdsqxaqgdmql9bk4awun');
-            connection.sendUTF('NICK mobbot_');
+            connection.sendUTF(`PASS oauth:${oauth.identity.password}`);
+            connection.sendUTF(`NICK ${oauth.identity.username}_`);
+            connection.sendUTF(`JOIN #${channels[0].slice(1)}`);
         });
 
         await this.onYeeetTheChild();
@@ -129,21 +130,18 @@ class MobBot {
     async onMessageListen() {
         this.mbClient.on('message', async (channel, userstate, message, self) => {
             if (self || userstate.username === 'mobbot_') return;
-            var _rdm = Math.random();
-            // https://clips.twitch.tv/SplendidDiligentTortoisePJSalt-AykamFt8TXjjdEiI
 
-            // if (message.includes('https://')) {
-            //     if (message.includes('https://clips.twitch.tv/')) {
-            //         this.mbClient.reply(channel, `@${userstate.username} viens de partager un clip dans le chat, merci à toi !`, userstate.id)
-            //     } else {
-            //         this.mbClient.deletemessage(channel, userstate.id)
-            //             .then((data) => {
-            //                 console.log(data)
-            //             }).catch((err) => {
-            //                 console.log(err)
-            //             });
-            //     };
-            // };
+            var _rdm = Math.random();
+
+            if (message.startsWith('https://')) {
+                if (userstate.username != 'daftmob') {
+                    if (message.startsWith('https://clips.twitch.tv/')) {
+                        this.mbClient.reply(channel, `@${userstate.username} viens de partager un clip dans le chat, merci à toi !`, userstate.id)
+                    } else {
+                        await axios.delete('https://api.twitch.tv/helix/moderation/chat?broadcaster_id=70530820&moderator_id=844905873&message_id=' + userstate.id, params)
+                    };
+                };
+            };
 
             if (message.startsWith('!')) {
                 let msg = message.trim().toLowerCase(),
