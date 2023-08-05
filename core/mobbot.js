@@ -40,12 +40,13 @@ class MobBot {
         this.mbCommands = new Map();
 
         this.live = false | this.live;
-        this._count = 1 | this._count;
+        this._count = 0 | this._count;
         this.date;
     };
 
     async onConnect() {
         this.date = new Date();
+
         await this.setCollection();
 
         this.mbClient.on('connected', this.onConnectedHandler);
@@ -107,6 +108,8 @@ class MobBot {
 
             checkLive = true;
             oldGameMemory = gameMemory;
+
+            await this.onLiveSponsor();
             await new Promise(resolve => setTimeout(resolve, 600000)); // 10 minutes
         };
     };
@@ -185,30 +188,36 @@ class MobBot {
                 this._count++;
             };
 
-            if (this.live) {
-                const tenMinutesLater = new Date(this.date.getTime() + 30 * 60 * 1000), // 30 minutes
-                    hasTenMinutesPassed = new Date() >= tenMinutesLater;
-
-                if (this._count % 20 === 0 || hasTenMinutesPassed) {
-                    await this.mbCommands
-                        .get('timer')
-                        .execute(this.mbClient,
-                            channel,
-                            message,
-                            userstate,
-                            await this.onLastVideo(),
-                            await this.onTimeStamp(),
-                            true);
-                };
-                this._count++;
-                hasTenMinutesPassed ? this.date = new Date() : null;
-            };
+            this._count++;
+            await this.onLiveSponsor();
 
             if (_rdm < .05 && !this.live) {
-                this.mbClient.reply(channel, `ALL SYSTEMS ARE OFFLINE MrDestructoid`, userstate.id)
+                await new Promise(resolve => setTimeout(resolve, 3500)); // 3.5 secondes
+                this.mbClient.say(channel, `ALL SYSTEMS ARE OFFLINE MrDestructoid`)
                     .catch(e => console.log(e));
             };
         });
+    };
+
+    async onLiveSponsor() {
+        if (this.live) {
+            const minutesLater = new Date(this.date.getTime() + 30 * 60 * 1000), // 30 minutes
+                hasMinutesPassed = new Date() >= minutesLater;
+
+            if (this._count % 20 === 0 || hasMinutesPassed) {
+                await this.mbCommands
+                    .get('timer')
+                    .execute(this.mbClient,
+                        channels[0],
+                        undefined,
+                        undefined,
+                        await this.onLastVideo(),
+                        await this.onTimeStamp(),
+                        true);
+            };
+
+            hasMinutesPassed ? this.date = new Date() : null;
+        };
     };
 
     async onSubscription() {
