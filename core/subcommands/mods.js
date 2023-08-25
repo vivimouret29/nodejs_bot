@@ -5,7 +5,7 @@ module.exports = {
         name: 'ping',
         description: 'a dynamic ping'
     },
-    async execute(client, channel, message, userstate) {
+    async execute(client, channel, message, userstate, urI, timestamp, autoPost, sponso) {
         client
             .reply(channel,
                 'ptit lien des mods de stalker gamma : https://github.com/Grokitach/Stalker_GAMMA/blob/main/G.A.M.M.A/modpack_data/modlist.txt',

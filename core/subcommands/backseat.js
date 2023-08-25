@@ -5,7 +5,7 @@ module.exports = {
         name: 'backseat',
         description: 'a dynamic backseat'
     },
-    async execute(client, channel, message, userstate) {
+    async execute(client, channel, message, userstate, urI, timestamp, autoPost, sponso) {
         client.reply(channel, 'pas de conseil si le daft n\'en demandes pas, sinon tu risques le ban', userstate.id)
             .catch(e => console.log(e));
     }

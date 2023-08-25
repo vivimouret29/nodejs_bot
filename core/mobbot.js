@@ -106,7 +106,8 @@ class MobBot {
                             undefined,
                             await this.onLastVideo(),
                             await this.onTimeStamp(),
-                            true);
+                            true,
+                            false);
                 };
             };
 
@@ -164,6 +165,7 @@ class MobBot {
                                 userstate,
                                 await this.onLastVideo(),
                                 await this.onTimeStamp(),
+                                false,
                                 false);
                         this._count++;
                         break;
@@ -221,6 +223,7 @@ class MobBot {
                         undefined,
                         await this.onLastVideo(),
                         await this.onTimeStamp(),
+                        false,
                         true);
             };
 

@@ -7,7 +7,7 @@ module.exports = {
         name: 'timer',
         description: 'a dynamic timer'
     },
-    async execute(client, channel, message, userstate, urI, timestamp, autoPost) {
+    async execute(client, channel, message, userstate, urI, timestamp, autoPost, sponso) {
         if (autoPost) {
             let mtpPhrases = [
                 'passes rejoindre son discord https://discord.gg/ucwnMKKxZe PixelBob',
@@ -20,6 +20,15 @@ module.exports = {
             ];
 
             client.say(channel, `daft est en live depuis ${timestamp}, ` + mtpPhrases[randomIntFromInterval(0, mtpPhrases.length - 1)])
+                .catch(e => console.log(e));
+        } else if (sponso) {
+            let spnPhrases = [
+                `Terry t'offre une montagne de réduction sur Instant-Gaming en utilisant ce lien https://www.instant-gaming.com/?igr=daftmob daftmo1Gotanitem`,
+                `rejoins l\'ordre de daft en lâchant ton Prime ou en trouvant le chemin de la force https://www.twitch.tv/products/daftmob daftmo1Gotanitem`,
+                'tentes de gagner des jeux gratuits en participant aux giveaway avec mon lien https://www.instant-gaming.com/fr/giveaway/instantgaming?igr=daftmob daftmo1Diosama'
+            ];
+
+            client.say(channel, spnPhrases[randomIntFromInterval(0, spnPhrases.length - 1)])
                 .catch(e => console.log(e));
         } else {
             client.reply(channel, `daft est en live depuis ${timestamp}`, userstate.id)

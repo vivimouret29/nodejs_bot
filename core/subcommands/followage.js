@@ -16,7 +16,7 @@ module.exports = {
         name: 'followage',
         description: 'a dynamic followage'
     },
-    async execute(client, channel, message, userstate) {
+    async execute(client, channel, message, userstate, urI, timestamp, autoPost, sponso) {
         if (userstate.username === 'daftmob') {
             client.reply(channel, `debilus...`, userstate.id)
                 .catch(e => console.log(e));

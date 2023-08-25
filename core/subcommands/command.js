@@ -8,7 +8,7 @@ module.exports = {
         name: 'command',
         description: 'a dynamic command'
     },
-    async execute(client, channel, message, userstate) {
+    async execute(client, channel, message, userstate, urI, timestamp, autoPost, sponso) {
         let commandsPath = path.join(__dirname, '../subcommands'),
             commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js')),
             commands = []

@@ -7,7 +7,7 @@ module.exports = {
         name: 'sub',
         description: 'a dynamic sub'
     },
-    async execute(client, channel, message, userstate) {
+    async execute(client, channel, message, userstate, urI, timestamp, autoPost, sponso) {
         let mtpPhrases = [
             `avec le courage de ta CB, deviens le chevalier qu'il faut en suivant le lien : https://www.twitch.tv/products/daftmob daftmo1Gotanitem, sinon Terry prends le Prime gratuitement`,
             `rejoins l\'ordre de daft en donnant ton Prime ou en trouvant le chemin vers la force : https://www.twitch.tv/products/daftmob daftmo1Gotanitem`
