@@ -41,6 +41,7 @@ class MobBot {
 
         this.live = false | this.live;
         this._count = 0 | this._count;
+        this._emote = true | this._emote;
         this.date;
     };
 
@@ -91,9 +92,11 @@ class MobBot {
             if (!checkLive || ax.data.data.length == 0) {
                 gameMemory = '';
                 this.live = false;
+                this._emote = false;
             } else {
                 gameMemory = ax.data.data[0].game_name;
                 this.live = true;
+                this._emote = true;
                 if (gameMemory != oldGameMemory && ax.data.data.length == 1) {
                     this.mbCommands
                         .get('timer')
@@ -169,6 +172,13 @@ class MobBot {
                             .catch(e => console.log(e));
                         this._count++;
                         break;
+                };
+
+                if (command.includes('emote')) {
+                    this.mbClient.say(channel, '!emote daftmo1Gotanitem')
+                        .catch(e => console.log(e));
+                    this._emote = false;
+                    this._count++;
                 };
             };
 
