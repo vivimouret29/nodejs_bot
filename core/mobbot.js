@@ -72,8 +72,6 @@ class MobBot {
             connection.sendUTF(`JOIN #${channels[0].slice(1)}`);
         });
 
-        await this.onYeeetTheChild();
-
         await this.mbClient.connect('ws://irc-ws.chat.twitch.tv:443').catch(console.error);
 
         let checkLive = true,
@@ -262,7 +260,14 @@ class MobBot {
 
     async onYeeetTheChild() {
         this.mbClient.on("ban", (channel, username, reason, userstate) => {
-            this.mbClient.say(channel, `YEEEEEEEEEEEEEEEEEEET THE ${username} !! FBPass`)
+            this.mbClient.say(channel, `YEEEEEEEEEEEEEEEEEEET ${username} !! DarkMode`)
+                .catch(e => console.log(e));
+        });
+    };
+
+    async onEasyYeeetTheChild() {
+        this.mbClient.on("timeout", (channel, username, reason, duration, userstate) => {
+            this.mbClient.say(channel, `${username} plus tard, reviendra !! FBPass`)
                 .catch(e => console.log(e));
         });
     }
