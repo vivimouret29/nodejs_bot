@@ -504,7 +504,7 @@ class DaftBot {
     async setRole() {
         this.dbClient.on(Events.MessageReactionAdd, async (react, user) => {
             var roChan = '1068559351570247741',
-                roMsg = '1071286935726854216',
+                roMsg = '1167224080513122414',
                 emoji = react.emoji.name,
                 channel = this.dbClient.channels.cache.get(react.message.channelId),
                 messageId = react.message.id,
@@ -518,18 +518,6 @@ class DaftBot {
                         break;
                     case '❤️':
                         await this.switchRoles(this.dbClient, guild, user.id, 1, true);
-                        break;
-                    case 'looners':
-                        await this.switchRoles(this.dbClient, guild, user.id, 2, true);
-                        break;
-                    case 'mandalorian':
-                        await this.switchRoles(this.dbClient, guild, user.id, 3, true);
-                        break;
-                    case 'linkitem':
-                        await this.switchRoles(this.dbClient, guild, user.id, 4, true);
-                        break;
-                    case 'croisade':
-                        await this.switchRoles(this.dbClient, guild, user.id, 5, true);
                         break;
                 };
             };
@@ -547,7 +535,7 @@ class DaftBot {
 
         this.dbClient.on(Events.MessageReactionRemove, async (react, user) => {
             var rChan = '1068559351570247741',
-                rMsg = '1071286935726854216',
+                rMsg = '1167224080513122414',
                 emoji = react.emoji.name,
                 channel = this.dbClient.channels.cache.get(react.message.channelId),
                 messageId = react.message.id,
@@ -562,18 +550,6 @@ class DaftBot {
                     case '❤️':
                         await this.switchRoles(this.dbClient, guild, user.id, 1, false);
                         break;
-                    case 'looners':
-                        await this.switchRoles(this.dbClient, guild, user.id, 2, false);
-                        break;
-                    case 'mandalorian':
-                        await this.switchRoles(this.dbClient, guild, user.id, 3, false);
-                        break;
-                    case 'linkitem':
-                        await this.switchRoles(this.dbClient, guild, user.id, 4, false);
-                        break;
-                    case 'croisade':
-                        await this.switchRoles(this.dbClient, guild, user.id, 5, false);
-                        break;
                 };
             };
         });
@@ -582,6 +558,8 @@ class DaftBot {
     async switchRoles(client, guild, userId, roleIndex, style) {
         var role = await client.guilds.cache.find(s => s.name == guild.name).roles.cache.find(r => r.name == this.rolesNames[roleIndex]),
             user = await client.guilds.cache.find(s => s.name == guild.name).members.cache.get(userId);
+
+        if (role == undefined) return console.log(`[${getCurrentDatetime('comm')}] Error in ${guild.name} for ${user.user.username} # ROLE ${this.rolesNames[roleIndex]} not found`);
 
         switch (style) {
             case true:
