@@ -342,11 +342,11 @@ class MobBot {
             var channelSend = client.channels.cache.find(channel => channel.name == channelTwitch[chan]);
             if (channelSend == undefined) break;
 
-            client.channels.cache
+            await client.channels.cache
                 .get(channelSend.id)
                 .send({
                     'channel_id': channelSend.id,
-                    'content': channelTwitch[chan] == '💻incoming' ? 'je suis en live <@&1071048787738497084>, venez me retrouver !' : '',
+                    'content': channelTwitch[chan] == '💻incoming' ? 'je suis parti en live <@&1071048787738497084>, venez me retrouver !' : '',
                     'tts': false,
                     'embeds': [{
                         'type': 'rich',
@@ -358,7 +358,7 @@ class MobBot {
                             'value': axios.data.data[0].title
                         }],
                         'image': {
-                            'url': `https://static-cdn.jtvnw.net/previews-ttv/live_user_${axios.data.data[0].user_login}-320x180.jpg?r=554274`,
+                            'url': `https://static-cdn.jtvnw.net/previews-ttv/live_user_${axios.data.data[0].user_login}-320x180.jpg?r=294998`,
                             'proxy_url': `https://twitch.tv/${axios.data.data[0].user_login}`
                         },
                         'thumbnail': {
