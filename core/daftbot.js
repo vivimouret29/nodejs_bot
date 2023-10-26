@@ -82,9 +82,9 @@ class DaftBot {
         this.language = this.language == undefined ? fr : this.language;
 
         this.emojiRoles = ['💜', '❤️', 'looners', 'mandalorian', 'linkitem', 'croisade'];
-        this.rolesNames = ['/D/TWITCH', '/D/YOUTUBE', '/D/STALKERS', '/D/CHASSEURS', '/D/HÉROS', '/D/GUERRIERS', '/D/RECRUES'];
+        this.rolesNames = ['/D/TWITCH', '/D/YOUTUBE'];
 
-        this.avoidBot = ['757970907992948826', '758393470024155186', '758319298325905428'];
+        this.avoidBot = ['757970907992948826', '758393470024155186', '758319298325905428']; // PyBot, mobbeta, BetaBot
         this.userToCheck = ['491907126701064193'];
 
         this.welcomeMessage = [948894919878123570];
