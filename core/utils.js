@@ -42,9 +42,9 @@ function getCurrentDatetime(choice) {
 		case 'csv':
 			return `${date.getUTCDate() < 10 ? `0${date.getUTCDate()}` : date.getUTCDate()}${date.getUTCMonth() < 10 ? `0${date.getUTCMonth()}` : date.getUTCMonth()}${date.getUTCFullYear()}`;
 		case 'date':
-			return `${date.getUTCFullYear()}-${date.getUTCMonth() < 10 ? `0${date.getUTCMonth()}` : date.getUTCMonth()}-${date.getUTCDate() < 10 ? `0${date.getUTCDate()}` : date.getUTCDate()} ${(date.getUTCHours() + 1) < 10 ? `0${date.getUTCHours()}` : (date.getUTCHours() + 1)}:${date.getUTCMinutes() < 10 ? `0${date.getUTCMinutes()}` : date.getUTCMinutes()}`;
+			return `${date.getUTCFullYear()}-${date.getUTCMonth() < 10 ? `0${date.getUTCMonth()}` : date.getUTCMonth()}-${date.getUTCDate() < 10 ? `0${date.getUTCDate()}` : date.getUTCDate()} ${(date.getHours()) < 10 ? `0${date.getHours()}` : (date.getHours())}:${date.getUTCMinutes() < 10 ? `0${date.getUTCMinutes()}` : date.getUTCMinutes()}`;
 		case 'comm':
-			return `${(date.getUTCHours() + 1) < 10 ? `0${date.getUTCHours()}` : (date.getUTCHours() + 1)}:${date.getUTCMinutes() < 10 ? `0${date.getUTCMinutes()}` : date.getUTCMinutes()} - ${date.getUTCDate() < 10 ? `0${date.getUTCDate()}` : date.getUTCDate()}/${date.getUTCMonth() < 10 ? `0${date.getUTCMonth()}` : date.getUTCMonth()}/${date.getUTCFullYear()}`;
+			return `${(date.getHours()) < 10 ? `0${date.getHours()}` : (date.getHours())}:${date.getUTCMinutes() < 10 ? `0${date.getUTCMinutes()}` : date.getUTCMinutes()} - ${date.getUTCDate() < 10 ? `0${date.getUTCDate()}` : date.getUTCDate()}/${date.getUTCMonth() < 10 ? `0${date.getUTCMonth()}` : date.getUTCMonth()}/${date.getUTCFullYear()}`;
 	};
 };
 
