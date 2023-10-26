@@ -26,7 +26,7 @@ module.exports = {
             Math.floor(totalSeconds / 60) < 10 ? minutes = `0${Math.floor(totalSeconds / 60)}` : minutes = Math.floor(totalSeconds / 60);
             Math.floor(totalSeconds % 60) < 10 ? seconds = `0${Math.floor(totalSeconds % 60)}` : seconds = Math.floor(totalSeconds % 60);
 
-            await sendEmbed(message, `${language.uptime} **${days}:${hours}:${minutes}.${seconds}**\n${start}`)
+            await sendEmbed(message, `${language.uptime} **${days}::${hours}:${minutes}.${seconds}**\n${start}`)
                 .catch(err => {
                     message.reply({ 'content': language.error, 'ephemeral': true });
                     console.log(`[${getCurrentDatetime('comm')}] Error sending message SEERROR ${err}`);

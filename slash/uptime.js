@@ -26,7 +26,7 @@ module.exports = {
             Math.floor(totalSeconds % 60) < 10 ? seconds = `0${Math.floor(totalSeconds % 60)}` : seconds = Math.floor(totalSeconds % 60);
 
             message.reply({
-                'content': `${language.uptime} **${days}:${hours}:${minutes}.${seconds}**\n${start}`,
+                'content': `${language.uptime} **${days}::${hours}:${minutes}.${seconds}**\n${start}`,
                 'ephemeral': true
             });
         } catch (err) {
