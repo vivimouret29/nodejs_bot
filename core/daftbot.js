@@ -167,10 +167,11 @@ class DaftBot {
                     name: this.language.activities,
                     type: ActivityType.Watching
                 }],
-                status: 'online'
+                status: 'idle'
             });
             console.log(`[${getCurrentDatetime('comm')}] ${this.dbClient.user.username} present in : `, this.dbClient.guilds.cache.map(guild => guild.name));
 
+            if (this.dbClient.user.id == this.avoidBot[1]) { return; };
             this.dbClient.mobbot
                 .get('mobbotConnection')
                 .execute();
@@ -214,8 +215,11 @@ class DaftBot {
                 };
 
                 let fe = await fetch(`https://www.youtube.com/feeds/videos.xml?channel_id=UCreItrEewfO6IPZYPu4C7pA`)
-                    .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error FETCH ${err}`); }),
-                    fetched = await fe.text(),
+                    .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error FETCH ${err}`); });
+
+                if (fe == undefined) { continue; };
+
+                let fetched = await fe.text(),
                     published = fetched.split(new RegExp(`(\>[^.]*?\/)`, 'giu'))[37].slice(15, -2),
                     pubDate = new Date(published);
 
@@ -230,7 +234,7 @@ class DaftBot {
                 checkLive = true;
                 oldUrIMemory = urIMemory;
                 oldGameMemory = gameMemory;
-                if (ping) await new Promise(resolve => setTimeout(resolve, 600 * 1000)); // 10 minutes
+                if (ping) await new Promise(resolve => setTimeout(resolve, 60 * 1000)); // 1 minute
                 else {
                     await new Promise(resolve => setTimeout(resolve, 3600 * 1000)); // 1 heure
                     ping = true;

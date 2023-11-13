@@ -346,12 +346,12 @@ class MobBot {
                 .get(channelSend.id)
                 .send({
                     'channel_id': channelSend.id,
-                    'content': channelTwitch[chan] == '💻incoming' ? 'je suis parti en live <@&1071048787738497084>, venez me retrouver !' : '',
+                    'content': channelTwitch[chan] == '💻incoming' ? 'le daft part en live sur <@&1071048787738497084>, venez le retrouver !' : '',
                     'tts': false,
                     'embeds': [{
                         'type': 'rich',
                         'title': `Live de ${axios.data.data[0].user_name}`,
-                        'description': `${language.descLiveSt} ${axios.data.data[0].user_name} ${language.descLiveNd}`,
+                        'description': `${language.descLiveSt} **${axios.data.data[0].user_name}** ${language.descLiveNd}`,
                         'color': randomColor(),
                         'fields': [{
                             'name': axios.data.data[0].game_name,
@@ -371,7 +371,7 @@ class MobBot {
                             'icon_url': client.user.avatarURL({ format: 'png', dynamic: true, size: 1024 })
                         },
                         'footer': {
-                            'text': `Viewers : ${axios.data.data[0].viewer_count}`,
+                            'text': `Viewers : **${axios.data.data[0].viewer_count}**`,
                             'icon_url': `https://em-content.zobj.net/thumbs/120/microsoft/319/busts-in-silhouette_1f465.png`,
                             'proxy_icon_url': `https://twitch.tv/${axios.data.data[0].user_login}`
                         },
