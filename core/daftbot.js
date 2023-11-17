@@ -234,9 +234,9 @@ class DaftBot {
                 checkLive = true;
                 oldUrIMemory = urIMemory;
                 oldGameMemory = gameMemory;
-                if (ping) await new Promise(resolve => setTimeout(resolve, 60 * 1000)); // 1 minute
+                if (ping) await new Promise(resolve => setTimeout(resolve, 60000)); // 1 minute
                 else {
-                    await new Promise(resolve => setTimeout(resolve, 3600 * 1000)); // 1 heure
+                    await new Promise(resolve => setTimeout(resolve, 3600000)); // 1 heure
                     ping = true;
                 };
             };

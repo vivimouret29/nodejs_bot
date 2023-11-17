@@ -113,7 +113,7 @@ class MobBot {
             oldGameMemory = gameMemory;
 
             await this.onLiveSponsor();
-            await new Promise(resolve => setTimeout(resolve, 600000)); // 10 minutes
+            await new Promise(resolve => setTimeout(resolve, 1800000)); // 30 minutes
         };
     };
 
@@ -371,7 +371,7 @@ class MobBot {
                             'icon_url': client.user.avatarURL({ format: 'png', dynamic: true, size: 1024 })
                         },
                         'footer': {
-                            'text': `Viewers : **${axios.data.data[0].viewer_count}**`,
+                            'text': `Viewers : ${axios.data.data[0].viewer_count}`,
                             'icon_url': `https://em-content.zobj.net/thumbs/120/microsoft/319/busts-in-silhouette_1f465.png`,
                             'proxy_icon_url': `https://twitch.tv/${axios.data.data[0].user_login}`
                         },
