@@ -5,10 +5,10 @@
 <div>
     <div align="center">
         <a>
-            <img src="https://img.shields.io/badge/daftbot-v2.3.4-green">
+            <img src="https://img.shields.io/badge/daftbot-v2.3.3-green">
         </a>
         <a>
-            <img src="https://img.shields.io/badge/mobbot-v1.1.0-purple">
+            <img src="https://img.shields.io/badge/mobbot-v1.1.1-purple">
         </a>
     </div>
     <br>
