@@ -341,6 +341,7 @@ class MobBot {
         for (let chan in channelTwitch) {
             var channelSend = client.channels.cache.find(channel => channel.name == channelTwitch[chan]);
             if (channelSend == undefined) break;
+            if (channelTwitch[chan] == 'bots' && axios.data.data[0].game_name != 'Rocket League') break;
 
             await client.channels.cache
                 .get(channelSend.id)
