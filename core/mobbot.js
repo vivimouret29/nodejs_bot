@@ -113,7 +113,7 @@ class MobBot {
             oldGameMemory = gameMemory;
 
             await this.onLiveSponsor();
-            await new Promise(resolve => setTimeout(resolve, 1800000)); // 30 minutes
+            await new Promise(resolve => setTimeout(resolve, 5 * 60000)); // 5 minutes
         };
     };
 
