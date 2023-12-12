@@ -324,7 +324,7 @@ class MobBot {
         };
 
         let guidDot = gD,
-            channelTwitch = ['💻incoming', '🎦-fox-stream-🎦', 'twitch-support-🎥'],
+            channelTwitch = ['💻incoming', '🎦-fox-stream-🎦', 'twitch-support-🎥', 'bots'],
             guid = '',
             dot = '';
 
