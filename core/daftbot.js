@@ -169,7 +169,7 @@ class DaftBot {
                 }],
                 status: 'idle'
             });
-            console.log(`[${getCurrentDatetime('comm')}] ${this.dbClient.user.username} present in : `, this.dbClient.guilds.cache.map(guild => guild.name));
+            console.log(`[${getCurrentDatetime('comm')}] ${this.dbClient.user.username} present in ${this.dbClient.guilds.cache.size} guilds : `, this.dbClient.guilds.cache.map(guild => guild.name));
 
             if (this.dbClient.user.id == this.avoidBot[1]) { return; };
             this.dbClient.mobbot
