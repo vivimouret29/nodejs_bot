@@ -9,7 +9,7 @@ const { Client } = require('tmi.js'),
     WebSocketClient = require('websocket').client,
     webSocket = new WebSocketClient(),
     { clientId, identity, channels } = require('./config.json'),
-    { getCurrentDatetime, randomColor } = require('./utils.js'),
+    { randomIntFromInterval, getCurrentDatetime, randomColor } = require('./utils.js'),
     { users: regular_users } = require('../resx/regular_users.json');
 
 const oauth = {
@@ -113,7 +113,7 @@ class MobBot {
             oldGameMemory = gameMemory;
 
             await this.onLiveSponsor();
-            await new Promise(resolve => setTimeout(resolve, 5 * 60000)); // 5 minutes
+            await new Promise(resolve => setTimeout(resolve, 15 * 60000)); // 15 minutes
         };
     };
 
@@ -191,8 +191,16 @@ class MobBot {
             };
 
             if (regular_users.includes(userstate.username) && _rdm < .005) {
-                this.mbClient.reply(channel, `salu ${userstate.username} PixelBob`, userstate.id)
+                let regulars_msg = [
+                    `salut ${userstate.username} PixelBob`,
+                    `ouah ${userstate.username} est là MyAvatar`,
+                    `${userstate.username} PotFriend`,
+                    `le GOAT ${userstate.username} GoatEmotey`
+                ];
+
+                this.mbClient.reply(channel, regulars_msg[randomIntFromInterval(0, regulars_msg.length - 1)], userstate.id)
                     .catch(e => console.log(e));
+                    
                 this._count++;
             };
 
