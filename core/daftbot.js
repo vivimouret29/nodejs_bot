@@ -589,7 +589,7 @@ class DaftBot {
                         console.log(`[${getCurrentDatetime('comm')}] Error when unassigning the role ${role.name} to ${user.user.username} : ${error}`);
                     };
                 } else {
-                    awaituser.send(this.language.remRole)
+                    await user.send(this.language.remRole)
                         .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error author.send() ${err}`); });
                     console.log(`[${getCurrentDatetime('comm')}] ${user.user.username} have not the role ${role.name}`);
                 };
