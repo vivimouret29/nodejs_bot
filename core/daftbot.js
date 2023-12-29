@@ -81,8 +81,8 @@ class DaftBot {
         this.isMuted = false;
         this.language = this.language == undefined ? fr : this.language;
 
-        this.emojiRoles = ['💜', '❤️', 'looners', 'mandalorian', 'linkitem', 'croisade'];
-        this.rolesNames = ['/D/TWITCH', '/D/YOUTUBE'];
+        this.emojiRoles = ['💜', '❤️'];
+        this.rolesNames = ['/D/TWITCH', '/D/YOUTUBE', '/D/NOVICE'];
 
         this.avoidBot = ['757970907992948826', '758393470024155186', '758319298325905428']; // PyBot, mobbeta, BetaBot
         this.userToCheck = ['491907126701064193'];
@@ -253,7 +253,7 @@ class DaftBot {
 
     async onListenGuildNewMember() {
         this.dbClient.on(Events.GuildMemberAdd, async (guild) => {
-            if (this.dbClient.user.id == this.avoidBot[1] || guild.user.bot || !this.welcomeMessage.includes(Number(guild.id))) return;
+            if (this.dbClient.user.id == this.avoidBot[1] || !this.welcomeMessage.includes(Number(guild.id))) return;
             console.log(`[${getCurrentDatetime('comm')}] New member \'${guild.user.username}\' join server : ${guild.guild.name}`);
 
             this.dbClient.channels.cache
@@ -532,7 +532,7 @@ class DaftBot {
                 messageReg = channel.messages.cache.get(messageIdReg);
 
             if (messageReg.channelId == reChan && reMsg.includes(message.id)) {
-                await this.switchRoles(this.dbClient, guild, user.id, 6, true);
+                await this.switchRoles(this.dbClient, guild, user.id, 2, true);
                 console.log(`[${getCurrentDatetime('comm')}] ${guild.name} / ${channel.name} # ${user.username} read the reglement`);
             };
         });
@@ -555,6 +555,16 @@ class DaftBot {
                         await this.switchRoles(this.dbClient, guild, user.id, 1, false);
                         break;
                 };
+            };
+
+            var reChan = '1068557736306024519',
+            reMsg = ['1077008507724890122', '1077008635865088110'],
+            messageIdReg = react.message.id,
+            messageReg = channel.messages.cache.get(messageIdReg);
+
+        if (messageReg.channelId == reChan && reMsg.includes(message.id)) {
+                await this.switchRoles(this.dbClient, guild, user.id, 2, false);
+                console.log(`[${getCurrentDatetime('comm')}] ${guild.name} / ${channel.name} # ${user.username} no longer accepts the reglement`);
             };
         });
     };
