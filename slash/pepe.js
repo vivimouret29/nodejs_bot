@@ -33,7 +33,7 @@ module.exports = {
 			countResponse = -1,
 			link = '';
 
-		const urI = 'https://vivsmouret-dipl0-pepe-diffuser.hf.space/run/predict',
+		const urI = 'https://dipl0-dipl0-pepe-diffuser-bot.hf.space/run/predict',
 			headers = {
 				'Authorization': `Bearer ${huggingface}`,
 				'Content-Type': 'application/json',

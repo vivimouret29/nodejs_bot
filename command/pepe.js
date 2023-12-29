@@ -1,5 +1,6 @@
 'use.strict'
 
+
 const fs = require('node:fs'),
     axios = require('axios'),
     { clientId, identity } = require('../core/config.json'),
@@ -14,7 +15,7 @@ module.exports = {
         description: 'a dynamic pepe',
         args: true
     },
-    async execute(message, client, language, user, args, initDateTime) {
+    async execute(message, client_, language, user, args, initDateTime) {
         if (args.length == 0) { return await sendEmbed(message, language.argsUndefined); };
 
         let msg = await message.channel
@@ -28,7 +29,7 @@ module.exports = {
             countResponse = -1,
             link = '';
 
-        const urI = 'https://vivsmouret-dipl0-pepe-diffuser.hf.space/run/predict',
+        const urI = 'https://dipl0-dipl0-pepe-diffuser-bot.hf.space/run/predict',
             headers = {
                 'Authorization': `Bearer ${huggingface}`,
                 'Content-Type': 'application/json',
