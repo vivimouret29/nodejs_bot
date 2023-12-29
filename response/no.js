@@ -9,7 +9,7 @@ module.exports = {
     },
     async execute(message, args, language) {
         let reply = new EmbedBuilder()
-            .setDescription('NO NO NO')
+            .setDescription(language.replyNo)
             .setImage('https://i.pinimg.com/originals/da/eb/26/daeb26a70a817fbeef6f8e3b5c9baee1.gif');
 
         await message.channel.send({ embeds: [reply] });
