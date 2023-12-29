@@ -12,7 +12,7 @@ module.exports = {
             .reply({ 'content': language.pingWait, 'fetchReply': true, 'ephemeral': true })
             .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error send command ping ${err}`); });
 
-        await message.editReply({ 'content': `Bip. ${language.pingEdit} ${randomIntFromInterval(200, 399)}ms.. Bip Boup..`, 'fetchReply': false, 'ephemeral': true })
+        await message.editReply({ 'content': `Bip. ${language.pingEdit} ${randomIntFromInterval(200, 399)}ms.. Bip Boup..`, 'fetchReply': false, 'ephemeral': false })
             .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error edit command ping ${err}`); });
     }
 };

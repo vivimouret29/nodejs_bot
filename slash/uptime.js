@@ -27,7 +27,7 @@ module.exports = {
 
             message.reply({
                 'content': `${language.uptime} **${days}::${hours}:${minutes}.${seconds}**\n${start}`,
-                'ephemeral': true
+                'ephemeral': false
             });
         } catch (err) {
             message.reply({ 'content': language.error, 'ephemeral': true });

@@ -29,7 +29,7 @@ async function messageEmbed(message, content) {
                     'proxy_icon_url': 'https://discord.gg/ucwnMKKxZe'
                 }
             }],
-            'ephemeral': true
+            'ephemeral': false
         });
 
     return messageToSend;

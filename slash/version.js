@@ -8,6 +8,6 @@ module.exports = {
         .setName('version')
         .setDescription('Pour connaître sa version actuelle'),
     async execute(message, client, language, user, initDateTime) {
-        await message.reply({ 'content': `daftbot ${package.version}`, 'ephemeral': true });
+        await message.reply({ 'content': `daftbot ${package.version}`, 'ephemeral': false });
     }
 };
