@@ -2,8 +2,8 @@
 
 module.exports = {
     data: {
-        name: 'ping',
-        description: 'a dynamic ping'
+        name: 'mods',
+        description: 'a dynamic mods list'
     },
     async execute(client, channel, message, userstate, urI, timestamp, autoPost, sponso) {
         client
