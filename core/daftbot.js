@@ -220,8 +220,11 @@ class DaftBot {
                 if (fe == undefined) { continue; };
 
                 let fetched = await fe.text(),
-                    published = fetched.split(new RegExp(`(\>[^.]*?\/)`, 'giu'))[37].slice(15, -2),
-                    pubDate = new Date(published);
+                    published = fetched.split(new RegExp(`(\>[^.]*?\/)`, 'giu'))[37]; 
+                    
+                if (published == undefined) { continue; };
+                let sliced = published.slice(15, -2), // slice fail some time ??
+                    pubDate = new Date(sliced);
 
                 urIMemory = fetched.split(new RegExp(`(\:[^.]*\<\/)`, 'giu'))[3].split(new RegExp(`(\<[^.]*?\>)`, 'giu'))[10];
                 if (new Date(new Date().setHours(new Date().getHours() - 2)) < pubDate && urIMemory != oldUrIMemory) {
