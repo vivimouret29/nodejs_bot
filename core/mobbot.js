@@ -8,7 +8,8 @@ const { Client } = require('tmi.js'),
     path = require('node:path'),
     WebSocketClient = require('websocket').client,
     webSocket = new WebSocketClient(),
-    { clientId, identity, channels } = require('./config.json'),
+    { TwitterApi } = require('twitter-api-v2'),
+    { clientId, identity, channels, x } = require('./config.json'),
     { randomIntFromInterval, getCurrentDatetime, randomColor } = require('./utils.js'),
     { users: regular_users } = require('../resx/regular_users.json');
 
@@ -30,6 +31,13 @@ const params = {
         'Client-ID': clientId
     }
 };
+const xApi = new TwitterApi({
+    appKey: x.api_key,
+    appSecret: x.api_secret,
+    accessToken: x.atas,
+    accessSecret: x.atas_secret,
+    bearerToken: x.bearer
+});
 
 var dataToExport = [];
 
@@ -200,7 +208,7 @@ class MobBot {
 
                 this.mbClient.reply(channel, regulars_msg[randomIntFromInterval(0, regulars_msg.length - 1)], userstate.id)
                     .catch(e => console.log(e));
-                    
+
                 this._count++;
             };
 
@@ -346,6 +354,19 @@ class MobBot {
             console.log(`[${getCurrentDatetime('comm')}] LIVENOTIFRROR Can't get guid and dot : `, err);
         };
 
+        // const mediaIds = await Promise.all([
+        //     xApi.v1.uploadMedia('./styles/ai/pepe-diffuser.jpg')
+        // ]);
+
+        const rwClient = xApi.readWrite;
+        await rwClient.v2.tweet({
+            text: `${axios.data.data[0].title}\
+            \n
+            \n#${axios.data.data[0].game_name}
+            \n\nhttps://twitch.tv/${axios.data.data[0].user_name}`,
+            // media: { media_ids: mediaIds }
+        });
+
         for (let chan in channelTwitch) {
             var channelSend = client.channels.cache.find(channel => channel.name == channelTwitch[chan]);
             if (channelSend == undefined) break;
@@ -464,7 +485,7 @@ class MobBot {
         let fe = await fetch(`https://www.youtube.com/feeds/videos.xml?channel_id=UCreItrEewfO6IPZYPu4C7pA`)
             .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error FETCH ${err}`); }),
             fetched = await fe.text();
-        return String(fetched.split(new RegExp(`(\:[^.]*\<\/)`, 'giu'))[3].split(new RegExp(`(\<[^.]*?\>)`, 'giu'))[10]);
+        return String(fetched.split(new RegExp(`(\:[^.]*\<\/)`, 'giu'))[3].split(new RegExp(`(\<[^.]*?\>)`, 'giu'))[10]); // split doesn't work simetimes ?
     };
 
     async onTimeStamp() {

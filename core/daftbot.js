@@ -220,8 +220,8 @@ class DaftBot {
                 if (fe == undefined) { continue; };
 
                 let fetched = await fe.text(),
-                    published = fetched.split(new RegExp(`(\>[^.]*?\/)`, 'giu'))[37]; 
-                    
+                    published = fetched.split(new RegExp(`(\>[^.]*?\/)`, 'giu'))[37];
+
                 if (published == undefined) { continue; };
                 let sliced = published.slice(15, -2), // slice fail some time ??
                     pubDate = new Date(sliced);
@@ -561,11 +561,11 @@ class DaftBot {
             };
 
             var reChan = '1068557736306024519',
-            reMsg = ['1077008507724890122', '1077008635865088110'],
-            messageIdReg = react.message.id,
-            messageReg = channel.messages.cache.get(messageIdReg);
+                reMsg = ['1077008507724890122', '1077008635865088110'],
+                messageIdReg = react.message.id,
+                messageReg = channel.messages.cache.get(messageIdReg);
 
-        if (messageReg.channelId == reChan && reMsg.includes(message.id)) {
+            if (messageReg.channelId == reChan && reMsg.includes(message.id)) {
                 await this.switchRoles(this.dbClient, guild, user.id, 2, false);
                 console.log(`[${getCurrentDatetime('comm')}] ${guild.name} / ${channel.name} # ${user.username} no longer accepts the reglement`);
             };
