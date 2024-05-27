@@ -25,9 +25,11 @@
     "json2csv": "^6.0.0-alpha.2",
     "openai": "^4.20.1",
     "tmi.js": "^1.9.0-pre.1",
+    "twitter-api-v2": "^1.17.0",
     "websocket": "^1.0.34"
   },
   "devDependencies": {
+    "@gradio/client": "^0.14.0",
     "@types/axios": "^0.14.0",
     "@types/json2csv": "^5.0.3",
     "@types/tmi.js": "^1.8.3"
