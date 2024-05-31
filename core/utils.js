@@ -1,5 +1,8 @@
 'use.strict'
 
+const fs = require('node:fs'),
+	request = require('request');
+
 async function sendEmbed(message, content) {
 	var messageToSend = await message
 		.reply({
@@ -57,8 +60,15 @@ function randomColor() {
 	return Number(hex);
 };
 
+function downloadImagesFromUrl(uri, filename, callback) {
+	request.head(uri, function (err, res, body) {
+		request(uri).pipe(fs.createWriteStream(filename)).on('close', callback);
+	});
+};
+
 exports.sendEmbed = sendEmbed;
 exports.messageErase = messageErase;
 exports.randomIntFromInterval = randomIntFromInterval;
 exports.getCurrentDatetime = getCurrentDatetime;
 exports.randomColor = randomColor;
+exports.downloadImagesFromUrl = downloadImagesFromUrl;
