@@ -29,9 +29,10 @@
     "websocket": "^1.0.34"
   },
   "devDependencies": {
-    "@gradio/client": "^0.14.0",
+    "@gradio/client": "^0.20.1",
     "@types/axios": "^0.14.0",
     "@types/json2csv": "^5.0.3",
-    "@types/tmi.js": "^1.8.3"
+    "@types/tmi.js": "^1.8.3",
+    "request": "^2.88.2"
   }
 }
