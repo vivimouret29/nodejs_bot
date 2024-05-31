@@ -1,13 +1,15 @@
 'use.strict'
 
 const { SlashCommandBuilder } = require('discord.js'),
-	fs = require('node:fs'),
+	dynamic = new Function('modulePath', 'return import(modulePath)'),
 	axios = require('axios'),
 	{ clientId, identity } = require('../core/config.json'),
 	{ huggingface } = require('../config.json'),
-	{ randomColor, getCurrentDatetime, randomIntFromInterval } = require('../core/utils.js');
+	{ randomColor, getCurrentDatetime, randomIntFromInterval, downloadImagesFromUrl } = require('../core/utils.js');
 
-var duration_average = randomIntFromInterval(40, 140);
+let duration_average = randomIntFromInterval(4, 140),
+	totalDuration = 0,
+	executionCount = 0;
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -18,69 +20,42 @@ module.exports = {
 				.setDescription('what you want to see')
 				.setRequired(true)
 		}),
-	async execute(message, client, language, user, initDateTime) {
+	async execute(message, client_, language, user, initDateTime) {
+		const { client } = await dynamic('@gradio/client');
+
 		let args = message.options.get("prompt").value;
 
 		await message.reply({
 			'channel_id': message.channel.channel_id,
-			'content': `pepe ${args} / *Waiting to display...*\n${language.timeAverage}${duration_average} seconds`,
+			'content': `pepe ${args} / *Waiting to display...*\n${language.timeAverage}${duration_average}s`,
 			'fetchReply': true,
 			'ephemeral': false
 		})
 			.catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error command pepe send ${err}`); });
 
-		let response = { status: 100 },
-			countResponse = -1,
-			link = '';
+		const app = await client('vivsmouret/pepe-diffuser');
 
-		const urI = 'https://dipl0-dipl0-pepe-diffuser-bot.hf.space/run/predict',
-			headers = {
-				'Authorization': `Bearer ${huggingface}`,
-				'Content-Type': 'application/json',
-				'Connection': 'Keep-Alive'
-			},
-			dt = JSON.stringify({
-				data: [
-					'pepe ' + args.toLowerCase()
-				]
-			});
+		const startTime = Date.now();
+		const response = await app.predict('/predict', [
+			'pepe ' + args.toLowerCase(),
+		]);
+		const endTime = Date.now();
 
-		while (response.status != 200) {
-			countResponse++;
+		const duration = (endTime - startTime) / 1000;
 
-			if (countResponse > 10) {
-				message.editReply({
-					'channel_id': message.channel.channel_id,
-					'content': `${language.imagineError}`,
-					'fetchReply': false,
-					'ephemeral': false
-				})
-					.catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error command pepe send ${err}`); });
-				return console.log(`[${getCurrentDatetime('comm')}] Error command pepe ${response.data}`);
-			};
+		totalDuration += duration;
+		executionCount += 1;
+		duration_average = totalDuration / executionCount;
 
-			response = await axios.post(urI, dt, { headers: headers })
-				.catch(error => { return response = error.response; });
+		const data = await response.data;
 
-			if (response.status == 410) {
-				message.editReply({
-					'channel_id': message.channel.channel_id,
-					'content': response.data,
-					'fetchReply': false,
-					'ephemeral': false
-				})
-					.catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error command pepe send ${err}`); });
-				return console.log(`[${getCurrentDatetime('comm')}] Error command pepe ${response.data}`);
-			};
-		};
-
-		const data = await response.data,
-			splitted = data.data[0].split(',')[1],
-			buffer = Buffer.from(splitted, 'base64');
+		downloadImagesFromUrl(data[0].url, `./styles/ai/pepe-diffuser.jpg`, function () {
+			console.log(`[${getCurrentDatetime('comm')}] Image successfully downloaded from HuggingFace`);
+		});
 
 		try {
-			if (message.member == null) { console.log(`[${getCurrentDatetime('comm')}] ${message.user.username}'s DM # Success after ${(60 * countResponse) + data.duration} seconds - ${message.user.username} diffuse \'pepe ${args.toLowerCase()}\'`); }
-			else { console.log(`[${getCurrentDatetime('comm')}] ${message.member.guild.name} / ${message.user.username} # Success after ${(60 * countResponse) + data.duration} seconds - ${message.user.username} diffuse \'pepe ${args.toLowerCase()}\'`); };
+			if (message.member == null) { console.log(`[${getCurrentDatetime('comm')}] ${message.user.username}'s DM # Success after ${duration} seconds - ${message.user.username} diffuse \'pepe ${args.toLowerCase()}\'`); }
+			else { console.log(`[${getCurrentDatetime('comm')}] ${message.member.guild.name} / ${message.user.username} # Success after ${duration} seconds - ${message.user.username} diffuse \'pepe ${args.toLowerCase()}\'`); };
 		} catch (err) { console.log(`[${getCurrentDatetime('comm')}] Error command pepe send ${err}`); };
 
 		var fetchPdp = await axios.get('https://huggingface.co/Dipl0', {
@@ -97,7 +72,6 @@ module.exports = {
 			console.log(`[${getCurrentDatetime('comm')}] Can't get guid : `, err);
 		};
 
-		fs.writeFileSync(`./styles/ai/pepe-diffuser.jpg`, buffer);
 		await message.editReply({
 			'channel_id': message.channel.channel_id,
 			'content': `<@${message.user.id}>`,
@@ -105,9 +79,10 @@ module.exports = {
 			'embeds': [{
 				'type': 'rich',
 				'title': 'Pepe',
-				'description': `**${args}**\n${language.timeDiffuse}${(60 * countResponse) + data.duration} seconds
-${language.timeAverage}${data.average_duration} seconds\n\n[**Pepe Diffuser**](https://huggingface.co/Dipl0/pepe-diffuser)`,
+				'description': `**${args}**\n${language.timeDiffuse}${duration}s
+${language.timeAverage}${duration_average}s\n\n[**Pepe Diffuser**](https://huggingface.co/Dipl0/pepe-diffuser)`,
 				'color': randomColor(),
+				'image': { 'url': data[0].url },
 				'author': {
 					'name': message.user.username,
 					'icon_url': message.user.avatarURL({ format: 'png', dynamic: true, size: 1024 })
@@ -117,12 +92,9 @@ ${language.timeAverage}${data.average_duration} seconds\n\n[**Pepe Diffuser**](h
 					'proxy_url': 'https://huggingface.co/Dipl0/pepe-diffuser'
 				}
 			}],
-			'files': [`./styles/ai/pepe-diffuser.jpg`],
 			'fetchReply': false,
 			'ephemeral': false
 		})
 			.catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error command pepe edit ${err}`); });
-
-		duration_average = data.average_duration;
 	}
 };

@@ -1,13 +1,14 @@
 'use.strict'
 
-
-const fs = require('node:fs'),
+const dynamic = new Function('modulePath', 'return import(modulePath)'),
     axios = require('axios'),
     { clientId, identity } = require('../core/config.json'),
     { huggingface } = require('../config.json'),
-    { sendEmbed, messageErase, randomColor, getCurrentDatetime, randomIntFromInterval } = require('../core/utils.js');
+    { sendEmbed, messageErase, randomColor, getCurrentDatetime, randomIntFromInterval, downloadImagesFromUrl } = require('../core/utils.js');
 
-var duration_average = randomIntFromInterval(40, 140);
+let duration_average = randomIntFromInterval(4, 140),
+    totalDuration = 0,
+    executionCount = 0;
 
 module.exports = {
     data: {
@@ -16,66 +17,40 @@ module.exports = {
         args: true
     },
     async execute(message, client_, language, user, args, initDateTime) {
+        const { client } = await dynamic('@gradio/client');
+
         if (args.length == 0) { return await sendEmbed(message, language.argsUndefined); };
 
         let msg = await message.channel
             .send({
                 'channel_id': message.channel.channel_id,
-                'content': `pepe ${args.join(' ')} / *Waiting to display...*\n${language.timeAverage}${duration_average} seconds`
+                'content': `pepe ${args.join(' ')} / *Waiting to display...*\n${language.timeAverage}${duration_average}s`
             })
             .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error command pepe send ${err}`); });
 
-        let response = { status: 100 },
-            countResponse = -1,
-            link = '';
+        const app = await client('vivsmouret/pepe-diffuser');
 
-        const urI = 'https://dipl0-dipl0-pepe-diffuser-bot.hf.space/run/predict',
-            headers = {
-                'Authorization': `Bearer ${huggingface}`,
-                'Content-Type': 'application/json',
-                'Connection': 'Keep-Alive'
-            },
-            dt = JSON.stringify({
-                data: [
-                    'pepe ' + args.join(' ').toLowerCase()
-                ]
-            });
+        const startTime = Date.now();
+        const response = await app.predict('/predict', [
+            'pepe ' + args.join(' ').toLowerCase(),
+        ]);
+        const endTime = Date.now();
 
-        while (response.status != 200) {
-            countResponse++;
-            if (countResponse > 11) {
-                msg.edit({
-                    'channel_id': message.channel.channel_id,
-                    'content': `${language.imagineError}`,
-                    'fetchReply': false,
-                    'ephemeral': false
-                })
-                    .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error command pepe send ${err}`); });
-                return;
-            };
+        const duration = (endTime - startTime) / 1000;
 
-            response = await axios.post(urI, dt, { headers: headers })
-                .catch(error => { return response = error.response; });
+        totalDuration += duration;
+        executionCount += 1;
+        duration_average = totalDuration / executionCount;
 
-            if (response.status == 410) {
-                msg.edit({
-                    'channel_id': message.channel.channel_id,
-                    'content': response.data,
-                    'fetchReply': false,
-                    'ephemeral': false
-                })
-                    .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error command pepe send ${err}`); });
-                return;
-            };
-        };
+        const data = await response.data;
 
-        const data = await response.data,
-            splitted = data.data[0].split(',')[1],
-            buffer = Buffer.from(splitted, 'base64');
+        downloadImagesFromUrl(data[0].url, `./styles/ai/pepe-diffuser.jpg`, function () {
+            console.log(`[${getCurrentDatetime('comm')}] Image successfully downloaded from HuggingFace`);
+        });
 
         try {
-            if (message.guild == null && message.channel.name == undefined) { console.log(`[${getCurrentDatetime('comm')}] ${message.author.username}'s DM # Success after ${(60 * countResponse) + data.duration} seconds - ${message.author.username} diffuse \'pepe ${args.join(' ').toLowerCase()}\'`); }
-            else { console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # Success after ${(60 * countResponse) + data.duration} seconds - ${message.author.username} diffuse \'pepe ${args.join(' ').toLowerCase()}\'`); };
+            if (message.guild == null && message.channel.name == undefined) { console.log(`[${getCurrentDatetime('comm')}] ${message.author.username}'s DM # Success after ${duration} seconds - ${message.author.username} diffuse \'pepe ${args.join(' ').toLowerCase()}\'`); }
+            else { console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # Success after ${duration} seconds - ${message.author.username} diffuse \'pepe ${args.join(' ').toLowerCase()}\'`); };
         } catch (err) { console.log(`[${getCurrentDatetime('comm')}] Error command pepe send ${err}`); };
 
         var fetchPdp = await axios.get('https://huggingface.co/Dipl0', {
@@ -93,7 +68,6 @@ module.exports = {
         };
 
         await messageErase(msg);
-        fs.writeFileSync(`./styles/ai/pepe-diffuser.jpg`, buffer);
         await message
             .reply({
                 'channel_id': message.channel.channel_id,
@@ -102,9 +76,10 @@ module.exports = {
                 'embeds': [{
                     'type': 'rich',
                     'title': 'Pepe',
-                    'description': `**${args.join(' ')}**\n${language.timeDiffuse}${(60 * countResponse) + data.duration} seconds
-${language.timeAverage}${data.average_duration} seconds\n\n[**Pepe Diffuser**](https://huggingface.co/Dipl0/pepe-diffuser)`,
+                    'description': `**${args.join(' ')}**\n${language.timeDiffuse}${duration}s
+${language.timeAverage}${duration_average}s\n\n[**Pepe Diffuser**](https://huggingface.co/Dipl0/pepe-diffuser)`,
                     'color': randomColor(),
+                    'image': { 'url': data[0].url },
                     'author': {
                         'name': message.author.username,
                         'icon_url': message.author.avatarURL({ format: 'png', dynamic: true, size: 1024 })
@@ -113,11 +88,8 @@ ${language.timeAverage}${data.average_duration} seconds\n\n[**Pepe Diffuser**](h
                         'url': `https://aeiljuispo.cloudimg.io/v7/https://s3.amazonaws.com/moonup/production/uploads/${link}?w=200&h=200&f=face`,
                         'proxy_url': 'https://huggingface.co/Dipl0/pepe-diffuser'
                     }
-                }],
-                'files': [`./styles/ai/pepe-diffuser.jpg`]
+                }]
             })
             .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error command pepe edit ${err}`); });
-
-        duration_average = data.average_duration;
     }
 };
