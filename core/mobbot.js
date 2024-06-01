@@ -362,7 +362,7 @@ class MobBot {
 
         try {
             response = await app.predict('/predict', [
-                'pepe ' + args.join(' ').toLowerCase(),
+                'pepe ' + axios.data.data[0].game_name,
             ]);
         } catch (err) {
             toggleMedia = false;
@@ -394,7 +394,7 @@ class MobBot {
                     await rwClient.v2.tweet({
                         text: `${axios.data.data[0].title}\
 \
-#${axios.data.data[0].game_name.split(' ').join('')}\
+#${axios.data.data[0].game_name.split(' ').join('')} #daftmob #twitch #pepe\
 \nhttps://twitch.tv/${axios.data.data[0].user_name}`
                     });
                     break;
