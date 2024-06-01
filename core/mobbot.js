@@ -11,7 +11,8 @@ const { Client } = require('tmi.js'),
     { TwitterApi } = require('twitter-api-v2'),
     { clientId, identity, channels, x } = require('./config.json'),
     { randomIntFromInterval, getCurrentDatetime, randomColor } = require('./utils.js'),
-    { users: regular_users } = require('../resx/regular_users.json');
+    { users: regular_users } = require('../resx/regular_users.json'),
+    dynamic = new Function('modulePath', 'return import(modulePath)');
 
 const oauth = {
     options: {
@@ -334,11 +335,12 @@ class MobBot {
             .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error during file send ${err}`); });
     };
 
-    async onLive(message, client, language, gD, axios) {
+    async onLive(message, client_, language, gD, axios) {
         if (gD == undefined || axios == undefined) {
             return console.log(`[${getCurrentDatetime('comm')}] Error function liveNotif() : GUID [${gD}] and/or AXIOS [${axios}]`);
         };
 
+        const { client } = await dynamic('@gradio/client');
         let guidDot = gD,
             channelTwitch = ['💻incoming', '🎦-fox-stream-🎦', 'twitch-support-🎥', 'bots'],
             guid = '',
@@ -354,25 +356,38 @@ class MobBot {
             console.log(`[${getCurrentDatetime('comm')}] LIVENOTIFRROR Can't get guid and dot : `, err);
         };
 
-        // const mediaIds = await Promise.all([
-        //     xApi.v1.uploadMedia('./styles/ai/pepe-diffuser.jpg')
-        // ]);
-
-        const rwClient = xApi.readWrite;
-        await rwClient.v2.tweet({
-            text: `${axios.data.data[0].title}\
-            \n
-            \n#${axios.data.data[0].game_name}
-            \n\nhttps://twitch.tv/${axios.data.data[0].user_name}`,
-            // media: { media_ids: mediaIds }
+        const app = await client('vivsmouret/pepe-diffuser');
+        const response = await app.predict('/predict', [
+            'pepe ' + axios.data.data[0].game_name,
+        ]);
+        const data = await response.data;
+        downloadImagesFromUrl(data[0].url, `./styles/ai/pepe-diffuser.jpg`, function () {
+            console.log(`[${getCurrentDatetime('comm')}] Image successfully downloaded from HuggingFace`);
         });
 
+        try {
+            const mediaIds = await Promise.all([
+                xApi.v1.uploadMedia('./styles/ai/pepe-diffuser.jpg')
+            ]);
+
+            const rwClient = xApi.readWrite;
+            await rwClient.v2.tweet({
+                text: `${axios.data.data[0].title}\
+\
+#${axios.data.data[0].game_name.split(' ').join('')}\
+\nhttps://twitch.tv/${axios.data.data[0].user_name}`,
+                media: { media_ids: mediaIds }
+            });
+        } catch (err) {
+            console.log(`[${getCurrentDatetime('comm')}] LIVENOTIFRROR XAPI Tweet Error : `, err);
+        };
+
         for (let chan in channelTwitch) {
-            var channelSend = client.channels.cache.find(channel => channel.name == channelTwitch[chan]);
+            var channelSend = client_.channels.cache.find(channel => channel.name == channelTwitch[chan]);
             if (channelSend == undefined) break;
             if (channelTwitch[chan] == 'bots' && axios.data.data[0].game_name != 'Rocket League') break;
 
-            await client.channels.cache
+            await client_.channels.cache
                 .get(channelSend.id)
                 .send({
                     'channel_id': channelSend.id,
@@ -398,7 +413,7 @@ class MobBot {
                         'author': {
                             'name': oauth.identity.username,
                             'url': `https://twitch.tv/${axios.data.data[0].user_login}`,
-                            'icon_url': client.user.avatarURL({ format: 'png', dynamic: true, size: 1024 })
+                            'icon_url': client_.user.avatarURL({ format: 'png', dynamic: true, size: 1024 })
                         },
                         'footer': {
                             'text': `Viewers : ${axios.data.data[0].viewer_count}`,
@@ -411,7 +426,7 @@ class MobBot {
                 .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error message liveNotif() ${err}`); });
         };
 
-        client.user.setPresence({
+        client_.user.setPresence({
             activities: [{
                 name: language.stream,
                 type: ActivityType.Streaming,
