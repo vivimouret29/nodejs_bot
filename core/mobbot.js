@@ -369,10 +369,10 @@ class MobBot {
             console.log(`[${getCurrentDatetime('comm')}] Error tweet command pepe predict ${err}`);
         };
 
-        const data = await response.data;
-        downloadImagesFromUrl(data[0].url, `./styles/ai/pepe-diffuser.jpg`, function () {
-            console.log(`[${getCurrentDatetime('comm')}] Image successfully downloaded from HuggingFace`);
-        });
+        // const data = await response.data;
+        // downloadImagesFromUrl(data[0].url, `./styles/ai/pepe-diffuser.jpg`, function () {
+        //     console.log(`[${getCurrentDatetime('comm')}] Image successfully downloaded from HuggingFace`);
+        // });
 
         try {
             const mediaIds = await Promise.all([
