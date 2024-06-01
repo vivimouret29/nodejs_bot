@@ -55,6 +55,10 @@ module.exports = {
 		let endTime = Date.now(),
 			duration = (endTime - startTime) / 1000;
 
+		totalDuration += duration;
+		executionCount += 1;
+		duration_average = totalDuration / executionCount;
+
 		const data = await response.data;
 
 		downloadImagesFromUrl(data[0].url, `./styles/ai/pepe-diffuser.jpg`, function () {
