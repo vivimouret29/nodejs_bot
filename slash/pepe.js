@@ -33,19 +33,27 @@ module.exports = {
 		})
 			.catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error command pepe send ${err}`); });
 
-		const app = await client('vivsmouret/pepe-diffuser');
+		let app = await client('vivsmouret/pepe-diffuser'),
+			response,
+			startTime = Date.now();
 
-		const startTime = Date.now();
-		const response = await app.predict('/predict', [
-			'pepe ' + args.toLowerCase(),
-		]);
-		const endTime = Date.now();
+		try {
+			response = await app.predict('/predict', [
+				'pepe ' + args.toLowerCase(),
+			]);
+		} catch (err) {
+			console.log(`[${getCurrentDatetime('comm')}] Error command pepe predict ${err}`);
+			return message.editReply({
+				'channel_id': message.channel.channel_id,
+				'content': response.data,
+				'fetchReply': false,
+				'ephemeral': false
+			})
+				.catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error command pepe send ${err}`); });
+		};
 
-		const duration = (endTime - startTime) / 1000;
-
-		totalDuration += duration;
-		executionCount += 1;
-		duration_average = totalDuration / executionCount;
+		let endTime = Date.now(),
+			duration = (endTime - startTime) / 1000;
 
 		const data = await response.data;
 

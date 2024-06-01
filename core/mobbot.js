@@ -356,10 +356,19 @@ class MobBot {
             console.log(`[${getCurrentDatetime('comm')}] LIVENOTIFRROR Can't get guid and dot : `, err);
         };
 
-        const app = await client('vivsmouret/pepe-diffuser');
-        const response = await app.predict('/predict', [
-            'pepe ' + axios.data.data[0].game_name,
-        ]);
+        let app = await client('vivsmouret/pepe-diffuser'),
+            response,
+            toggleMedia = true;
+
+        try {
+            response = await app.predict('/predict', [
+                'pepe ' + args.join(' ').toLowerCase(),
+            ]);
+        } catch (err) {
+            toggleMedia = false;
+            console.log(`[${getCurrentDatetime('comm')}] Error tweet command pepe predict ${err}`);
+        };
+
         const data = await response.data;
         downloadImagesFromUrl(data[0].url, `./styles/ai/pepe-diffuser.jpg`, function () {
             console.log(`[${getCurrentDatetime('comm')}] Image successfully downloaded from HuggingFace`);
@@ -371,13 +380,25 @@ class MobBot {
             ]);
 
             const rwClient = xApi.readWrite;
-            await rwClient.v2.tweet({
-                text: `${axios.data.data[0].title}\
+            switch (toggleMedia) {
+                case true:
+                    await rwClient.v2.tweet({
+                        text: `${axios.data.data[0].title}\
 \
 #${axios.data.data[0].game_name.split(' ').join('')}\
 \nhttps://twitch.tv/${axios.data.data[0].user_name}`,
-                media: { media_ids: mediaIds }
-            });
+                        media: { media_ids: mediaIds }
+                    });
+                    break;
+                case false:
+                    await rwClient.v2.tweet({
+                        text: `${axios.data.data[0].title}\
+\
+#${axios.data.data[0].game_name.split(' ').join('')}\
+\nhttps://twitch.tv/${axios.data.data[0].user_name}`
+                    });
+                    break;
+            };
         } catch (err) {
             console.log(`[${getCurrentDatetime('comm')}] LIVENOTIFRROR XAPI Tweet Error : `, err);
         };
