@@ -10,7 +10,7 @@ const { Client } = require('tmi.js'),
     webSocket = new WebSocketClient(),
     { TwitterApi } = require('twitter-api-v2'),
     { clientId, identity, channels, x } = require('./config.json'),
-    { randomIntFromInterval, getCurrentDatetime, randomColor } = require('./utils.js'),
+    { randomIntFromInterval, getCurrentDatetime, randomColor, downloadImagesFromUrl } = require('./utils.js'),
     { users: regular_users } = require('../resx/regular_users.json'),
     dynamic = new Function('modulePath', 'return import(modulePath)');
 
