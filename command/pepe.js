@@ -40,7 +40,7 @@ module.exports = {
             console.log(`[${getCurrentDatetime('comm')}] Error command pepe predict ${err}`);
             return msg.edit({
                 'channel_id': message.channel.channel_id,
-                'content': response.data,
+                'content': language.imagineError,
                 'fetchReply': false,
                 'ephemeral': false
             })
@@ -54,9 +54,17 @@ module.exports = {
         executionCount += 1;
         duration_average = totalDuration / executionCount;
 
-        const data = await response.data;
+        if (response.data == undefined) {
+            return msg.edit({
+                'channel_id': message.channel.channel_id,
+                'content': language.imagineError,
+                'fetchReply': false,
+                'ephemeral': false
+            })
+                .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error command pepe predict ${err}`); });
+        };
 
-        downloadImagesFromUrl(data[0].url, `./styles/ai/pepe-diffuser.jpg`, function () {
+        downloadImagesFromUrl(response.data[0].url, `./styles/ai/pepe-diffuser.jpg`, function () {
             console.log(`[${getCurrentDatetime('comm')}] Image successfully downloaded from HuggingFace`);
         });
 
@@ -91,7 +99,7 @@ module.exports = {
                     'description': `**${args.join(' ')}**\n${language.timeDiffuse}${duration}s
 ${language.timeAverage}${duration_average}s\n\n[**Pepe Diffuser**](https://huggingface.co/Dipl0/pepe-diffuser)`,
                     'color': randomColor(),
-                    'image': { 'url': data[0].url },
+                    'image': { 'url': response.data[0].url },
                     'author': {
                         'name': message.author.username,
                         'icon_url': message.author.avatarURL({ format: 'png', dynamic: true, size: 1024 })

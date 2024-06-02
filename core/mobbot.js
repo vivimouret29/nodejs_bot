@@ -364,15 +364,19 @@ class MobBot {
             response = await app.predict('/predict', [
                 'pepe ' + axios.data.data[0].game_name,
             ]);
+            console.log(`[${getCurrentDatetime('comm')}] LIVENOTIF Success predict: `, response.data[0].path);
         } catch (err) {
-            toggleMedia = false;
-            console.log(`[${getCurrentDatetime('comm')}] Error tweet command pepe predict ${err}`);
+            console.log(`[${getCurrentDatetime('comm')}] LIVENOTIFRROR HuggingFace API Error ${err}`);
         };
 
-        // const data = await response.data;
-        // downloadImagesFromUrl(data[0].url, `./styles/ai/pepe-diffuser.jpg`, function () {
-        //     console.log(`[${getCurrentDatetime('comm')}] Image successfully downloaded from HuggingFace`);
-        // });
+        if (response.data == undefined) {
+            toggleMedia = false;
+            console.log(`[${getCurrentDatetime('comm')}] LIVENOTIFRROR Get response data : `, response);
+        } else {
+            downloadImagesFromUrl(response.data[0].url, `./styles/ai/pepe-diffuser.jpg`, function () {
+                console.log(`[${getCurrentDatetime('comm')}] Image successfully downloaded from HuggingFace`);
+            });
+        };
 
         try {
             const mediaIds = await Promise.all([
@@ -389,6 +393,7 @@ class MobBot {
 \nhttps://twitch.tv/${axios.data.data[0].user_name}`,
                         media: { media_ids: mediaIds }
                     });
+                    console.log(`[${getCurrentDatetime('comm')}] LIVENOTIF Tweet with media`);
                     break;
                 case false:
                     await rwClient.v2.tweet({
@@ -397,6 +402,7 @@ class MobBot {
 #${axios.data.data[0].game_name.split(' ').join('')} #daftmob #twitch #pepe\
 \nhttps://twitch.tv/${axios.data.data[0].user_name}`
                     });
+                    console.log(`[${getCurrentDatetime('comm')}] LIVENOTIF Tweet without media`);
                     break;
             };
         } catch (err) {

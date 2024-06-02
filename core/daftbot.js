@@ -456,7 +456,7 @@ class DaftBot {
 
             if (message.author.id == owner) {
                 if (Math.random() < .05) {
-                    let dio = this.dbClient.emojis.cache.find(emoji => emoji.name === 'daftmo1Diosama');
+                    let dio = this.dbClient.emojis.cache.find(emoji => emoji.name === 'daftmo1Diosama').catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error finding diosama : ${err}`); })
                     if (dio == undefined) { return console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # Dio Sama not found here`); };
                     message.react(dio);
                 };
