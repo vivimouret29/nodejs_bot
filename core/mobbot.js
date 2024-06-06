@@ -307,7 +307,7 @@ class MobBot {
 
     async onDataExport(message, client) {
         if (dataToExport.length === 0) {
-            let emoji = client.emojis.cache.find(emoji => emoji.name === 'sadpepe');
+            let emoji = client.emojis.cache.find(emoji => emoji.id === '1071408691875676262');
             message
                 .react(emoji)
                 .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error react ${err}`); });
@@ -316,13 +316,13 @@ class MobBot {
 
         fs.writeFile(`./core/data/mobbot_analytics.csv`, parse(dataToExport), function (err) {
             if (err) {
-                let emoji = client.emojis.cache.find(emoji => emoji.name === 'fufufu');
+                let emoji = client.emojis.cache.find(emoji => emoji.id === '1071407982472085624');
                 message
                     .react(emoji)
                     .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error react ${err}`); });
                 throw err;
             } else {
-                let emoji = client.emojis.cache.find(emoji => emoji.name === 'linkbadass');
+                let emoji = client.emojis.cache.find(emoji => emoji.id === '1071050224291819560');
                 message
                     .react(emoji)
                     .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error react ${err}`); });
