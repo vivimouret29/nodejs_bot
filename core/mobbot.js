@@ -362,7 +362,7 @@ class MobBot {
 
         try {
             response = await app.predict('/predict', [
-                'pepe ' + axios.data.data[0].game_name,
+                'pepe is playing at ' + axios.data.data[0].game_name,
             ]);
             console.log(`[${getCurrentDatetime('comm')}] LIVENOTIF Success predict: `, response.data[0].path);
         } catch (err) {
@@ -373,24 +373,24 @@ class MobBot {
             toggleMedia = false;
             console.log(`[${getCurrentDatetime('comm')}] LIVENOTIFRROR Get response data : `, response);
         } else {
-            downloadImagesFromUrl(response.data[0].url, `./styles/ai/pepe-diffuser.jpg`, function () {
+            downloadImagesFromUrl(response.data[0].url, `./styles/ai/pepe-diffuser-x.jpg`, function () {
                 console.log(`[${getCurrentDatetime('comm')}] Image successfully downloaded from HuggingFace`);
             });
         };
 
-        try {
-            const mediaIds = await Promise.all([
-                xApi.v1.uploadMedia('./styles/ai/pepe-diffuser.jpg')
-            ]);
+        const rwClient = xApi.readWrite;
 
-            const rwClient = xApi.readWrite;
+        try {
             switch (toggleMedia) {
                 case true:
+                    const mediaIds = await Promise.all([
+                        xApi.v1.uploadMedia('./styles/ai/pepe-diffuser-x.jpg')
+                    ]);
+
                     await rwClient.v2.tweet({
                         text: `${axios.data.data[0].title}\
-\
-#${axios.data.data[0].game_name.split(' ').join('')}\
-\nhttps://twitch.tv/${axios.data.data[0].user_name}`,
+                        \n#daftmob #${axios.data.data[0].game_name.split(' ').join('')} #twitch #pepe\
+                        \n\nhttps://twitch.tv/${axios.data.data[0].user_name}`,
                         media: { media_ids: mediaIds }
                     });
                     console.log(`[${getCurrentDatetime('comm')}] LIVENOTIF Tweet with media`);
@@ -398,9 +398,8 @@ class MobBot {
                 case false:
                     await rwClient.v2.tweet({
                         text: `${axios.data.data[0].title}\
-\
-#${axios.data.data[0].game_name.split(' ').join('')} #daftmob #twitch #pepe\
-\nhttps://twitch.tv/${axios.data.data[0].user_name}`
+                        \n#daftmob #${axios.data.data[0].game_name.split(' ').join('')} #twitch #pepe\
+                        \n\nhttps://twitch.tv/${axios.data.data[0].user_name}`
                     });
                     console.log(`[${getCurrentDatetime('comm')}] LIVENOTIF Tweet without media`);
                     break;
