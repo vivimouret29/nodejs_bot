@@ -8,7 +8,7 @@ module.exports = {
     async execute(client, channel, message, userstate, urI, timestamp, autoPost, sponso) {
         client
             .reply(channel,
-                'Cliques sur le lien suivant pour sortir de la bordure et rejoindre le serveur du daft : https://discord.gg/ucwnMKKxZe',
+                'Cliques sur le lien suivant pour sortir de la bordure et rejoindre le serveur du daft : https://discord.gg/8qMFZC4djd',
                 userstate.id)
             .catch(e => console.log(e));
     }
