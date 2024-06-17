@@ -357,23 +357,23 @@ class MobBot {
         };
 
         let app = await client('vivsmouret/pepe-diffuser'),
-            response,
+            response = undefined,
             toggleMedia = true;
 
         try {
             response = await app.predict('/predict', [
                 'pepe is playing at ' + axios.data.data[0].game_name,
             ]);
-            console.log(`[${getCurrentDatetime('comm')}] LIVENOTIF Success predict: `, response.data[0].path);
+            console.log(`[${getCurrentDatetime('comm')}] LIVENOTIF Success predict: `, await response.data[0].path);
         } catch (err) {
             console.log(`[${getCurrentDatetime('comm')}] LIVENOTIFRROR HuggingFace API Error ${err}`);
         };
 
-        if (response.data == undefined) {
+        if (await response == undefined) {
             toggleMedia = false;
             console.log(`[${getCurrentDatetime('comm')}] LIVENOTIFRROR Get response data : `, response);
         } else {
-            downloadImagesFromUrl(response.data[0].url, `./styles/ai/pepe-diffuser-x.jpg`, function () {
+            downloadImagesFromUrl(await response.data[0].url, `./styles/ai/pepe-diffuser-x.jpg`, function () {
                 console.log(`[${getCurrentDatetime('comm')}] Image successfully downloaded from HuggingFace`);
             });
         };
@@ -391,7 +391,7 @@ class MobBot {
                         text: `${axios.data.data[0].title}\
                         \n#daftmob #${axios.data.data[0].game_name.split(' ').join('')} #twitch #pepe\
                         \n\nhttps://twitch.tv/${axios.data.data[0].user_name}`,
-                        media: { media_ids: mediaIds }
+                        media: { media_ids: await response.data[0].url }
                     });
                     console.log(`[${getCurrentDatetime('comm')}] LIVENOTIF Tweet with media`);
                     break;
