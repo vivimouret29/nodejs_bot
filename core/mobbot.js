@@ -340,7 +340,9 @@ class MobBot {
             return console.log(`[${getCurrentDatetime('comm')}] Error function liveNotif() : GUID [${gD}] and/or AXIOS [${axios}]`);
         };
 
-        const { client } = await dynamic('@gradio/client');
+        const { client } = await dynamic('@gradio/client'),
+            rwClient = xApi.readWrite;
+            
         let guidDot = gD,
             channelTwitch = ['💻incoming', '🎦-fox-stream-🎦', 'twitch-support-🎥', 'bots'],
             guid = '',
@@ -378,8 +380,6 @@ class MobBot {
             });
         };
 
-        const rwClient = xApi.readWrite;
-
         try {
             switch (toggleMedia) {
                 case true:
@@ -391,7 +391,7 @@ class MobBot {
                         text: `${axios.data.data[0].title}\
                         \n#daftmob #${axios.data.data[0].game_name.split(' ').join('')} #twitch #pepe\
                         \n\nhttps://twitch.tv/${axios.data.data[0].user_name}`,
-                        media: { media_ids: await response.data[0].url }
+                        media: { media_ids: mediaIds }
                     });
                     console.log(`[${getCurrentDatetime('comm')}] LIVENOTIF Tweet with media`);
                     break;
@@ -402,6 +402,7 @@ class MobBot {
                         \n\nhttps://twitch.tv/${axios.data.data[0].user_name}`
                     });
                     console.log(`[${getCurrentDatetime('comm')}] LIVENOTIF Tweet without media`);
+                    toggleMedia = true;
                     break;
             };
         } catch (err) {
