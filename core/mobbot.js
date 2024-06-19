@@ -6,9 +6,8 @@ const { Client } = require('tmi.js'),
     axios = require('axios'),
     fs = require('node:fs'),
     path = require('node:path'),
-    WebSocketClient = require('websocket').client,
-    webSocket = new WebSocketClient(),
     { TwitterApi } = require('twitter-api-v2'),
+    rwClient = xApi.readWrite,
     { clientId, identity, channels, x } = require('./config.json'),
     { randomIntFromInterval, getCurrentDatetime, randomColor, downloadImagesFromUrl } = require('./utils.js'),
     { users: regular_users } = require('../resx/regular_users.json'),
@@ -340,9 +339,7 @@ class MobBot {
             return console.log(`[${getCurrentDatetime('comm')}] Error function liveNotif() : GUID [${gD}] and/or AXIOS [${axios}]`);
         };
 
-        const { client } = await dynamic('@gradio/client'),
-            rwClient = xApi.readWrite;
-            
+        const { client } = await dynamic('@gradio/client');
         let guidDot = gD,
             channelTwitch = ['💻incoming', '🎦-fox-stream-🎦', 'twitch-support-🎥', 'bots'],
             guid = '',
@@ -484,6 +481,18 @@ class MobBot {
             descp = video[6].split(new RegExp(`(\"[^.]*?\")`, 'giu'))[12].split(new RegExp(`(\>[^.]*?\:)`, 'giu'))[3].slice(1, -9);
         } catch (err) {
             console.log(`[${getCurrentDatetime('comm')}] VIDEONOTIFRROR Can't get video's information : `, err);
+        };
+
+        try {
+            await rwClient.v2.tweet({
+                text: `${title}\
+            \n${descp}\
+            \n#daftmob #youtube #pepe\
+            \n\nhttps://www.youtube.com/watch?v=${urI}`
+            });
+            console.log(`[${getCurrentDatetime('comm')}] YTBVIDEO Tweet ${title}`);
+        } catch (err) {
+            console.log(`[${getCurrentDatetime('comm')}] VIDEONOTIFRROR XAPI Tweet Error : `, err);
         };
 
         for (let chan in channelYoutube) {
