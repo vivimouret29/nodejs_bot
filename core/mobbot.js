@@ -7,7 +7,6 @@ const { Client } = require('tmi.js'),
     fs = require('node:fs'),
     path = require('node:path'),
     { TwitterApi } = require('twitter-api-v2'),
-    rwClient = xApi.readWrite,
     { clientId, identity, channels, x } = require('./config.json'),
     { randomIntFromInterval, getCurrentDatetime, randomColor, downloadImagesFromUrl } = require('./utils.js'),
     { users: regular_users } = require('../resx/regular_users.json'),
@@ -38,6 +37,7 @@ const xApi = new TwitterApi({
     accessSecret: x.atas_secret,
     bearerToken: x.bearer
 });
+const rwClient = xApi.readWrite;
 
 var dataToExport = [];
 
