@@ -335,8 +335,11 @@ class MobBot {
     };
 
     async onLive(message, client_, language, gD, axios) {
-        if (gD == undefined || axios == undefined) {
-            return console.log(`[${getCurrentDatetime('comm')}] Error function liveNotif() : GUID [${gD}] and/or AXIOS [${axios}]`);
+        if (gD == undefined) {
+            return console.log(`[${getCurrentDatetime('comm')}] Error function liveNotif() GUID [${gD}]`);
+        };
+        if (axios == undefined) {
+            return console.log(`[${getCurrentDatetime('comm')}] Error function liveNotif() AXIOS [${axios}]`);
         };
 
         const { client } = await dynamic('@gradio/client');
