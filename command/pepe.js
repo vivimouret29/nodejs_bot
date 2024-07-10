@@ -54,7 +54,7 @@ module.exports = {
         executionCount += 1;
         duration_average = totalDuration / executionCount;
 
-        if (response.data == undefined) {
+        if (response == undefined) {
             return msg.edit({
                 'channel_id': message.channel.channel_id,
                 'content': language.imagineError,

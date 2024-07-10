@@ -340,6 +340,28 @@ class MobBot {
         };
 
         const { client } = await dynamic('@gradio/client');
+        let app = await client('vivsmouret/pepe-diffuser'),
+            response = undefined,
+            toggleMedia = true;
+
+        try {
+            response = await app.predict('/predict', [
+                'pepe is playing at ' + axios.data.data[0].game_name,
+            ]);
+            console.log(`[${getCurrentDatetime('comm')}] LIVENOTIF Success predict: `, response.data[0].path);
+        } catch (err) {
+            console.log(`[${getCurrentDatetime('comm')}] LIVENOTIFRROR HuggingFace API Error ${err}`);
+        };
+
+        if (response == undefined) {
+            toggleMedia = false;
+            console.log(`[${getCurrentDatetime('comm')}] LIVENOTIFRROR When get response data : `, response);
+        } else {
+            downloadImagesFromUrl(response.data[0].url, `./styles/ai/pepe-diffuser-x.jpg`, function () {
+                console.log(`[${getCurrentDatetime('comm')}] Image successfully downloaded from HuggingFace`);
+            });
+        };
+
         let guidDot = gD,
             channelTwitch = ['💻incoming', '🎦-fox-stream-🎦', 'twitch-support-🎥', 'bots'],
             guid = '',
@@ -353,28 +375,6 @@ class MobBot {
             dot = dot.split('.')[1].split(' ')[0];
         } catch (err) {
             console.log(`[${getCurrentDatetime('comm')}] LIVENOTIFRROR Can't get guid and dot : `, err);
-        };
-
-        let app = await client('vivsmouret/pepe-diffuser'),
-            response = undefined,
-            toggleMedia = true;
-
-        try {
-            response = await app.predict('/predict', [
-                'pepe is playing at ' + axios.data.data[0].game_name,
-            ]);
-            console.log(`[${getCurrentDatetime('comm')}] LIVENOTIF Success predict: `, await response.data[0].path);
-        } catch (err) {
-            console.log(`[${getCurrentDatetime('comm')}] LIVENOTIFRROR HuggingFace API Error ${err}`);
-        };
-
-        if (await response == undefined) {
-            toggleMedia = false;
-            console.log(`[${getCurrentDatetime('comm')}] LIVENOTIFRROR Get response data : `, response);
-        } else {
-            downloadImagesFromUrl(await response.data[0].url, `./styles/ai/pepe-diffuser-x.jpg`, function () {
-                console.log(`[${getCurrentDatetime('comm')}] Image successfully downloaded from HuggingFace`);
-            });
         };
 
         try {
