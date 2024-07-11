@@ -366,7 +366,7 @@ class MobBot {
         };
 
         let guidDot = gD,
-            channelTwitch = ['💻incoming', '🎦-fox-stream-🎦', 'twitch-support-🎥', 'bots'],
+            channelTwitch = ['💻incoming', '🎦-fox-stream-🎦', 'twitch-support-🎥', 'bots', 'pirate-bots'],
             guid = '',
             dot = '';
 
@@ -413,6 +413,7 @@ class MobBot {
             var channelSend = client_.channels.cache.find(channel => channel.name == channelTwitch[chan]);
             if (channelSend == undefined) break;
             if (channelTwitch[chan] == 'bots' && axios.data.data[0].game_name != 'Rocket League') break;
+            if (channelTwitch[chan] == 'pirate-bots' && axios.data.data[0].game_name != 'Sea of Thieves') break;            
 
             await client_.channels.cache
                 .get(channelSend.id)
