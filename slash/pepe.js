@@ -85,12 +85,9 @@ module.exports = {
 			}
 		});
 
-		try {
-			link = await fetchPdp.data.split(new RegExp(`(s\/[^.]..........................................)`, 'giu'))[3];
-			link.endsWith('?') ? link = link.slice(2, -1) : link = link.split('s/')[1]
-		} catch (err) {
-			console.log(`[${getCurrentDatetime('comm')}] Can't get guid : `, err);
-		};
+		link = fetchPdp.data.split(new RegExp(`(s\/[^.]..........................................)`, 'giu'))[3];
+        link = link.split('s/')[1];
+        link = link.slice(0, -7);
 
 		await message.editReply({
 			'channel_id': message.channel.channel_id,
@@ -108,7 +105,7 @@ ${language.timeAverage}${duration_average}s\n\n[**Pepe Diffuser**](https://huggi
 					'icon_url': message.user.avatarURL({ format: 'png', dynamic: true, size: 1024 })
 				},
 				'thumbnail': {
-					'url': `https://aeiljuispo.cloudimg.io/v7/https://s3.amazonaws.com/moonup/production/uploads/${link}?w=200&h=200&f=face`,
+					'url': `https://aeiljuispo.cloudimg.io/v7/https://s3.amazonaws.com/moonup/production/uploads/${link}?w=128&h=128&f=face`,
 					'proxy_url': 'https://huggingface.co/Dipl0/pepe-diffuser'
 				}
 			}],
