@@ -335,25 +335,22 @@ class MobBot {
     };
 
     async onLive(message, client_, language, gD, axios) {
-        if (gD == undefined) {
-            return console.log(`[${getCurrentDatetime('comm')}] Error function liveNotif() GUID [${gD}]`);
-        };
-        if (axios == undefined) {
-            return console.log(`[${getCurrentDatetime('comm')}] Error function liveNotif() AXIOS [${axios}]`);
-        };
-
         const { client } = await dynamic('@gradio/client');
         let app = await client('vivsmouret/pepe-diffuser'),
             response = undefined,
             toggleMedia = true;
 
-        try {
-            response = await app.predict('/predict', [
-                'pepe is playing at ' + axios.data.data[0].game_name,
-            ]);
-            console.log(`[${getCurrentDatetime('comm')}] LIVENOTIF Success predict: `, response.data[0].path);
-        } catch (err) {
-            console.log(`[${getCurrentDatetime('comm')}] LIVENOTIFRROR HuggingFace API Error ${err}`);
+        if (axios == undefined) {
+            return console.log(`[${getCurrentDatetime('comm')}] Error function liveNotif() AXIOS [${axios}]`);
+        } else {
+            try {
+                response = await app.predict('/predict', [
+                    'pepe is playing at ' + axios.data.data[0].game_name,
+                ]);
+                console.log(`[${getCurrentDatetime('comm')}] LIVENOTIF Success predict: `, response.data[0].path);
+            } catch (err) {
+                console.log(`[${getCurrentDatetime('comm')}] LIVENOTIFRROR HuggingFace API Error ${err}`);
+            };
         };
 
         if (response == undefined) {
@@ -365,55 +362,49 @@ class MobBot {
             });
         };
 
-        let guidDot = gD,
-            channelTwitch = ['💻incoming', '🎦-fox-stream-🎦', 'twitch-support-🎥', 'bots', 'pirate-bots'],
+        let channelTwitch = ['💻incoming', '🎦-fox-stream-🎦', 'twitch-support-🎥', 'bots', 'pirate-bots'],
             guid = '',
             dot = '';
 
-        try {
-            guid = guidDot.split(new RegExp(`(s\/[^.]*-p)`, 'giu'))[1];
+        if (gD == undefined) {
+            return console.log(`[${getCurrentDatetime('comm')}] Error function liveNotif() GUID [${gD}]`);
+        } else {
+            guid = gD.split(new RegExp(`(s\/[^.]*-p)`, 'giu'))[1];
             guid = guid.split('s/')[1].split('-p')[0];
 
-            dot = guidDot.split(new RegExp(`(ge-[.]*...........)`, 'giu'))[1];
+            dot = gD.split(new RegExp(`(ge-[.]*...........)`, 'giu'))[1];
             dot = dot.split('.')[1].split(' ')[0];
-        } catch (err) {
-            console.log(`[${getCurrentDatetime('comm')}] LIVENOTIFRROR Can't get guid and dot : `, err);
         };
 
-        try {
-            switch (toggleMedia) {
-                case true:
-                    const mediaIds = await Promise.all([
-                        xApi.v1.uploadMedia('./styles/ai/pepe-diffuser-x.jpg')
-                    ]);
-
-                    await rwClient.v2.tweet({
-                        text: `${axios.data.data[0].title}\
+        switch (toggleMedia) {
+            case true:
+                const mediaIds = await Promise.all([
+                    xApi.v1.uploadMedia('./styles/ai/pepe-diffuser-x.jpg')
+                ]);
+                await rwClient.v2.tweet({
+                    text: `${axios.data.data[0].title}\
                         \n#daftmob #${axios.data.data[0].game_name.split(' ').join('')} #twitch #pepe\
                         \n\nhttps://twitch.tv/${axios.data.data[0].user_name}`,
-                        media: { media_ids: mediaIds }
-                    });
-                    console.log(`[${getCurrentDatetime('comm')}] LIVENOTIF Tweet with media`);
-                    break;
-                case false:
-                    await rwClient.v2.tweet({
-                        text: `${axios.data.data[0].title}\
+                    media: { media_ids: mediaIds }
+                });
+                console.log(`[${getCurrentDatetime('comm')}] LIVENOTIF Tweet with media`);
+                break;
+            case false:
+                await rwClient.v2.tweet({
+                    text: `${axios.data.data[0].title}\
                         \n#daftmob #${axios.data.data[0].game_name.split(' ').join('')} #twitch #pepe\
                         \n\nhttps://twitch.tv/${axios.data.data[0].user_name}`
-                    });
-                    console.log(`[${getCurrentDatetime('comm')}] LIVENOTIF Tweet without media`);
-                    toggleMedia = true;
-                    break;
-            };
-        } catch (err) {
-            console.log(`[${getCurrentDatetime('comm')}] LIVENOTIFRROR XAPI Tweet Error : `, err);
+                });
+                console.log(`[${getCurrentDatetime('comm')}] LIVENOTIF Tweet without media`);
+                toggleMedia = true;
+                break;
         };
 
         for (let chan in channelTwitch) {
             var channelSend = client_.channels.cache.find(channel => channel.name == channelTwitch[chan]);
             if (channelSend == undefined) break;
             if (channelTwitch[chan] == 'bots' && axios.data.data[0].game_name != 'Rocket League') break;
-            if (channelTwitch[chan] == 'pirate-bots' && axios.data.data[0].game_name != 'Sea of Thieves') break;            
+            if (channelTwitch[chan] == 'pirate-bots' && axios.data.data[0].game_name != 'Sea of Thieves') break;
 
             await client_.channels.cache
                 .get(channelSend.id)
@@ -477,27 +468,19 @@ class MobBot {
             thumbnail,
             descp;
 
-        try {
-            video = fetched.split(new RegExp(`(\:[^.]*\<\/)`, 'giu'));
-            urI = video[3].split(new RegExp(`(\<[^.]*?\>)`, 'giu'))[10];
-            title = video[3].split(new RegExp(`(\<[^.]*?\>)`, 'giu'))[18].slice(0, -2);
-            thumbnail = video[6].split(new RegExp(`(\"[^.]*?\")`, 'giu'))[8];
-            descp = video[6].split(new RegExp(`(\"[^.]*?\")`, 'giu'))[12].split(new RegExp(`(\>[^.]*?\:)`, 'giu'))[3].slice(1, -9);
-        } catch (err) {
-            console.log(`[${getCurrentDatetime('comm')}] VIDEONOTIFRROR Can't get video's information : `, err);
-        };
+        video = fetched.split(new RegExp(`(\:[^.]*\<\/)`, 'giu'));
+        urI = video[3].split(new RegExp(`(\<[^.]*?\>)`, 'giu'))[10];
+        title = video[3].split(new RegExp(`(\<[^.]*?\>)`, 'giu'))[18].slice(0, -2);
+        thumbnail = video[6].split(new RegExp(`(\"[^.]*?\")`, 'giu'))[8];
+        descp = video[6].split(new RegExp(`(\"[^.]*?\")`, 'giu'))[12].split(new RegExp(`(\>[^.]*?\:)`, 'giu'))[3].slice(1, -9);
 
-        try {
-            await rwClient.v2.tweet({
-                text: `${title}\
+        await rwClient.v2.tweet({
+            text: `${title}\
             \n${descp}\
             \n#daftmob #youtube #pepe\
             \n\nhttps://www.youtube.com/watch?v=${urI}`
-            });
-            console.log(`[${getCurrentDatetime('comm')}] YTBVIDEO Tweet ${title}`);
-        } catch (err) {
-            console.log(`[${getCurrentDatetime('comm')}] VIDEONOTIFRROR XAPI Tweet Error : `, err);
-        };
+        });
+        console.log(`[${getCurrentDatetime('comm')}] YTBVIDEO Tweet ${title}`);
 
         for (let chan in channelYoutube) {
             var channelSend = client.channels.cache.find(channel => channel.name == channelYoutube[chan]);

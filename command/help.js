@@ -46,18 +46,21 @@ module.exports = {
 
         for (i in descSplit) { desc += descSplit[i]; };
 
-        try {
-            guid = await guidDot.data.split(new RegExp(`(s\/[^.]*-p)`, 'giu'))[1];
+        if (guidDot.data == undefined) {
+            return console.log(`[${getCurrentDatetime('comm')}] Error function help() GUID [${guidDot}]`);
+        } else {
+            guid = guidDot.data.split(new RegExp(`(s\/[^.]*-p)`, 'giu'))[1];
             guid = guid.split('s/')[1].split('-p')[0];
 
-            dot = await guidDot.data.split(new RegExp(`(ge-[.]*...........)`, 'giu'))[1];
+            dot = guidDot.data.split(new RegExp(`(ge-[.]*...........)`, 'giu'))[1];
             dot = dot.split('.')[1].split(' ')[0];
-        } catch (err) { console.log(`[${getCurrentDatetime('comm')}] Can't get guid or dot`); };
+        };
 
         await message.channel
             .send({
                 'channel_id': message.channel.channel_id,
-                'content': `DM ${lang === 'fr' ? 'envoyé' : 'sent'}  ${client.emojis.cache.find(emoji => emoji.name === 'spirit_orb')}`
+                'content': `${client.emojis.cache.find(emoji => emoji.name === 'spirit_orb')} \
+DM ${lang === 'fr' ? 'envoyé' : 'sent'}  ${client.emojis.cache.find(emoji => emoji.name === 'spirit_orb')}`
             })
             .then(async () => {
                 await message.author
