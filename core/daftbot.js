@@ -161,7 +161,6 @@ class DaftBot {
             .catch(console.error);
 
         this.dbClient.on(Events.ClientReady, async () => {
-            // this.dbClient.user.avatarURL('https://cdn.discordapp.com/app-icons/758393470024155186/0511369d46276b2ba6eb6c380ea52df1.png?size=480');
             this.dbClient.user.setPresence({
                 activities: [{
                     name: this.language.activities,
@@ -252,6 +251,15 @@ class DaftBot {
             Routes.applicationCommands(client),
             { body: this.commands },
         );
+
+        let onStart = 10;
+        await new Promise(resolve => setTimeout(resolve, 1 * 1000)); // 1 seconde
+        console.log(`[${getCurrentDatetime('comm')}] Waiting ${onStart}s for proper launch...`);
+        for (let i = onStart - 1; i > 0; i--) {
+            await new Promise(resolve => setTimeout(resolve, 1 * 1000)); // 1 seconde
+            console.log(`[${getCurrentDatetime('comm')}] ${i}`);
+        };
+        console.log(`[${getCurrentDatetime('comm')}] ${this.dbClient.user.username}\'s ready to chat !`);
     };
 
     async onListenGuildNewMember() {
