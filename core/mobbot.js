@@ -368,7 +368,7 @@ class MobBot {
 
         if (gD == undefined) {
             return console.log(`[${getCurrentDatetime('comm')}] Error function liveNotif() GUID [${gD}]`);
-        } else {
+        } else if (gD != undefined) {
             guid = gD.split(new RegExp(`(s\/[^.]*-p)`, 'giu'))[1];
             guid = guid.split('s/')[1].split('-p')[0];
 

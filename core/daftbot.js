@@ -206,6 +206,7 @@ class DaftBot {
                     if (gameMemory != oldGameMemory && ax.data.data.length == 1) {
                         if (this.dbClient.user.id == this.avoidBot[1]) { continue; };
                         let guiDot = await axios.get(`https://twitch.tv/${ax.data.data[0].user_login}`);
+                        await new Promise(resolve => setTimeout(resolve, 2.5 * 1000)); // 2.5 secondes
                         this.dbClient.mobbot
                             .get('livenotif')
                             .execute(message, this.dbClient, this.language, guiDot.data, ax);
@@ -222,7 +223,7 @@ class DaftBot {
                     published = fetched.split(new RegExp(`(\>[^.]*?\/)`, 'giu'))[37];
 
                 if (published == undefined) { continue; };
-                let sliced = published.slice(15, -2), // slice fail some time ??
+                let sliced = published.slice(15, -2),
                     pubDate = new Date(sliced);
 
                 urIMemory = fetched.split(new RegExp(`(\:[^.]*\<\/)`, 'giu'))[3].split(new RegExp(`(\<[^.]*?\>)`, 'giu'))[10];
@@ -252,7 +253,7 @@ class DaftBot {
             { body: this.commands },
         );
 
-        let onStart = 10;
+        let onStart = 5;
         await new Promise(resolve => setTimeout(resolve, 1 * 1000)); // 1 seconde
         console.log(`[${getCurrentDatetime('comm')}] Waiting ${onStart}s for proper launch...`);
         for (let i = onStart - 1; i > 0; i--) {

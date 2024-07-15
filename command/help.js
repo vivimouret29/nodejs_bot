@@ -20,6 +20,8 @@ module.exports = {
             descSplit = '',
             lang = '';
 
+        await new Promise(resolve => setTimeout(resolve, 2.5 * 1000)); // 2.5 secondes
+
         switch (language) {
             case langFr:
                 lang = 'fr';
@@ -46,9 +48,9 @@ module.exports = {
 
         for (i in descSplit) { desc += descSplit[i]; };
 
-        if (guidDot.data == undefined) {
+        if (guidDot == undefined && guidDot.data == undefined) {
             return console.log(`[${getCurrentDatetime('comm')}] Error function help() GUID [${guidDot}]`);
-        } else {
+        } else if (guidDot != undefined && guidDot.data != undefined) {
             guid = guidDot.data.split(new RegExp(`(s\/[^.]*-p)`, 'giu'))[1];
             guid = guid.split('s/')[1].split('-p')[0];
 
@@ -73,7 +75,7 @@ DM ${lang === 'fr' ? 'envoyé' : 'sent'}  ${client.emojis.cache.find(emoji => em
                             'title': language.help,
                             'description': desc,
                             'color': 0x0eb70b,
-                            'timestamp': `2023-03-29T19:20:42.000Z`,
+                            'timestamp': `2024-07-16T01:38:12.365Z`, //TODO: don't forget to update dis
                             'author': {
                                 'name': client.user.username,
                                 'icon_url': 'https://cdn.discordapp.com/app-icons/757955750164430980/94a997258883caba5f553f98aea8df59.png?size=256'
