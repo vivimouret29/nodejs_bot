@@ -94,6 +94,7 @@ class MobBot {
                 });
 
             if (ax == undefined) { break; };
+            console.log(`[${getCurrentDatetime('comm')}] AXIOS HELIX STREAMS ${ax}`);
 
             if (!checkLive || ax.data.data.length == 0) {
                 gameMemory = '';
@@ -371,9 +372,11 @@ class MobBot {
         } else if (gD != undefined) {
             guid = gD.split(new RegExp(`(s\/[^.]*-p)`, 'giu'))[1];
             guid = guid.split('s/')[1].split('-p')[0];
+            console.log(`[${getCurrentDatetime('comm')}] GUID ${guid}`);
 
             dot = gD.split(new RegExp(`(ge-[.]*...........)`, 'giu'))[1];
             dot = dot.split('.')[1].split(' ')[0];
+            console.log(`[${getCurrentDatetime('comm')}] DOT ${dot}`);
         };
 
         switch (toggleMedia) {
@@ -469,10 +472,15 @@ class MobBot {
             descp;
 
         video = fetched.split(new RegExp(`(\:[^.]*\<\/)`, 'giu'));
+        console.log(`[${getCurrentDatetime('comm')}] VIDEO DATA ${video[3]} /// ${video[6]}`);
         urI = video[3].split(new RegExp(`(\<[^.]*?\>)`, 'giu'))[10];
+        console.log(`[${getCurrentDatetime('comm')}] URL ${urI}`);
         title = video[3].split(new RegExp(`(\<[^.]*?\>)`, 'giu'))[18].slice(0, -2);
+        console.log(`[${getCurrentDatetime('comm')}] TITLE ${title}`);
         thumbnail = video[6].split(new RegExp(`(\"[^.]*?\")`, 'giu'))[8];
+        console.log(`[${getCurrentDatetime('comm')}] THUMBNAIL ${thumbnail}`);
         descp = video[6].split(new RegExp(`(\"[^.]*?\")`, 'giu'))[12].split(new RegExp(`(\>[^.]*?\:)`, 'giu'))[3].slice(1, -9);
+        console.log(`[${getCurrentDatetime('comm')}] DESCP ${descp}`);
 
         await rwClient.v2.tweet({
             text: `${title}\

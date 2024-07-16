@@ -53,9 +53,11 @@ module.exports = {
         } else if (guidDot != undefined && guidDot.data != undefined) {
             guid = guidDot.data.split(new RegExp(`(s\/[^.]*-p)`, 'giu'))[1];
             guid = guid.split('s/')[1].split('-p')[0];
+            console.log(`[${getCurrentDatetime('comm')}] GUID ${guid}`);
 
             dot = guidDot.data.split(new RegExp(`(ge-[.]*...........)`, 'giu'))[1];
             dot = dot.split('.')[1].split(' ')[0];
+            console.log(`[${getCurrentDatetime('comm')}] DOT ${dot}`);
         };
 
         await message.channel
