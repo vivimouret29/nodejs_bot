@@ -1,6 +1,8 @@
 'use.strict'
 
 const fs = require('node:fs'),
+	moment = require('moment-timezone'),
+	utc2 = moment().tz('Europe/Paris'),
 	request = require('request');
 
 async function sendEmbed(message, content) {
@@ -40,14 +42,13 @@ async function messageErase(message) { await message.delete().catch(O_o => { });
 function randomIntFromInterval(min, max) { return Math.floor(Math.random() * (max - min + 1) + min) };
 
 function getCurrentDatetime(choice) {
-	let date = new Date();
 	switch (choice) {
 		case 'csv':
-			return `${date.getUTCDate() < 10 ? `0${date.getUTCDate()}` : date.getUTCDate()}${date.getUTCMonth() < 10 ? `0${date.getUTCMonth()}` : date.getUTCMonth()}${date.getUTCFullYear()}`;
+			return `${utc2.format('YYYY-MM-DD HH:mm:ss')}`;
 		case 'date':
-			return `${date.getUTCFullYear()}-${date.getUTCMonth() < 10 ? `0${date.getUTCMonth()}` : date.getUTCMonth()}-${date.getUTCDate() < 10 ? `0${date.getUTCDate()}` : date.getUTCDate()} ${(date.getHours()) < 10 ? `0${date.getHours()}` : (date.getHours())}:${date.getUTCMinutes() < 10 ? `0${date.getUTCMinutes()}` : date.getUTCMinutes()}`;
+			return `${utc2.format('DDMMYYYY')}`;
 		case 'comm':
-			return `${(date.getHours()) < 10 ? `0${date.getHours()}` : (date.getHours())}:${date.getUTCMinutes() < 10 ? `0${date.getUTCMinutes()}` : date.getUTCMinutes()} - ${date.getUTCDate() < 10 ? `0${date.getUTCDate()}` : date.getUTCDate()}/${date.getUTCMonth() < 10 ? `0${date.getUTCMonth()}` : date.getUTCMonth()}/${date.getUTCFullYear()}`;
+			return `${utc2.format('HH:mm:ss DD/MM/YYYY')}`;
 	};
 };
 
