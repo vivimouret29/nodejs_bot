@@ -23,12 +23,16 @@ module.exports = {
             return;
         };
 
-        let fe = await axios.get(`https://api.twitch.tv/helix/channels/followed?user_id=${userstate.id}` + params)
-            .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error FETCH ${err}`); }),
-            timeSince = new Date(fe.data.data[0].followed_at).toLocaleString('fr-FR', { timeZone: 'Europe/Paris' }),
+        let fe = await axios.get(`https://api.twitch.tv/helix/channels/followed?user_id=${userstate.id}` + params) // TODO: to repair
+            .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error FETCH ${err}`); });
+        if (fe == undefined) { return console.log(`[${getCurrentDatetime('comm')}] Error function followage() FETCH [${fe}]`); };
+        console.log(`[${getCurrentDatetime('comm')}] HELIX FOLLOWAGE ${fe.statusText}`);
+
+        let timeSince = new Date(fe.data.data[0].followed_at).toLocaleString('fr-FR', { timeZone: 'Europe/Paris' }),
             day = timeSince.split('/')[0],
             months = timeSince.split('/')[1],
             years = new Date(fe.data.data[0].followed_at).getUTCFullYear();
+        console.log(`[${getCurrentDatetime('comm')}] FOLLOWAGE ${timeSince}`);
 
         switch (months) {
             case '01':

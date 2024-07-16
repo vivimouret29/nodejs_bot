@@ -79,10 +79,12 @@ module.exports = {
                 'Client-ID': clientId
             }
         });
+        console.log(`[${getCurrentDatetime('comm')}] FETCH HUGGINGFACE PEPE ${fetchPdp.statusText}`);
 
         link = fetchPdp.data.split(new RegExp(`(s\/[^.]..........................................)`, 'giu'))[3];
         link = link.split('s/')[1];
         link = link.slice(0, -7);
+        console.log(`[${getCurrentDatetime('comm')}] LINK HUGGINGFACE ${link}`);
 
         await messageErase(msg);
         await message

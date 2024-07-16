@@ -170,7 +170,6 @@ class DaftBot {
             });
             console.log(`[${getCurrentDatetime('comm')}] ${this.dbClient.user.username} present in ${this.dbClient.guilds.cache.size} guilds : `, this.dbClient.guilds.cache.map(guild => guild.name));
 
-            if (this.dbClient.user.id == this.avoidBot[1]) { return; };
             this.dbClient.mobbot
                 .get('mobbotConnection')
                 .execute();
@@ -205,10 +204,10 @@ class DaftBot {
                 } else {
                     gameMemory = ax.data.data[0].game_name;
                     if (gameMemory != oldGameMemory && ax.data.data.length == 1) {
-                        if (this.dbClient.user.id == this.avoidBot[1]) { continue; };
                         let guiDot = await axios.get(`https://twitch.tv/${ax.data.data[0].user_login}`);
+                        console.log(`[${getCurrentDatetime('comm')}] GUIDOT TWITCH ${guiDot.statusText}`);
+                        if (this.dbClient.user.id == this.avoidBot[1]) { continue; };
                         await new Promise(resolve => setTimeout(resolve, 2.5 * 1000)); // 2.5 secondes
-                        console.log(`[${getCurrentDatetime('comm')}] GUIDOT TWITCH ${guiDot.data}`);
                         this.dbClient.mobbot
                             .get('livenotif')
                             .execute(message, this.dbClient, this.language, guiDot.data, ax);

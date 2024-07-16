@@ -19,7 +19,7 @@ module.exports = {
             desc = '',
             descSplit = '',
             lang = '';
-        console.log(`[${getCurrentDatetime('comm')}] GUIDOT HELP ${guidDot}`);
+        console.log(`[${getCurrentDatetime('comm')}] GUIDOT HELP ${guidDot.statusText}`);
 
         await new Promise(resolve => setTimeout(resolve, 2.5 * 1000)); // 2.5 secondes
 
