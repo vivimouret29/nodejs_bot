@@ -184,6 +184,7 @@ class DaftBot {
                 oldGameMemory = '',
                 oldUrIMemory = '',
                 message,
+                ytbCount = 0,
                 ping = true;
 
             while (true) {
@@ -214,34 +215,38 @@ class DaftBot {
                     };
                 };
 
-                let fe = await fetch(`https://www.youtube.com/feeds/videos.xml?channel_id=UCreItrEewfO6IPZYPu4C7pA`)
-                    .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error FETCH ${err}`); });
-                if (fe == undefined) { continue; };
+                if (ytbCount % 6 == 0) {
+                    let fe = await fetch(`https://www.youtube.com/feeds/videos.xml?channel_id=UCreItrEewfO6IPZYPu4C7pA`)
+                        .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error FETCH ${err}`); });
+                    if (fe == undefined) { continue; };
 
-                let fetched = await fe.text(),
-                    published = fetched.split(new RegExp(`(\>[^.]*?\/)`, 'giu'))[37];
+                    let fetched = await fe.text(),
+                        published = fetched.split(new RegExp(`(\>[^.]*?\/)`, 'giu'))[37];
 
-                if (published == undefined) { continue; };
-                console.log(`[${getCurrentDatetime('comm')}] SLICE ${published}`);
+                    if (published == undefined) { continue; };
+                    console.log(`[${getCurrentDatetime('comm')}] SLICE ${published}`);
 
-                let sliced = published.slice(13, -2),
-                    pubDate = new Date(sliced);
-                console.log(`[${getCurrentDatetime('comm')}] DATE PUBLICATION YTB ${pubDate}`);
+                    let sliced = published.slice(13, -2),
+                        pubDate = new Date(sliced);
+                    console.log(`[${getCurrentDatetime('comm')}] DATE PUBLICATION YTB ${pubDate}`);
 
-                urIMemory = fetched.split(new RegExp(`(\:[^.]*\<\/)`, 'giu'))[3].split(new RegExp(`(\<[^.]*?\>)`, 'giu'))[10];
-                if (new Date(new Date().setHours(new Date().getHours() - 2)) < pubDate && urIMemory != oldUrIMemory) {
-                    if (this.dbClient.user.id == this.avoidBot[1]) { continue; };
-                    this.dbClient.mobbot
-                        .get('videonotif')
-                        .execute(message, this.dbClient, this.language);
+                    urIMemory = fetched.split(new RegExp(`(\:[^.]*\<\/)`, 'giu'))[3].split(new RegExp(`(\<[^.]*?\>)`, 'giu'))[10];
+                    if (new Date(new Date().setHours(new Date().getHours() - 2)) < pubDate && urIMemory != oldUrIMemory) {
+                        if (this.dbClient.user.id == this.avoidBot[1]) { continue; };
+                        this.dbClient.mobbot
+                            .get('videonotif')
+                            .execute(message, this.dbClient, this.language);
+                    };
                 };
 
                 checkLive = true;
                 oldUrIMemory = urIMemory;
                 oldGameMemory = gameMemory;
-                if (ping) await new Promise(resolve => setTimeout(resolve, 5 * 60000)); // 5 minutes
-                else {
-                    await new Promise(resolve => setTimeout(resolve, 3600000)); // 1 heure
+                if (ping) {
+                    ytbCount++;
+                    await new Promise(resolve => setTimeout(resolve, 5 * 60000)); // 5 minutes
+                } else {
+                    await new Promise(resolve => setTimeout(resolve, 30 * 60000)); // 30 minutes
                     ping = true;
                 };
             };
