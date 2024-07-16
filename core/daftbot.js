@@ -194,9 +194,8 @@ class DaftBot {
                         checkLive = false;
                         console.log(`[${getCurrentDatetime('comm')}] Error GET AXIOS ${err}`);
                     });
-                console.log(`[${getCurrentDatetime('comm')}] AXIOS WHILEDAFT ${ax.data.data[0].game_name}`);
-
                 if (ax == undefined) { continue; };
+                console.log(`[${getCurrentDatetime('comm')}] AXIOS WHILEDAFT ${ax.data.data[0].game_name}`);
 
                 if (!checkLive || ax.data.data.length == 0) {
                     gameMemory = '';
@@ -205,7 +204,7 @@ class DaftBot {
                     gameMemory = ax.data.data[0].game_name;
                     if (gameMemory != oldGameMemory && ax.data.data.length == 1) {
                         let guiDot = await axios.get(`https://twitch.tv/${ax.data.data[0].user_login}`);
-                        console.log(`[${getCurrentDatetime('comm')}] GUIDOT TWITCH ${guiDot.statusText}`);
+                        if (guiDot != undefined) { console.log(`[${getCurrentDatetime('comm')}] GUIDOT TWITCH ${guiDot.statusText}`); };
                         if (this.dbClient.user.id == this.avoidBot[1]) { continue; };
                         await new Promise(resolve => setTimeout(resolve, 2.5 * 1000)); // 2.5 secondes
                         this.dbClient.mobbot

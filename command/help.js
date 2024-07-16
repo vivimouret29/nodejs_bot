@@ -19,10 +19,8 @@ module.exports = {
             desc = '',
             descSplit = '',
             lang = '';
-        console.log(`[${getCurrentDatetime('comm')}] GUIDOT HELP ${guidDot.statusText}`);
 
         await new Promise(resolve => setTimeout(resolve, 2.5 * 1000)); // 2.5 secondes
-
         switch (language) {
             case langFr:
                 lang = 'fr';
@@ -49,9 +47,10 @@ module.exports = {
 
         for (i in descSplit) { desc += descSplit[i]; };
 
-        if (guidDot == undefined && guidDot.data == undefined) {
+        if (guidDot == undefined) {
             return console.log(`[${getCurrentDatetime('comm')}] Error function help() GUID [${guidDot}]`);
-        } else if (guidDot != undefined && guidDot.data != undefined) {
+        } else if (guidDot.data != undefined) {
+            console.log(`[${getCurrentDatetime('comm')}] GUIDOT HELP ${guidDot.statusText}`);
             guid = guidDot.data.split(new RegExp(`(s\/[^.]*-p)`, 'giu'))[1];
             console.log(`[${getCurrentDatetime('comm')}] GUID ${guid}`);
             if (guid == undefined) return console.log(`[${getCurrentDatetime('comm')}] Error function help() GUID [${guid}]`);
