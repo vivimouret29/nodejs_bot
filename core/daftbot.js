@@ -215,7 +215,7 @@ class DaftBot {
                     };
                 };
 
-                if (ytbCount % 6 == 0) {
+                if (ytbCount % 6 == 0) { // 30 minutes
                     let fe = await fetch(`https://www.youtube.com/feeds/videos.xml?channel_id=UCreItrEewfO6IPZYPu4C7pA`)
                         .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error FETCH ${err}`); });
                     if (fe == undefined) { continue; };
