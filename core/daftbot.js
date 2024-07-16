@@ -195,7 +195,7 @@ class DaftBot {
                         checkLive = false;
                         console.log(`[${getCurrentDatetime('comm')}] Error GET AXIOS ${err}`);
                     });
-                console.log(`[${getCurrentDatetime('comm')}] AXIOS HELIX STREAMS ${ax}`);
+                console.log(`[${getCurrentDatetime('comm')}] AXIOS WHILEDAFT ${ax.data.data[0].game_name}`);
 
                 if (ax == undefined) { continue; };
 
@@ -208,7 +208,7 @@ class DaftBot {
                         if (this.dbClient.user.id == this.avoidBot[1]) { continue; };
                         let guiDot = await axios.get(`https://twitch.tv/${ax.data.data[0].user_login}`);
                         await new Promise(resolve => setTimeout(resolve, 2.5 * 1000)); // 2.5 secondes
-                        console.log(`[${getCurrentDatetime('comm')}] GUIDOT TWITCH ${guiDot}`);
+                        console.log(`[${getCurrentDatetime('comm')}] GUIDOT TWITCH ${guiDot.data}`);
                         this.dbClient.mobbot
                             .get('livenotif')
                             .execute(message, this.dbClient, this.language, guiDot.data, ax);
@@ -219,7 +219,6 @@ class DaftBot {
                 let fe = await fetch(`https://www.youtube.com/feeds/videos.xml?channel_id=UCreItrEewfO6IPZYPu4C7pA`)
                     .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error FETCH ${err}`); });
                 if (fe == undefined) { continue; };
-                console.log(`[${getCurrentDatetime('comm')}] YOUTUBE FETCH ${fe}`);
 
                 let fetched = await fe.text(),
                     published = fetched.split(new RegExp(`(\>[^.]*?\/)`, 'giu'))[37];
@@ -227,7 +226,7 @@ class DaftBot {
                 if (published == undefined) { continue; };
                 console.log(`[${getCurrentDatetime('comm')}] SLICE ${published}`);
 
-                let sliced = published.slice(15, -2),
+                let sliced = published.slice(13, -2),
                     pubDate = new Date(sliced);
                 console.log(`[${getCurrentDatetime('comm')}] DATE PUBLICATION YTB ${pubDate}`);
 

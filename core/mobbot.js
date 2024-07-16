@@ -94,7 +94,7 @@ class MobBot {
                 });
 
             if (ax == undefined) { break; };
-            console.log(`[${getCurrentDatetime('comm')}] AXIOS HELIX STREAMS ${ax}`);
+            console.log(`[${getCurrentDatetime('comm')}] AXIOS WHILEMOB ${ax.data.data[0].game_name}`);
 
             if (!checkLive || ax.data.data.length == 0) {
                 gameMemory = '';
@@ -371,10 +371,12 @@ class MobBot {
             return console.log(`[${getCurrentDatetime('comm')}] Error function liveNotif() GUID [${gD}]`);
         } else if (gD != undefined) {
             guid = gD.split(new RegExp(`(s\/[^.]*-p)`, 'giu'))[1];
+            console.log(`[${getCurrentDatetime('comm')}] GUID ${guid}`);
             guid = guid.split('s/')[1].split('-p')[0];
             console.log(`[${getCurrentDatetime('comm')}] GUID ${guid}`);
 
             dot = gD.split(new RegExp(`(ge-[.]*...........)`, 'giu'))[1];
+            console.log(`[${getCurrentDatetime('comm')}] DOT ${dot}`);
             dot = dot.split('.')[1].split(' ')[0];
             console.log(`[${getCurrentDatetime('comm')}] DOT ${dot}`);
         };
