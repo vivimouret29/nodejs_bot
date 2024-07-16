@@ -462,8 +462,15 @@ class DaftBot {
                         else { console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`); };
                         await this.dbClient.command
                             .get(command)
-                            .execute(message, this.dbClient, this.language, this.user, args, this.initDateTime);
-                        await new Promise(resolve => setTimeout(resolve, 2 * 1000));
+                            .execute(message, this.dbClient, this.language, this.user, args, this.initDateTime)
+                            .then(async (response) => {
+                                if (response == false) {
+                                    this.dbClient.command
+                                        .get(command)
+                                        .execute(message, this.dbClient, this.language, this.user, args, this.initDateTime);
+                                };
+                            });
+                        await new Promise(resolve => setTimeout(resolve, 2 * 1000)); // 2 secondes
                         if (checkCollection == 'rw' || checkCollection == 'rollweapons'
                             || checkCollection == 'ra' || checkCollection == 'rollarmors') { await this.readCsvFile(); };
                         break;

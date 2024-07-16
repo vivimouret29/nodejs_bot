@@ -26,9 +26,8 @@ module.exports = {
         };
 
         if (String(contenText).startsWith('http') || contenText == undefined) {
-            await sendEmbed(message, `${language.wrongContent}\n
+            return await sendEmbed(message, `${language.wrongContent}\n
 *e.g. ${prefix}status ${typeThings != undefined ? typeThings : 'watch'} ${stOnOff != undefined ? stOnOff : 'dnd'} hello world ! ${urlLike != undefined ? urlLike : ''}*`);
-            return;
         };
 
         if (urlBool) {
@@ -53,9 +52,8 @@ module.exports = {
             case 'dnd':
                 break;
             default:
-                await sendEmbed(message, `${language.wrongStatus}\n
+                return await sendEmbed(message, `${language.wrongStatus}\n
 *e.g. ${prefix}status ${typeThings != undefined ? typeThings : 'watch'} online ${contenText != undefined ? contenText : 'hello world !'} ${urlLike != undefined ? urlLike : ''}*`);
-                return;
         };
 
         switch (typeThings) {
@@ -75,9 +73,8 @@ module.exports = {
                 typeThings = ActivityType.Competing;
                 break;
             default:
-                await sendEmbed(message, `${language.wrongActivities}\n
+                return await sendEmbed(message, `${language.wrongActivities}\n
 *e.g. ${prefix}status stream ${stOnOff != undefined ? stOnOff : 'idle'} ${contenText != undefined ? contenText : 'hello world !'} ${urlLike != undefined ? urlLike : ''}*`);
-                return;
         };
 
         if (!urlBool) {
