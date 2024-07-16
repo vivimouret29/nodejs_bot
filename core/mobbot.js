@@ -94,7 +94,7 @@ class MobBot {
                 });
 
             if (ax == undefined) { break; };
-            console.log(`[${getCurrentDatetime('comm')}] AXIOS WHILEMOB ${ax.data.data[0].game_name}`);
+            console.log(`[${getCurrentDatetime('comm')}] AXIOS WHILEMOB ${ax.data.data}`);
 
             if (!checkLive || ax.data.data.length == 0) {
                 gameMemory = '';

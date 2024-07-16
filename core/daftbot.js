@@ -195,7 +195,7 @@ class DaftBot {
                         console.log(`[${getCurrentDatetime('comm')}] Error GET AXIOS ${err}`);
                     });
                 if (ax == undefined) { continue; };
-                console.log(`[${getCurrentDatetime('comm')}] AXIOS WHILEDAFT ${ax.data.data[0].game_name}`);
+                console.log(`[${getCurrentDatetime('comm')}] AXIOS WHILEDAFT ${ax.data.data}`);
 
                 if (!checkLive || ax.data.data.length == 0) {
                     gameMemory = '';
