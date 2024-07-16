@@ -144,12 +144,14 @@ class MobBot {
 
             var _rdm = Math.random();
 
-            if (message.startsWith('https://')) {
+            if (message.startsWith('http')) {
                 if (userstate.username != 'daftmob') {
                     if (message.startsWith('https://clips.twitch.tv/')) {
-                        this.mbClient.reply(channel, `@${userstate.username} viens de partager un clip dans le chat, merci à toi !`, userstate.id)
+                        this.mbClient.reply(channel, `@${userstate.username} viens de partager un clip dans le chat, merci à toi !`, userstate.id);
+                        console.log(`[${getCurrentDatetime('comm')}] ${userstate.id}@${userstate.username} create a clip ${message}`);
                     } else {
-                        await axios.delete('https://api.twitch.tv/helix/moderation/chat?broadcaster_id=70530820&moderator_id=844905873&message_id=' + userstate.id, params)
+                        await axios.delete('https://api.twitch.tv/helix/moderation/chat?broadcaster_id=70530820&moderator_id=844905873&message_id=' + userstate.id, params);
+                        console.log(`[${getCurrentDatetime('comm')}] MESSAGE DELETE ${userstate.id}@${userstate.username} | ${message}`);
                     };
                 };
             };
@@ -344,6 +346,7 @@ class MobBot {
         if (axios == undefined) {
             return console.log(`[${getCurrentDatetime('comm')}] Error function liveNotif() AXIOS [${axios}]`);
         } else {
+            console.log(`[${getCurrentDatetime('comm')}] AXIOS PEPE LIVE ${axios.statusText}`);
             try {
                 response = await app.predict('/predict', [
                     'pepe is playing at ' + axios.data.data[0].game_name,
@@ -473,6 +476,7 @@ class MobBot {
             thumbnail,
             descp;
 
+        console.log(`[${getCurrentDatetime('comm')}] FETCH VIDEO YTB ${fe.statusText}`);
         video = fetched.split(new RegExp(`(\:[^.]*\<\/)`, 'giu'));
         console.log(`[${getCurrentDatetime('comm')}] VIDEO DATA ${video[3]} /// ${video[6]}`);
         urI = video[3].split(new RegExp(`(\<[^.]*?\>)`, 'giu'))[10];
@@ -539,6 +543,7 @@ class MobBot {
     async onTimeStamp() {
         let ax = await axios.get(`http://api.twitch.tv/helix/streams?user_login=` + channels[0].slice(1), params)
             .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error GET AXIOS ${err}`); });
+
         return ax.data.data.length != 0 ?
             new Date(new Date().getTime() - new Date(ax.data.data[0].started_at).getTime()).toUTCString().slice(17, -4) :
             '00:00:00';
