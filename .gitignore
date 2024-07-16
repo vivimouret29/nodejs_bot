@@ -1,10 +1,11 @@
-node_modules
 .vscode
+node_modules
 /config.json
 /core/config.json
-/core/*.txt
 /core/data/mobbot_analytics.csv
+/core/*.txt
+/data/logs/*.log
+/data/*.csv
+/package-lock.json
 /styles/ai/pepe-diffuser.jpg
 /styles/ai/pepe-diffuser-x.jpg
-/data/*.csv
-/data/logs/*.log
