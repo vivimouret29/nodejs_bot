@@ -67,9 +67,21 @@ function downloadImagesFromUrl(uri, filename, callback) {
 	});
 };
 
+async function threadPause(numbers, time) {
+	switch (time) {
+		case true:
+			await new Promise(resolve => setTimeout(resolve, numbers * 60000));
+			break;
+		case false:
+			await new Promise(resolve => setTimeout(resolve, numbers * 1000));
+			break;
+	};
+};
+
 exports.sendEmbed = sendEmbed;
 exports.messageErase = messageErase;
 exports.randomIntFromInterval = randomIntFromInterval;
 exports.getCurrentDatetime = getCurrentDatetime;
 exports.randomColor = randomColor;
 exports.downloadImagesFromUrl = downloadImagesFromUrl;
+exports.threadPause = threadPause;

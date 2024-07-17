@@ -1,7 +1,7 @@
 'use.strict'
 
 const { emojis: dctmj } = require('../resx/emojis.json'),
-    { sendEmbed, getCurrentDatetime, randomColor } = require('../core/utils.js');
+    { sendEmbed, getCurrentDatetime, randomColor, threadPause } = require('../core/utils.js');
 
 module.exports = {
     data: {
@@ -68,7 +68,7 @@ module.exports = {
             })
             .then(async (msg) => {
                 for (i = 0; i < dictMojis.length; i++) { await msg.react(dictMojis[i]) };
-                await new Promise(resolve => setTimeout(resolve, 30 * 1000));
+                await threadPause(30, false); // 30 secondes
                 return reactions = msg.reactions.cache.map(reaction => reaction);
             })
             .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error command send poll ${err}`); });

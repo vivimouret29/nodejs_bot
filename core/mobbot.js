@@ -8,7 +8,7 @@ const { Client } = require('tmi.js'),
     path = require('node:path'),
     { TwitterApi } = require('twitter-api-v2'),
     { clientId, identity, channels, x } = require('./config.json'),
-    { randomIntFromInterval, getCurrentDatetime, randomColor, downloadImagesFromUrl } = require('./utils.js'),
+    { randomIntFromInterval, getCurrentDatetime, randomColor, downloadImagesFromUrl, threadPause } = require('./utils.js'),
     { users: regular_users } = require('../resx/regular_users.json'),
     dynamic = new Function('modulePath', 'return import(modulePath)');
 
@@ -122,7 +122,7 @@ class MobBot {
             oldGameMemory = gameMemory;
 
             await this.onLiveSponsor();
-            await new Promise(resolve => setTimeout(resolve, 15 * 60000)); // 15 minutes
+            await threadPause(15, true); // 15 minutes
         };
     };
 
@@ -219,7 +219,7 @@ class MobBot {
             await this.onLiveSponsor();
 
             if (_rdm < .05 && !this.live) {
-                await new Promise(resolve => setTimeout(resolve, 3500)); // 3.5 secondes
+                await threadPause(3.5, false); // 3.5 secondes
                 this.mbClient.say(channel, `ALL SYSTEMS ARE OFFLINE MrDestructoid`)
                     .catch(e => console.log(e));
             };

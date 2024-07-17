@@ -11,7 +11,7 @@ const { Client, Collection, GatewayIntentBits, PermissionsBitField, ActivityType
     { clientId, identity, channels } = require('./config.json'),
     { fr, en, uk } = require('../resx/lang.json'),
     { memes } = require('../resx/memes.json'),
-    { sendEmbed, messageErase, getCurrentDatetime, randomIntFromInterval } = require('./utils.js'),
+    { sendEmbed, messageErase, getCurrentDatetime, randomIntFromInterval, threadPause } = require('./utils.js'),
     { Admin } = require('../core/classes/admin.js'),
     { User } = require('../core/classes/user.js');
 
@@ -175,7 +175,7 @@ class DaftBot {
                 .execute();
             console.log(`[${getCurrentDatetime('comm')}] ${this.dbClient.user.username} connect on irc-ws.chat.twitch.tv:443`);
 
-            await new Promise(resolve => setTimeout(resolve, 5 * 1000)); // 5 secondes
+            await threadPause(5, false); // 5 secondes
             this.onFirstStart = false;
 
             let checkLive = true,
@@ -241,30 +241,18 @@ class DaftBot {
 
                 checkLive = true;
                 oldUrIMemory = urIMemory;
-                oldGameMemory = gameMemory;
-                if (ping) {
-                    ytbCount++;
-                    await new Promise(resolve => setTimeout(resolve, 5 * 60000)); // 5 minutes
-                } else {
-                    await new Promise(resolve => setTimeout(resolve, 30 * 60000)); // 30 minutes
-                    ping = true;
-                };
+                await threadPause(60, true); // 1 heure
             };
         });
 
         this.dbClient.on(Events.GuildCreate, async (guild) => { console.log(`[${getCurrentDatetime('comm')}] ${this.dbClient.user.username} added in : ${guild.name}`); });
         this.dbClient.on(Events.GuildDelete, async (guild) => { console.log(`[${getCurrentDatetime('comm')}] ${this.dbClient.user.username} removed in : ${guild.name}`); });
 
-        await rest.put(
-            Routes.applicationCommands(client),
-            { body: this.commands },
-        );
-
-        let onStart = 5;
-        await new Promise(resolve => setTimeout(resolve, 1 * 1000)); // 1 seconde
+        let onStart = 10;
+        await threadPause(3, false); // 2 secondes
         console.log(`[${getCurrentDatetime('comm')}] Waiting ${onStart}s for proper launch...`);
         for (let i = onStart - 1; i > 0; i--) {
-            await new Promise(resolve => setTimeout(resolve, 1 * 1000)); // 1 seconde
+            await threadPause(1, false); // 1 seconde
             console.log(`[${getCurrentDatetime('comm')}] ${i}`);
         };
         console.log(`[${getCurrentDatetime('comm')}] ${this.dbClient.user.username}\'s ready to chat !`);
@@ -315,7 +303,7 @@ class DaftBot {
                     'lastroll': 0
                 });
                 await this.writeCsvFile(this.user);
-                await new Promise(resolve => setTimeout(resolve, 2 * 1000));
+                await threadPause(2, false); // 2
                 await this.readCsvFile();
             } else { this.user = this.userClass.getUserProperty(interaction.user.id, this.usersProperty); };
 
@@ -334,7 +322,7 @@ class DaftBot {
                     await this.dbClient.slash
                         .get(interaction.commandName)
                         .execute(interaction, this.dbClient, this.language, this.user, this.initDateTime);
-                    await new Promise(resolve => setTimeout(resolve, 2 * 1000));
+                    await threadPause(2, false); // 2 secondes
                     if (checkCollection == 'rw' || checkCollection == 'rollweapons'
                         || checkCollection == 'ra' || checkCollection == 'rollarmors') { await this.readCsvFile(); };
                     break;
@@ -353,7 +341,7 @@ class DaftBot {
                     'lastroll': 0
                 });
                 await this.writeCsvFile(this.user);
-                await new Promise(resolve => setTimeout(resolve, 2 * 1000));
+                await threadPause(2, false); // 2 secondes
                 await this.readCsvFile();
             } else { this.user = this.userClass.getUserProperty(message.author.id, this.usersProperty); };
 
@@ -470,7 +458,7 @@ class DaftBot {
                                         .execute(message, this.dbClient, this.language, this.user, args, this.initDateTime);
                                 };
                             });
-                        await new Promise(resolve => setTimeout(resolve, 2 * 1000)); // 2 secondes
+                            await threadPause(2, false); // 2 secondes
                         if (checkCollection == 'rw' || checkCollection == 'rollweapons'
                             || checkCollection == 'ra' || checkCollection == 'rollarmors') { await this.readCsvFile(); };
                         break;
