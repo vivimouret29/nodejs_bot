@@ -3,7 +3,7 @@
 const axios = require('axios'),
     { fr: langFr, en: langEn, uk: langUk } = require('../resx/lang.json'),
     { fr: helpFr, en: helpEn, uk: helpUk } = require('../resx/help.json'),
-    { getCurrentDatetime } = require('../core/utils.js');
+    { randomColor, getCurrentDatetime } = require('../core/utils.js');
 
 module.exports = {
     data: {
@@ -83,7 +83,7 @@ DM ${lang === 'fr' ? 'envoyé' : 'sent'}  ${client.emojis.cache.find(emoji => em
                             'type': 'rich',
                             'title': language.help,
                             'description': desc,
-                            'color': 0x0eb70b,
+                            'color': randomColor(),
                             'timestamp': `2024-07-16T01:38:12.365Z`, //TODO: don't forget to update dis
                             'author': {
                                 'name': client.user.username,
