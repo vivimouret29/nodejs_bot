@@ -1,16 +1,18 @@
 'use.strict'
 
 const { Client } = require('tmi.js'),
-    { ActivityType } = require('discord.js'),
-    { parse } = require('json2csv'),
     axios = require('axios'),
+    dynamic = new Function('modulePath', 'return import(modulePath)'),
     fs = require('node:fs'),
+    moment = require('moment-timezone'),
     path = require('node:path'),
-    { TwitterApi } = require('twitter-api-v2'),
+    util = require('util'),
+    { ActivityType } = require('discord.js'),
     { clientId, identity, channels, x } = require('./config.json'),
+    { parse } = require('json2csv'),
     { randomIntFromInterval, getCurrentDatetime, randomColor, downloadImagesFromUrl, threadPause } = require('./utils.js'),
     { users: regular_users } = require('../resx/regular_users.json'),
-    dynamic = new Function('modulePath', 'return import(modulePath)');
+    { TwitterApi } = require('twitter-api-v2');
 
 const oauth = {
     options: {
@@ -54,7 +56,7 @@ class MobBot {
     };
 
     async onConnect() {
-        this.date = new Date();
+        this.date = moment().tz('Europe/Paris').format();
 
         await this.setCollection();
 
@@ -127,20 +129,26 @@ class MobBot {
     };
 
     async setCollection() {
+        var commandCount = 0,
+            commandName = [];
         const commandsPath = path.join(__dirname, './subcommands'),
             commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
 
         for (let file of commandFiles) {
             var filePath = path.join(commandsPath, file),
                 command = require(filePath);
+                commandCount++;
+                commandName.push(command.data.name);
             if ('data' in command && 'execute' in command) { this.mbCommands.set(command.data.name, command); }
             else { console.log(`[ERROR_FILE_COMMAND] The command at ${filePath} is missing a required "data" or "execute" property.`); };
         };
+
+        console.log(`[${getCurrentDatetime('comm')}] ${commandCount} commands loaded : ` + util.inspect(commandName, false, null, true));
     };
 
     async onMessageListen() {
         this.mbClient.on('message', async (channel, userstate, message, self) => {
-            if (self || userstate.username === 'mobbot_') return;
+            // if (self || userstate.username === 'mobbot_') return;
 
             var _rdm = Math.random();
 
@@ -228,7 +236,7 @@ class MobBot {
 
     async onLiveSponsor() {
         if (this.live) {
-            const minutesLater = new Date(this.date.getTime() + 30 * 60 * 1000), // 30 minutes
+            const minutesLater = moment().tz('Europe/Paris').add(30, 'minutes').toDate(), // 30 minutes
                 hasMinutesPassed = new Date() >= minutesLater;
 
             if (this._count % 20 === 0 || hasMinutesPassed) {

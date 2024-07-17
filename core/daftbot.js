@@ -1,11 +1,12 @@
 'use.strict'
 
 const { Client, Collection, GatewayIntentBits, PermissionsBitField, ActivityType, Events, Partials, REST, Routes } = require('discord.js'),
-    fs = require('node:fs'),
-    util = require('util'),
     csvParse = require('fast-csv'),
+    fs = require('node:fs'),
+    moment = require('moment-timezone'),
     path = require('node:path'),
     packageVersion = require('../package.json'),
+    util = require('util'),
     { parse } = require('json2csv'),
     { prefix, token, owner, client } = require('../config.json'),
     { channelYtbId } = require('./config.json'),
@@ -70,8 +71,7 @@ class DaftBot {
         this.usersProperty = [];
         this.user;
 
-        this.date = new Date();
-        this.initDateTime = `${(this.date.getUTCHours() + 1) < 10 ? `0${this.date.getUTCHours()}` : this.date.getUTCHours()}:${this.date.getUTCMinutes() < 10 ? `0${this.date.getUTCMinutes()}` : this.date.getUTCMinutes()} - ${this.date.getUTCDate() < 10 ? `0${this.date.getUTCDate()}` : this.date.getUTCDate()}/${this.date.getUTCMonth() < 10 ? `0${this.date.getUTCMonth()}` : this.date.getUTCMonth()}/${this.date.getUTCFullYear()}`;
+        this.date = moment().tz('Europe/Paris').format("HH:mm:ss - DD/MM/YYYY");
         this.isMuted = false;
         this.language = this.language == undefined ? fr : this.language;
 
@@ -206,8 +206,10 @@ class DaftBot {
                 if (published == undefined) { continue; };
                 console.log(`[${getCurrentDatetime('comm')}] SLICE ${published}`);
 
-                let sliced = published.slice(13, -2),
-                    pubDate = new Date(sliced);
+                let sliced = published.slice(15, -2);
+                if (new Date(sliced) == 'Invalid Date') { sliced = published.slice(13, -2); };
+
+                let pubDate = new Date(sliced);
                 console.log(`[${getCurrentDatetime('comm')}] DATE PUBLICATION YTB ${pubDate}`);
 
                 urIMemory = fetched.split(new RegExp(`(\:[^.]*\<\/)`, 'giu'))[3].split(new RegExp(`(\<[^.]*?\>)`, 'giu'))[10];
@@ -278,7 +280,8 @@ class DaftBot {
                     'username': String(interaction.user.username),
                     'canroll': true,
                     'roll': 0,
-                    'lastroll': 0
+                    'lastroll': 0,
+                    'guildId': Number(interaction.guildId)
                 });
                 await this.writeCsvFile(this.user);
                 await threadPause(2, false); // 2
@@ -299,7 +302,7 @@ class DaftBot {
                     else { console.log(`[${getCurrentDatetime('comm')}] ${interaction.member.guild.name} / ${interaction.user.username} # ${interaction.commandName}${interaction.options.get("prompt") != undefined ? ` - ${interaction.options.get("prompt").value}` : ''}`); };
                     await this.dbClient.slash
                         .get(interaction.commandName)
-                        .execute(interaction, this.dbClient, this.language, this.user, this.initDateTime);
+                        .execute(interaction, this.dbClient, this.language, this.user, this.date);
                     await threadPause(2, false); // 2 secondes
                     if (checkCollection == 'rw' || checkCollection == 'rollweapons'
                         || checkCollection == 'ra' || checkCollection == 'rollarmors') { await this.readCsvFile(); };
@@ -316,7 +319,8 @@ class DaftBot {
                     'username': String(message.author.username),
                     'canroll': true,
                     'roll': 0,
-                    'lastroll': 0
+                    'lastroll': 0,
+                    'guildId': Number(message.guildId)
                 });
                 await this.writeCsvFile(this.user);
                 await threadPause(2, false); // 2 secondes
@@ -428,15 +432,15 @@ class DaftBot {
                         else { console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${author} : ${msg}`); };
                         await this.dbClient.command
                             .get(command)
-                            .execute(message, this.dbClient, this.language, this.user, args, this.initDateTime)
+                            .execute(message, this.dbClient, this.language, this.user, args, this.date)
                             .then(async (response) => {
                                 if (response == false) {
                                     this.dbClient.command
                                         .get(command)
-                                        .execute(message, this.dbClient, this.language, this.user, args, this.initDateTime);
+                                        .execute(message, this.dbClient, this.language, this.user, args, this.date);
                                 };
                             });
-                            await threadPause(2, false); // 2 secondes
+                        await threadPause(2, false); // 2 secondes
                         if (checkCollection == 'rw' || checkCollection == 'rollweapons'
                             || checkCollection == 'ra' || checkCollection == 'rollarmors') { await this.readCsvFile(); };
                         break;
@@ -799,28 +803,14 @@ class DaftBot {
             .pipe(csvParse.parse({ headers: true, delimiter: ',' }))
             .on('data', row => {
                 if (row.id != 'id') {
-                    let user;
-                    if (new Date(Number(row.lastroll)) > new Date(Date.now())) {
-                        user = this.userClass.setUserProperty({
-                            'id': Number(row.id),
-                            'username': String(row.username),
-                            'canroll': false,
-                            'roll': Number(row.roll),
-                            'lastroll': Number(row.lastroll),
-                            'guildId': String(row.guildId),
-                            'lang': String(row.lang)
-                        });
-                    } else {
-                        user = this.userClass.setUserProperty({
-                            'id': Number(row.id),
-                            'username': String(row.username),
-                            'canroll': true,
-                            'roll': Number(row.roll),
-                            'lastroll': Number(row.lastroll),
-                            'guildId': String(row.guildId),
-                            'lang': String(row.lang)
-                        });
-                    };
+                    let user = this.userClass.setUserProperty({
+                        'id': Number(row.id),
+                        'username': String(row.username),
+                        'canroll': true,
+                        'roll': Number(row.roll),
+                        'lastroll': String(row.lastroll),
+                        'guildId': Number(row.guildId)
+                    });
 
                     this.usersProperty.push({
                         "key": Number(user.id),
@@ -841,9 +831,8 @@ class DaftBot {
             'username': String(user.username),
             'canroll': Boolean(user.canroll),
             'roll': Number(user.roll),
-            'lastroll': Number(user.lastroll),
-            'guildId': String(user.guildId),
-            'lang': String(user.lang)
+            'lastroll': String(moment().tz('Europe/Paris').format(user.lastroll)),
+            'guildId': Number(user.guildId)
         }];
 
         await fs.createReadStream(filePathUser)
@@ -855,9 +844,8 @@ class DaftBot {
                         'username': String(row.username),
                         'canroll': row.canroll == 'true' ? true : false,
                         'roll': Number(row.roll),
-                        'lastroll': Number(row.lastroll),
-                        'guildId': String(row.guildId),
-                        'lang': String(row.lang)
+                        'lastroll': String(row.lastroll),
+                        'guildId': Number(row.guildId)
                     });
                 };
             })

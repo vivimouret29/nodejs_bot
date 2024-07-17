@@ -1,11 +1,12 @@
 'use.strict'
 
 const { SlashCommandBuilder } = require('discord.js'),
-    { randomIntFromInterval, getCurrentDatetime } = require('../core/utils.js'),
-    fs = require('node:fs'),
-    { parse } = require('json2csv'),
+    { randomIntFromInterval, getCurrentDatetime, getTimeRemaining } = require('../core/utils.js'),
     csvParse = require('fast-csv'),
-    { Armors } = require('../core/classes/armors.js');
+    fs = require('node:fs'),
+    moment = require('moment-timezone'),
+    { Armors } = require('../core/classes/armors.js'),
+    { parse } = require('json2csv');
 
 const filePathUser = `./data/user_roll.csv`;
 const filePathInventory = `./data/arm_inventory_user_roll.csv`;
@@ -16,10 +17,11 @@ module.exports = {
         .setName('rollarmors')
         .setDescription('Pour lancer une roulette d\'armures de The Legend Of Zelda: Breath Of The Wild'),
     async execute(message, client, language, user, args, initDateTime) {
-        if (!user.canroll) {
+        if (user.canroll) {
+            let duration = getTimeRemaining(user.lastroll);
             return message.reply({
                 'channel_id': message.channel.channel_id,
-                'content': `${message.user.username}: ${language.rollWait} **${String(new Date(Number(user.lastroll) - Date.now())).slice(16, -38)}**`,
+                'content': `${message.author.username}: ${language.rollWait} **${duration.hours}:${duration.minutes}.${duration.seconds}**`,
                 'fetchReply': false,
                 'ephemeral': true
             });
@@ -133,7 +135,8 @@ module.exports = {
                             'username': String(row.username),
                             'canroll': false,
                             'roll': Number(row.roll) + 1,
-                            'lastroll': Date.now() + 40000000
+                            'lastroll': String(moment().tz('Europe/Paris').subtract(-14, 'hours').format()),
+                            'guildId': Number(row.guildId)
                         });
                     } else {
                         usersProperty.push({
@@ -141,7 +144,8 @@ module.exports = {
                             'username': String(row.username),
                             'canroll': true,
                             'roll': Number(row.roll) + 1,
-                            'lastroll': Number(row.lastroll)
+                            'lastroll': String(moment().tz('Europe/Paris').format(row.lastroll)),
+                            'guildId': Number(row.guildId)
                         });
                     };
                 } else {
@@ -150,7 +154,8 @@ module.exports = {
                         'username': String(row.username),
                         'canroll': row.canroll == 'true' ? true : false,
                         'roll': Number(row.roll),
-                        'lastroll': Number(row.lastroll)
+                        'lastroll': String(moment().tz('Europe/Paris').format(row.lastroll)),
+                        'guildId': Number(row.guildId)
                     });
                 };
             })

@@ -8,7 +8,6 @@ class User {
         this.roll = this.roll;
         this.lastroll = this.lastroll;
         this.guildId = this.guildId;
-        this.lang = this.lang;
 
     };
 
@@ -17,18 +16,16 @@ class User {
         this.username = String(user.username);
         this.canroll = Boolean(user.canroll);
         this.roll = Number(user.roll);
-        this.lastroll = Number(user.lastroll);
+        this.lastroll = String(user.lastroll);
         this.guildId = String(user.guildId);
-        this.lang = String(user.lang);
 
         return {
             'id': Number(this.id),
             'username': String(this.username),
             'canroll': Boolean(this.canroll),
             'roll': Number(this.roll),
-            'lastroll': Number(this.lastroll),
-            'guildId': String(this.guildId),
-            'lang': String(this.lang)
+            'lastroll': String(this.lastroll),
+            'guildId': String(this.guildId)
         };
     };
 
@@ -39,18 +36,16 @@ class User {
                 this.username = String(userProperty[i].value.username);
                 this.canroll = Boolean(userProperty[i].value.canroll);
                 this.roll = Number(userProperty[i].value.roll);
-                this.lastroll = Number(userProperty[i].value.lastroll);
+                this.lastroll = String(userProperty[i].value.lastroll);
                 this.guildId = String(userProperty[i].value.guildId);
-                this.lang = String(userProperty[i].value.lang);
 
                 return {
                     'id': Number(this.id),
                     'username': String(this.username),
                     'canroll': Boolean(this.canroll),
                     'roll': Number(this.roll),
-                    'lastroll': Number(this.lastroll),
-                    'guildId': String(this.guildId),
-                    'lang': String(this.lang)
+                    'lastroll': String(this.lastroll),
+                    'guildId': String(this.guildId)
                 };
             };
         };

@@ -77,6 +77,20 @@ async function threadPause(numbers, time) {
 	};
 };
 
+function getTimeRemaining(targetDate) {
+	targetDate = moment.tz(user.lastroll, "Europe/Paris")
+	let momentNow = moment().tz('Europe/Paris'),
+		diff = targetDate.diff(momentNow),
+		duration = moment.duration(diff),
+		durationList = {
+			hours: duration.hours(),
+			minutes: duration.minutes(),
+			seconds: duration.seconds()
+		};
+
+	return durationList;
+}
+
 exports.sendEmbed = sendEmbed;
 exports.messageErase = messageErase;
 exports.randomIntFromInterval = randomIntFromInterval;
@@ -84,3 +98,4 @@ exports.getCurrentDatetime = getCurrentDatetime;
 exports.randomColor = randomColor;
 exports.downloadImagesFromUrl = downloadImagesFromUrl;
 exports.threadPause = threadPause;
+exports.getTimeRemaining = getTimeRemaining;
