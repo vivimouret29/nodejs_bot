@@ -23,7 +23,7 @@ module.exports = {
             return;
         };
 
-        let fe = await axios.get(`https://api.twitch.tv/helix/channels/followed?user_id=${userstate.id}` + params) // TODO: to repair
+        let fe = await axios.get(`https://api.twitch.tv/helix/channels/followed?user_id=${userstate.id}` + params) // this endpoint is used in a deprecated version of the API
             .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error FETCH ${err}`); });
         if (fe == undefined) { return console.log(`[${getCurrentDatetime('comm')}] Error function followage() FETCH [${fe}]`); };
         console.log(`[${getCurrentDatetime('comm')}] HELIX FOLLOWAGE ${fe.statusText}`);
