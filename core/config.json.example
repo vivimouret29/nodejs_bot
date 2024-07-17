@@ -13,5 +13,8 @@
         "bearer_token": "<your_bearer_token>",
         "atas": "<your_atas>",
         "atas_secret": "<your_atas_secret>"
-    }
+    },
+    "channelYtbId": [
+        "<your_channel_id>"
+    ]
 }
