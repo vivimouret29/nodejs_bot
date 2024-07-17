@@ -2,7 +2,6 @@
 
 const fs = require('node:fs'),
 	moment = require('moment-timezone'),
-	utc2 = moment().tz('Europe/Paris'),
 	request = require('request');
 
 async function sendEmbed(message, content) {
@@ -44,11 +43,11 @@ function randomIntFromInterval(min, max) { return Math.floor(Math.random() * (ma
 function getCurrentDatetime(choice) {
 	switch (choice) {
 		case 'csv':
-			return `${utc2.format('YYYY-MM-DD HH:mm:ss')}`;
+			return `${moment().tz('Europe/Paris').format('YYYY-MM-DD HH:mm:ss')}`;
 		case 'date':
-			return `${utc2.format('DDMMYYYY')}`;
+			return `${moment().tz('Europe/Paris').format('DDMMYYYY')}`;
 		case 'comm':
-			return `${utc2.format('HH:mm:ss DD/MM/YYYY')}`;
+			return `${moment().tz('Europe/Paris').format('HH:mm:ss DD/MM/YYYY')}`;
 	};
 };
 
@@ -70,10 +69,10 @@ function downloadImagesFromUrl(uri, filename, callback) {
 async function threadPause(numbers, time) {
 	switch (time) {
 		case true:
-			await new Promise(resolve => setTimeout(resolve, numbers * 60000));
+			await new Promise(resolve => setTimeout(resolve, numbers * 60000)); // minutes
 			break;
 		case false:
-			await new Promise(resolve => setTimeout(resolve, numbers * 1000));
+			await new Promise(resolve => setTimeout(resolve, numbers * 1000)); // secondes
 			break;
 	};
 };
