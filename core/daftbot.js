@@ -1,14 +1,14 @@
 'use.strict'
 
 const { Client, Collection, GatewayIntentBits, PermissionsBitField, ActivityType, Events, Partials, REST, Routes } = require('discord.js'),
-    axios = require('axios'),
     fs = require('node:fs'),
-    { parse } = require('json2csv'),
+    util = require('util'),
     csvParse = require('fast-csv'),
     path = require('node:path'),
     packageVersion = require('../package.json'),
+    { parse } = require('json2csv'),
     { prefix, token, owner, client } = require('../config.json'),
-    { clientId, identity, channels } = require('./config.json'),
+    { channelYtbId } = require('./config.json'),
     { fr, en, uk } = require('../resx/lang.json'),
     { memes } = require('../resx/memes.json'),
     { sendEmbed, messageErase, getCurrentDatetime, randomIntFromInterval, threadPause } = require('./utils.js'),
@@ -32,12 +32,6 @@ const intents = [
     GatewayIntentBits.DirectMessages,
     GatewayIntentBits.DirectMessageReactions
 ];
-const params = {
-    headers: {
-        Authorization: `Bearer ${identity.password}`,
-        'Client-ID': clientId
-    }
-};
 const partials = [
     Partials.Channel,
     Partials.Emoji,
@@ -101,6 +95,9 @@ class DaftBot {
     };
 
     async setCollection() {
+        var commandCount = 0,
+            commandName = [];
+
         // Command Collection
         const commandsPath = path.join(__dirname, '../command'),
             commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
@@ -108,8 +105,11 @@ class DaftBot {
         for (let file of commandFiles) {
             var filePath = path.join(commandsPath, file),
                 command = require(filePath);
-            if ('data' in command && 'execute' in command) { this.dbClient.command.set(command.data.name, command); }
-            else { console.log(`[ERROR_FILE_COMMAND] The command at ${filePath} is missing a required "data" or "execute" property.`); };
+            if ('data' in command && 'execute' in command) {
+                this.dbClient.command.set(command.data.name, command);
+                commandCount++;
+                commandName.push(command.data.name);
+            } else { console.log(`[ERROR_FILE_COMMAND] The command at ${filePath} is missing a required "data" or "execute" property.`); };
         };
 
         // Mobbot Collection
@@ -119,8 +119,11 @@ class DaftBot {
         for (let file of mobbotFiles) {
             var filePath = path.join(mobbotsPath, file),
                 command = require(filePath);
-            if ('data' in command && 'execute' in command) { this.dbClient.mobbot.set(command.data.name, command); }
-            else { console.log(`[ERROR_FILE_MOBBOT] The command at ${filePath} is missing a required "data" or "execute" property.`); };
+            if ('data' in command && 'execute' in command) {
+                this.dbClient.mobbot.set(command.data.name, command);
+                commandCount++;
+                commandName.push(command.data.name);
+            } else { console.log(`[ERROR_FILE_MOBBOT] The command at ${filePath} is missing a required "data" or "execute" property.`); };
         };
 
         // Slash Collection
@@ -133,8 +136,9 @@ class DaftBot {
             if ('data' in command && 'execute' in command) {
                 this.dbClient.slash.set(command.data.name, command);
                 this.commands.push(command.data.toJSON());
-            }
-            else { console.log(`[ERROR_FILE_MOBBOT] The command at ${filePath} is missing a required "data" or "execute" property.`); };
+                commandCount++;
+                commandName.push(command.data.name);
+            } else { console.log(`[ERROR_FILE_MOBBOT] The command at ${filePath} is missing a required "data" or "execute" property.`); };
         };
 
         // Response Collection
@@ -144,9 +148,14 @@ class DaftBot {
         for (let file of responseFiles) {
             var filePath = path.join(responsesPath, file),
                 command = require(filePath);
-            if ('data' in command && 'execute' in command) { this.dbClient.response.set(command.data.name, command); }
-            else { console.log(`[ERROR_FILE_RESPONSE] The command at ${filePath} is missing a required "data" or "execute" property.`); };
+            if ('data' in command && 'execute' in command) {
+                this.dbClient.response.set(command.data.name, command);
+                commandCount++;
+                commandName.push(command.data.name);
+            } else { console.log(`[ERROR_FILE_RESPONSE] The command at ${filePath} is missing a required "data" or "execute" property.`); };
         };
+
+        console.log(`[${getCurrentDatetime('comm')}] ${commandCount} commands loaded : ` + util.inspect(commandName, false, null, true));
     };
 
     async onLogin() {
@@ -178,68 +187,37 @@ class DaftBot {
             await threadPause(5, false); // 5 secondes
             this.onFirstStart = false;
 
-            let checkLive = true,
-                gameMemory = '',
-                urIMemory = '',
-                oldGameMemory = '',
-                oldUrIMemory = '',
-                message,
-                ytbCount = 0,
-                ping = true;
+            await rest.put(
+                Routes.applicationCommands(client),
+                { body: this.commands }
+            );
+
+            let urIMemory = '',
+                oldUrIMemory = '';
 
             while (true) {
-                if (channels[0] == undefined) { continue; };
+                let fe = await fetch(`https://www.youtube.com/feeds/videos.xml?channel_id=${channelYtbId[0]}`)
+                    .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error FETCH ${err}`); });
+                if (fe == undefined) { continue; };
 
-                let ax = await axios.get(`http://api.twitch.tv/helix/streams?user_login=` + channels[0].slice(1), params)
-                    .catch(err => {
-                        checkLive = false;
-                        console.log(`[${getCurrentDatetime('comm')}] Error GET AXIOS ${err}`);
-                    });
-                if (ax == undefined) { continue; };
-                console.log(`[${getCurrentDatetime('comm')}] AXIOS WHILEDAFT ${ax.data.data}`);
+                let fetched = await fe.text(),
+                    published = fetched.split(new RegExp(`(\>[^.]*?\/)`, 'giu'))[37];
 
-                if (!checkLive || ax.data.data.length == 0) {
-                    gameMemory = '';
-                    ping = true;
-                } else {
-                    gameMemory = ax.data.data[0].game_name;
-                    if (gameMemory != oldGameMemory && ax.data.data.length == 1) {
-                        let guiDot = await axios.get(`https://twitch.tv/${ax.data.data[0].user_login}`);
-                        if (guiDot != undefined) { console.log(`[${getCurrentDatetime('comm')}] GUIDOT TWITCH ${guiDot.statusText}`); };
-                        if (this.dbClient.user.id == this.avoidBot[1]) { continue; };
-                        await new Promise(resolve => setTimeout(resolve, 2.5 * 1000)); // 2.5 secondes
-                        this.dbClient.mobbot
-                            .get('livenotif')
-                            .execute(message, this.dbClient, this.language, guiDot.data, ax);
-                        ping = false;
-                    };
+                if (published == undefined) { continue; };
+                console.log(`[${getCurrentDatetime('comm')}] SLICE ${published}`);
+
+                let sliced = published.slice(13, -2),
+                    pubDate = new Date(sliced);
+                console.log(`[${getCurrentDatetime('comm')}] DATE PUBLICATION YTB ${pubDate}`);
+
+                urIMemory = fetched.split(new RegExp(`(\:[^.]*\<\/)`, 'giu'))[3].split(new RegExp(`(\<[^.]*?\>)`, 'giu'))[10];
+                if (new Date(new Date().setHours(new Date().getHours() - 2)) < pubDate && urIMemory != oldUrIMemory) {
+                    if (this.dbClient.user.id == this.avoidBot[1]) { continue; };
+                    this.dbClient.mobbot
+                        .get('videonotif')
+                        .execute(undefined, this.dbClient, this.language);
                 };
 
-                if (ytbCount % 6 == 0) { // 30 minutes
-                    let fe = await fetch(`https://www.youtube.com/feeds/videos.xml?channel_id=UCreItrEewfO6IPZYPu4C7pA`)
-                        .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error FETCH ${err}`); });
-                    if (fe == undefined) { continue; };
-
-                    let fetched = await fe.text(),
-                        published = fetched.split(new RegExp(`(\>[^.]*?\/)`, 'giu'))[37];
-
-                    if (published == undefined) { continue; };
-                    console.log(`[${getCurrentDatetime('comm')}] SLICE ${published}`);
-
-                    let sliced = published.slice(13, -2),
-                        pubDate = new Date(sliced);
-                    console.log(`[${getCurrentDatetime('comm')}] DATE PUBLICATION YTB ${pubDate}`);
-
-                    urIMemory = fetched.split(new RegExp(`(\:[^.]*\<\/)`, 'giu'))[3].split(new RegExp(`(\<[^.]*?\>)`, 'giu'))[10];
-                    if (new Date(new Date().setHours(new Date().getHours() - 2)) < pubDate && urIMemory != oldUrIMemory) {
-                        if (this.dbClient.user.id == this.avoidBot[1]) { continue; };
-                        this.dbClient.mobbot
-                            .get('videonotif')
-                            .execute(message, this.dbClient, this.language);
-                    };
-                };
-
-                checkLive = true;
                 oldUrIMemory = urIMemory;
                 await threadPause(60, true); // 1 heure
             };
