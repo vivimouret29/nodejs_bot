@@ -18,10 +18,10 @@ module.exports = {
         args: false
     },
     async execute(message, client, language, user, args, initDateTime) {
-        if (user.canroll) {
+        if (!user.canroll) {
             let duration = getTimeRemaining(user.lastroll);
             return message.channel.send(
-                `${message.author.username}: ${language.rollWait} **${duration.hours}:${duration.minutes}.${duration.seconds}**`
+                `${message.author.username}: ${language.rollWait} **${duration.hours} ${language.hours} ${duration.minutes} ${language.minutes} ${duration.seconds} ${language.seconds}**`
             );
         };
 
@@ -126,29 +126,47 @@ module.exports = {
                         usersProperty.push({
                             'id': Number(row.id),
                             'username': String(row.username),
+                            'platform': String(row.platform),
+                            'pseudo': String(row.pseudo),
+                            'rubis': Number(row.rubis),
                             'canroll': false,
                             'roll': Number(row.roll) + 1,
                             'lastroll': String(moment().tz('Europe/Paris').subtract(-14, 'hours').format()),
-                            'guildId': Number(row.guildId)
+                            'dailyroll': String(row.dailyroll),
+                            'canwork': row.canwork == 'true' ? true : false,
+                            'lastwork': String(row.lastwork),
+                            'guildid': String(row.guildid)
                         });
                     } else {
                         usersProperty.push({
                             'id': Number(row.id),
                             'username': String(row.username),
+                            'platform': String(row.platform),
+                            'pseudo': String(row.pseudo),
+                            'rubis': Number(row.rubis),
                             'canroll': true,
                             'roll': Number(row.roll) + 1,
                             'lastroll': String(moment().tz('Europe/Paris').format(row.lastroll)),
-                            'guildId': Number(row.guildId)
+                            'dailyroll': String(row.dailyroll),
+                            'canwork': row.canwork == 'true' ? true : false,
+                            'lastwork': String(row.lastwork),
+                            'guildid': String(row.guildid)
                         });
                     };
                 } else {
                     usersProperty.push({
                         'id': Number(row.id),
                         'username': String(row.username),
+                        'platform': String(row.platform),
+                        'pseudo': String(row.pseudo),
+                        'rubis': Number(row.rubis),
                         'canroll': row.canroll == 'true' ? true : false,
                         'roll': Number(row.roll),
                         'lastroll': String(moment().tz('Europe/Paris').format(row.lastroll)),
-                        'guildId': Number(row.guildId)
+                        'dailyroll': String(row.dailyroll),
+                        'canwork': row.canwork == 'true' ? true : false,
+                        'lastwork': String(row.lastwork),
+                        'guildid': String(row.guildid)
                     });
                 };
             })

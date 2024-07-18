@@ -84,6 +84,7 @@ class DaftBot {
         this.welcomeMessage = [948894919878123570];
 
         this.onFirstStart = true;
+        this.onStart = 5;
     };
 
     async onConnect() {
@@ -164,7 +165,7 @@ class DaftBot {
             .then(async () => {
                 console.log(`[${getCurrentDatetime('comm')}] ${this.dbClient.user.username}\'s logged
 [${getCurrentDatetime('comm')}] ${this.dbClient.user.username} v${packageVersion.version}`);
-                await this.readCsvFile();
+                this.readCsvFile();
                 await this.readAdminFile();
             })
             .catch(console.error);
@@ -177,7 +178,8 @@ class DaftBot {
                 }],
                 status: 'idle'
             });
-            console.log(`[${getCurrentDatetime('comm')}] ${this.dbClient.user.username} present in ${this.dbClient.guilds.cache.size} guilds : `, this.dbClient.guilds.cache.map(guild => guild.name));
+            console.log(`[${getCurrentDatetime('comm')}] ${this.dbClient.user.username} present in ${this.dbClient.guilds.cache.size} guilds : `,
+                util.inspect(this.dbClient.guilds.cache.map(guild => guild.name), false, null, true));
 
             this.dbClient.mobbot
                 .get('mobbotConnection')
@@ -221,17 +223,16 @@ class DaftBot {
                 };
 
                 oldUrIMemory = urIMemory;
-                await threadPause(60, true); // 1 heure
+                await threadPause(60 * 6, true); // 6 heures
             };
         });
 
         this.dbClient.on(Events.GuildCreate, async (guild) => { console.log(`[${getCurrentDatetime('comm')}] ${this.dbClient.user.username} added in : ${guild.name}`); });
         this.dbClient.on(Events.GuildDelete, async (guild) => { console.log(`[${getCurrentDatetime('comm')}] ${this.dbClient.user.username} removed in : ${guild.name}`); });
 
-        let onStart = 10;
         await threadPause(3, false); // 2 secondes
-        console.log(`[${getCurrentDatetime('comm')}] Waiting ${onStart}s for proper launch...`);
-        for (let i = onStart - 1; i > 0; i--) {
+        console.log(`[${getCurrentDatetime('comm')}] Waiting ${this.onStart}s for proper launch...`);
+        for (let i = this.onStart - 1; i > 0; i--) {
             await threadPause(1, false); // 1 seconde
             console.log(`[${getCurrentDatetime('comm')}] ${i}`);
         };
@@ -278,14 +279,20 @@ class DaftBot {
                 this.user = this.userClass.setUserProperty({
                     'id': Number(interaction.user.id),
                     'username': String(interaction.user.username),
+                    'platform': String(undefined),
+                    'pseudo': String(undefined),
+                    'rubis': 0,
                     'canroll': true,
                     'roll': 0,
-                    'lastroll': 0,
-                    'guildId': Number(interaction.guildId)
+                    'lastroll': moment().tz('Europe/Paris').format(),
+                    'dailyroll': moment().tz('Europe/Paris').format(),
+                    'canwork': true,
+                    'lastwork': moment().tz('Europe/Paris').format(),
+                    'guildid': interaction.guildId
                 });
                 await this.writeCsvFile(this.user);
                 await threadPause(2, false); // 2
-                await this.readCsvFile();
+                this.readCsvFile();
             } else { this.user = this.userClass.getUserProperty(interaction.user.id, this.usersProperty); };
 
             if (this.adminClass.getAdminProperty(interaction.user.id, this.adminsProperty) != undefined) {
@@ -305,7 +312,8 @@ class DaftBot {
                         .execute(interaction, this.dbClient, this.language, this.user, this.date);
                     await threadPause(2, false); // 2 secondes
                     if (checkCollection == 'rw' || checkCollection == 'rollweapons'
-                        || checkCollection == 'ra' || checkCollection == 'rollarmors') { await this.readCsvFile(); };
+                        || checkCollection == 'ra' || checkCollection == 'rollarmors'
+                        || checkCollection == 'daily') { this.readCsvFile(); };
                     break;
             };
         });
@@ -317,14 +325,20 @@ class DaftBot {
                 this.user = this.userClass.setUserProperty({
                     'id': Number(message.author.id),
                     'username': String(message.author.username),
+                    'platform': String(undefined),
+                    'pseudo': String(undefined),
+                    'rubis': 0,
                     'canroll': true,
                     'roll': 0,
-                    'lastroll': 0,
-                    'guildId': Number(message.guildId)
+                    'lastroll': moment().tz('Europe/Paris').format(),
+                    'dailyroll': moment().tz('Europe/Paris').format(),
+                    'canwork': true,
+                    'lastwork': moment().tz('Europe/Paris').format(),
+                    'guildid': message.guildId
                 });
                 await this.writeCsvFile(this.user);
                 await threadPause(2, false); // 2 secondes
-                await this.readCsvFile();
+                this.readCsvFile();
             } else { this.user = this.userClass.getUserProperty(message.author.id, this.usersProperty); };
 
             if (this.adminClass.getAdminProperty(message.author.id, this.adminsProperty) != undefined) {
@@ -442,7 +456,8 @@ class DaftBot {
                             });
                         await threadPause(2, false); // 2 secondes
                         if (checkCollection == 'rw' || checkCollection == 'rollweapons'
-                            || checkCollection == 'ra' || checkCollection == 'rollarmors') { await this.readCsvFile(); };
+                            || checkCollection == 'ra' || checkCollection == 'rollarmors'
+                            || checkCollection == 'daily') { this.readCsvFile(); };
                         break;
                 };
             };
@@ -797,20 +812,45 @@ class DaftBot {
         };
     };
 
-    async readCsvFile() {
+    readCsvFile() {
         this.usersProperty = [];
-        await fs.createReadStream(filePathUser)
+        fs.createReadStream(filePathUser)
             .pipe(csvParse.parse({ headers: true, delimiter: ',' }))
             .on('data', row => {
                 if (row.id != 'id') {
-                    let user = this.userClass.setUserProperty({
-                        'id': Number(row.id),
-                        'username': String(row.username),
-                        'canroll': true,
-                        'roll': Number(row.roll),
-                        'lastroll': String(row.lastroll),
-                        'guildId': Number(row.guildId)
-                    });
+                    let user;
+                    if (moment(row.lastroll).tz('Europe/Paris').format() > moment().tz('Europe/Paris').format()) {
+                        // moment().tz('Europe/Paris') > moment(row.lastroll).tz('Europe/Paris')
+                        user = this.userClass.setUserProperty({
+                            'id': Number(row.id),
+                            'username': String(row.username),
+                            'platform': String(row.platform),
+                            'pseudo': String(row.pseudo),
+                            'rubis': String(row.rubis),
+                            'canroll': false,
+                            'roll': Number(row.roll),
+                            'lastroll': String(row.lastroll),
+                            'dailyroll': String(row.dailyroll),
+                            'canwork': row.canwork == 'true' ? true : false,
+                            'lastwork': String(row.lastwork),
+                            'guildid': String(row.guildid)
+                        });
+                    } else {
+                        user = this.userClass.setUserProperty({
+                            'id': Number(row.id),
+                            'username': String(row.username),
+                            'platform': String(row.platform),
+                            'pseudo': String(row.pseudo),
+                            'rubis': String(row.rubis),
+                            'canroll': true,
+                            'roll': Number(row.roll),
+                            'lastroll': String(row.lastroll),
+                            'dailyroll': String(row.dailyroll),
+                            'canwork': row.canwork == 'true' ? true : false,
+                            'lastwork': String(row.lastwork),
+                            'guildid': String(row.guildid)
+                        });
+                    };
 
                     this.usersProperty.push({
                         "key": Number(user.id),
@@ -829,23 +869,35 @@ class DaftBot {
         let userToSave = [{
             'id': Number(user.id),
             'username': String(user.username),
+            'platform': String(user.platform),
+            'pseudo': String(user.pseudo),
+            'rubis': String(user.rubis),
             'canroll': Boolean(user.canroll),
             'roll': Number(user.roll),
-            'lastroll': String(moment().tz('Europe/Paris').format(user.lastroll)),
-            'guildId': Number(user.guildId)
+            'lastroll': String(moment(user.lastroll).tz('Europe/Paris').format()),
+            'dailyroll': String(moment(user.dailyroll).tz('Europe/Paris').format()),
+            'canwork': Boolean(user.canwork),
+            'lastwork': String(moment(user.lastwork).tz('Europe/Paris').format()),
+            'guildid': String(user.guildid)
         }];
 
-        await fs.createReadStream(filePathUser)
+        fs.createReadStream(filePathUser)
             .pipe(csvParse.parse({ headers: true, delimiter: ',' }))
             .on('data', row => {
                 if (row.id != 'id') {
                     userToSave.push({
                         'id': Number(row.id),
                         'username': String(row.username),
+                        'platform': String(row.platform),
+                        'pseudo': String(row.pseudo),
+                        'rubis': String(row.rubis),
                         'canroll': row.canroll == 'true' ? true : false,
                         'roll': Number(row.roll),
                         'lastroll': String(row.lastroll),
-                        'guildId': Number(row.guildId)
+                        'dailyroll': String(row.dailyroll),
+                        'canwork': Boolean(user.canwork),
+                        'lastwork': String(row.lastwork),
+                        'guildid': String(row.guildid)
                     });
                 };
             })
@@ -857,13 +909,13 @@ class DaftBot {
                         throw err;
                     };
                 });
-                await this.readCsvFile();
+                this.readCsvFile();
             });
     };
 
     async readAdminFile() {
         this.adminsProperty = [];
-        await fs.createReadStream(filePathAdmin)
+        fs.createReadStream(filePathAdmin)
             .pipe(csvParse.parse({ headers: true, delimiter: ',' }))
             .on('data', row => {
                 if (row.id != 'id') {
@@ -902,7 +954,7 @@ class DaftBot {
                 break;
         };
 
-        await fs.createReadStream(filePathAdmin)
+        fs.createReadStream(filePathAdmin)
             .pipe(csvParse.parse({ headers: true, delimiter: ',' }))
             .on('data', row => {
                 if (row.id != 'id') {

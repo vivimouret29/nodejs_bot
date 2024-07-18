@@ -1,5 +1,8 @@
 {
     "fr": {
+        "hours": "heures",
+        "minutes": "minutes",
+        "seconds": "secondes",
         "help": "Liste des commandes",
         "helpAuthor": "daftbot par daftmob",
         "changLang": "Langue changée en Français",
@@ -75,6 +78,9 @@
         "adminList": "Liste des admins"
     },
     "en": {
+        "hours": "hours",
+        "minutes": "minutes",
+        "seconds": "seconds",
         "help": "List of orders",
         "helpAuthor": "daftbot by daftmob",
         "changLang": "Language changed to English",
@@ -149,6 +155,9 @@
         "adminList": "List of admins"
     },
     "uk": {
+        "hours": "годин",
+        "minutes": "хвилини",
+        "seconds": "секунди",
         "help": "Список замовлень",
         "helpAuthor": "daftbot by daftmob",
         "changLang": "Мову змінено на українську",

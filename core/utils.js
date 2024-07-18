@@ -21,7 +21,7 @@ async function sendEmbed(message, content) {
 				},
 				'footer': {
 					'text': message.content,
-					'icon_url': 'https://cdn.discordapp.com/app-icons/757955750164430980/94a997258883caba5f553f98aea8df59.png?size=256',
+					'icon_url': 'https://cdn.discordapp.com/avatars/431915542610313217/a_35720bc230cac7b4edfcd5a564623cd3.webp?size=256',
 					'proxy_icon_url': 'https://discord.gg/ucwnMKKxZe'
 				}
 			}],
@@ -78,7 +78,7 @@ async function threadPause(numbers, time) {
 };
 
 function getTimeRemaining(targetDate) {
-	targetDate = moment.tz(user.lastroll, "Europe/Paris")
+	targetDate = moment.tz(targetDate, "Europe/Paris")
 	let momentNow = moment().tz('Europe/Paris'),
 		diff = targetDate.diff(momentNow),
 		duration = moment.duration(diff),

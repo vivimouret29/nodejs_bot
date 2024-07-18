@@ -96,7 +96,6 @@ class MobBot {
                 });
 
             if (ax == undefined) { break; };
-            console.log(`[${getCurrentDatetime('comm')}] AXIOS WHILEMOB ${ax.data.data}`);
 
             if (!checkLive || ax.data.data.length == 0) {
                 gameMemory = '';
@@ -148,7 +147,7 @@ class MobBot {
 
     async onMessageListen() {
         this.mbClient.on('message', async (channel, userstate, message, self) => {
-            // if (self || userstate.username === 'mobbot_') return;
+            if (self || userstate.username === 'mobbot_') return;
 
             var _rdm = Math.random();
 
