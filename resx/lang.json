@@ -77,7 +77,10 @@
         "needGuild": "Tu dois être administrateur dans un serveur pour utiliser cette commande",
         "adminList": "Liste des admins",
         "richestEmpty": "Personne n'a d'argent, c'est la crise !",
-        "richestError": "Erreur lors de la récupération des données de la banque..."
+        "richestError": "Erreur lors de la récupération des données de la banque...",
+        "dailyreward": "Tu viens de récupérer ta récompense quotidienne",
+        "dailywin": "tu gagnes",
+        "delaydaily": "Tu récupères ta prochaine récompense dans"
     },
     "en": {
         "hours": "hours",
@@ -156,7 +159,10 @@
         "needGuild": "You have to be an administrator in a server to use this command",
         "adminList": "List of admins",
         "richestEmpty": "Nobody has any money, it's a crisis !",
-        "richestError": "Error recovering data from the bank..."
+        "richestError": "Error recovering data from the bank...",
+        "dailyreward": "You've just collected your daily reward",
+        "dailywin": "you win",
+        "delaydaily": "You collect your next reward in"
     },
     "uk": {
         "hours": "годин",
@@ -235,6 +241,9 @@
         "needGuild": "Ви повинні бути адміністратором на сервері, щоб використовувати цю команду",
         "adminList": "Список адміністраторів",
         "richestEmpty": "Ні в кого немає грошей, це криза !",
-        "richestError": "Помилка при відновленні даних з банку..."
+        "richestError": "Помилка при відновленні даних з банку...",
+        "dailyreward": "Ви щойно забрали свою щоденну винагороду",
+        "dailywin": "Ви перемогли",
+        "delaydaily": "Наступну нагороду ви отримаєте в"
     }
 }

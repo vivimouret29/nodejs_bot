@@ -18,8 +18,8 @@ module.exports = {
         if (moment(user.dailyroll).tz('Europe/Paris').format() < moment().tz('Europe/Paris').format()) {
             let updateDailyRoll = moment().tz('Europe/Paris').add(22, 'hours').format(),
                 winday = randomIntFromInterval(250, 1200),
-                text = `Tu viens de récupérer ta récompense quotidienne !
-<@${message.author.id}>, tu gagnes : **${winday}** ${client.emojis.cache.find(emoji => emoji.name === 'rubis')} !`;
+                text = `${language.dailyreward} !
+<@${message.author.id}>, ${language.dailywin} : **${winday}** ${client.emojis.cache.find(emoji => emoji.name === 'rubis')} !`;
 
             await sendEmbed(message, text)
                 .catch(err => {
@@ -58,7 +58,7 @@ module.exports = {
             console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${message.author.username} got ${Number(winday)} for his daily reward`);
         } else if (moment(user.dailyroll).tz('Europe/Paris').format() > moment().tz('Europe/Paris').format()) {
             let duration = getTimeRemaining(user.dailyroll);
-            await sendEmbed(message, `Tu récupères ta prochaine récompense dans **${duration.hours} ${language.hours} ${duration.minutes} ${language.minutes} ${duration.seconds} ${language.seconds}**`)
+            await sendEmbed(message, `${language.delaydaily} **${duration.hours} ${language.hours} ${duration.minutes} ${language.minutes} ${duration.seconds} ${language.seconds}**`)
                 .catch(err => {
                     message.reply({ 'content': language.error, 'ephemeral': false });
                     console.log(`[${getCurrentDatetime('comm')}] Error sending message SEERROR ${err}`);

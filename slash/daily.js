@@ -17,8 +17,8 @@ module.exports = {
         if (moment(user.dailyroll).tz('Europe/Paris').format() < moment().tz('Europe/Paris').format()) {
             let updateDailyRoll = moment().tz('Europe/Paris').add(22, 'hours').format(),
                 winday = randomIntFromInterval(250, 1200),
-                text = `Tu viens de récupérer ta récompense quotidienne !
-<@${message.user.id}>, tu gagnes : **${winday}** ${client.emojis.cache.find(emoji => emoji.name === 'rubis')} !`;
+                text = `${language.dailyreward} !
+<@${message.author.id}>, ${language.dailywin} : **${winday}** ${client.emojis.cache.find(emoji => emoji.name === 'rubis')} !`;
 
             await message.reply({
                 'channel_id': message.channel.channel_id,
@@ -67,7 +67,7 @@ module.exports = {
                 'channel_id': message.channel.channel_id,
                 'embeds': [{
                     'type': 'rich',
-                    'description': `Tu récupères ta prochaine récompense dans **${duration.hours} ${language.hours} ${duration.minutes} ${language.minutes} ${duration.seconds} ${language.seconds}**`,
+                    'description': `${language.delaydaily} **${duration.hours} ${language.hours} ${duration.minutes} ${language.minutes} ${duration.seconds} ${language.seconds}**`,
                     'color': randomColor()
                 }],
                 'fetchReply': false,
