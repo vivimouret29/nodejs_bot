@@ -221,6 +221,7 @@ module.exports = {
                             'dailyroll': String(row.dailyroll),
                             'canwork': row.canwork == 'true' ? true : false,
                             'claimwork': String(row.claimwork),
+                            'worktime': Number(row.worktime),
                             'guildid': String(row.guildid)
                         });
                     } else {
@@ -236,6 +237,7 @@ module.exports = {
                             'dailyroll': String(row.dailyroll),
                             'canwork': row.canwork == 'true' ? true : false,
                             'claimwork': String(row.claimwork),
+                            'worktime': Number(row.worktime),
                             'guildid': String(row.guildid)
                         });
                     };
@@ -252,6 +254,7 @@ module.exports = {
                         'dailyroll': String(row.dailyroll),
                         'canwork': row.canwork == 'true' ? true : false,
                         'claimwork': String(row.claimwork),
+                        'worktime': Number(row.worktime),
                         'guildid': String(row.guildid)
                     });
                 };

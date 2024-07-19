@@ -48,6 +48,7 @@ module.exports = {
                         'dailyroll': String(updateDailyRoll),
                         'canwork': row.canwork == 'true' ? true : false,
                         'claimwork': String(row.claimwork),
+                        'worktime': Number(row.worktime),
                         'guildid': String(row.guildid)
                     });
                 })

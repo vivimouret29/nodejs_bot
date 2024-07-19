@@ -13,6 +13,7 @@ class User {
         this.dailyroll = this.dailyroll;
         this.canwork = this.canwork;
         this.claimwork = this.claimwork;
+        this.worktime = this.worktime;
         this.guildid = this.guildid;
 
     };
@@ -29,6 +30,7 @@ class User {
         this.dailyroll = String(user.dailyroll);
         this.canwork = Boolean(user.canwork);
         this.claimwork = String(user.claimwork);
+        this.worktime = Number(user.worktime);
         this.guildid = String(user.guildid);
 
         return {
@@ -43,6 +45,7 @@ class User {
             'dailyroll': String(this.dailyroll),
             'canwork': Boolean(this.canwork),
             'claimwork': String(this.claimwork),
+            'worktime': Number(this.worktime),
             'guildid': String(this.guildid)
         };
     };
@@ -61,6 +64,7 @@ class User {
                 this.dailyroll = String(userProperty[i].value.dailyroll);
                 this.canwork = Boolean(userProperty[i].value.canwork);
                 this.claimwork = String(userProperty[i].value.claimwork);
+                this.worktime = Number(userProperty[i].value.worktime);
                 this.guildid = String(userProperty[i].value.guildid);
 
                 return {
@@ -75,6 +79,7 @@ class User {
                     'dailyroll': String(this.dailyroll),
                     'canwork': Boolean(this.canwork),
                     'claimwork': String(this.claimwork),
+                    'worktime': Number(this.worktime),
                     'guildid': String(this.guildid)
                 };
             };

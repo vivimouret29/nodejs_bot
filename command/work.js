@@ -34,6 +34,7 @@ module.exports = {
                         'dailyroll': String(user.dailyroll),
                         'canwork': true,
                         'claimwork': String(moment().tz('Europe/Paris').format()),
+                        'worktime': Number(user.worktime) + 1,
                         'guildid': String(user.guildid)
                     };
                     fsToParse = true;
@@ -76,6 +77,7 @@ module.exports = {
                         'dailyroll': String(user.dailyroll),
                         'canwork': false,
                         'claimwork': String(moment().tz('Europe/Paris').add(2, 'hours').format()),
+                        'worktime': Number(user.worktime),
                         'guildid': String(user.guildid)
                     };
                     fsToParse = true;
@@ -98,6 +100,7 @@ module.exports = {
                         'dailyroll': String(user.dailyroll),
                         'canwork': false,
                         'claimwork': String(moment().tz('Europe/Paris').add(2, 'hours').format()),
+                        'worktime': Number(user.worktime) + 1,
                         'guildid': String(user.guildid)
                     };
                     fsToParse = true;

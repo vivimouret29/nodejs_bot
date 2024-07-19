@@ -288,6 +288,7 @@ class DaftBot {
                     'dailyroll': moment().tz('Europe/Paris').format(),
                     'canwork': true,
                     'claimwork': moment().tz('Europe/Paris').format(),
+                    'worktime': 0,
                     'guildid': interaction.guildId
                 });
                 await this.writeCsvFile(this.user);
@@ -334,6 +335,7 @@ class DaftBot {
                     'dailyroll': moment().tz('Europe/Paris').format(),
                     'canwork': true,
                     'claimwork': moment().tz('Europe/Paris').format(),
+                    'worktime': 0,
                     'guildid': message.guildId
                 });
                 await this.writeCsvFile(this.user);
@@ -832,6 +834,7 @@ class DaftBot {
                             'dailyroll': String(row.dailyroll),
                             'canwork': row.canwork == 'true' ? true : false,
                             'claimwork': String(row.claimwork),
+                            'worktime': Number(row.worktime),
                             'guildid': String(row.guildid)
                         });
                     } else {
@@ -847,6 +850,7 @@ class DaftBot {
                             'dailyroll': String(row.dailyroll),
                             'canwork': row.canwork == 'true' ? true : false,
                             'claimwork': String(row.claimwork),
+                            'worktime': Number(row.worktime),
                             'guildid': String(row.guildid)
                         });
                     };
@@ -877,6 +881,7 @@ class DaftBot {
             'dailyroll': String(moment(user.dailyroll).tz('Europe/Paris').format()),
             'canwork': Boolean(user.canwork),
             'claimwork': String(moment(user.claimwork).tz('Europe/Paris').format()),
+            'worktime': Number(user.worktime),
             'guildid': String(user.guildid)
         }];
 
@@ -894,8 +899,9 @@ class DaftBot {
                         'roll': Number(row.roll),
                         'lastroll': String(row.lastroll),
                         'dailyroll': String(row.dailyroll),
-                        'canwork': Boolean(user.canwork),
+                        'canwork': Boolean(row.canwork),
                         'claimwork': String(row.claimwork),
+                        'worktime': Number(row.worktime),
                         'guildid': String(row.guildid)
                     });
                 };
