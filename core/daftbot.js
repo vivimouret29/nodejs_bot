@@ -287,7 +287,7 @@ class DaftBot {
                     'lastroll': moment().tz('Europe/Paris').format(),
                     'dailyroll': moment().tz('Europe/Paris').format(),
                     'canwork': true,
-                    'lastwork': moment().tz('Europe/Paris').format(),
+                    'claimwork': moment().tz('Europe/Paris').format(),
                     'guildid': interaction.guildId
                 });
                 await this.writeCsvFile(this.user);
@@ -313,7 +313,7 @@ class DaftBot {
                     await threadPause(2, false); // 2 secondes
                     if (checkCollection == 'rw' || checkCollection == 'rollweapons'
                         || checkCollection == 'ra' || checkCollection == 'rollarmors'
-                        || checkCollection == 'daily') { this.readCsvFile(); };
+                        || checkCollection == 'daily' || checkCollection == 'work') { this.readCsvFile(); };
                     break;
             };
         });
@@ -333,7 +333,7 @@ class DaftBot {
                     'lastroll': moment().tz('Europe/Paris').format(),
                     'dailyroll': moment().tz('Europe/Paris').format(),
                     'canwork': true,
-                    'lastwork': moment().tz('Europe/Paris').format(),
+                    'claimwork': moment().tz('Europe/Paris').format(),
                     'guildid': message.guildId
                 });
                 await this.writeCsvFile(this.user);
@@ -457,7 +457,7 @@ class DaftBot {
                         await threadPause(2, false); // 2 secondes
                         if (checkCollection == 'rw' || checkCollection == 'rollweapons'
                             || checkCollection == 'ra' || checkCollection == 'rollarmors'
-                            || checkCollection == 'daily') { this.readCsvFile(); };
+                            || checkCollection == 'daily' || checkCollection == 'work') { this.readCsvFile(); };
                         break;
                 };
             };
@@ -820,7 +820,6 @@ class DaftBot {
                 if (row.id != 'id') {
                     let user;
                     if (moment(row.lastroll).tz('Europe/Paris').format() > moment().tz('Europe/Paris').format()) {
-                        // moment().tz('Europe/Paris') > moment(row.lastroll).tz('Europe/Paris')
                         user = this.userClass.setUserProperty({
                             'id': Number(row.id),
                             'username': String(row.username),
@@ -832,7 +831,7 @@ class DaftBot {
                             'lastroll': String(row.lastroll),
                             'dailyroll': String(row.dailyroll),
                             'canwork': row.canwork == 'true' ? true : false,
-                            'lastwork': String(row.lastwork),
+                            'claimwork': String(row.claimwork),
                             'guildid': String(row.guildid)
                         });
                     } else {
@@ -847,7 +846,7 @@ class DaftBot {
                             'lastroll': String(row.lastroll),
                             'dailyroll': String(row.dailyroll),
                             'canwork': row.canwork == 'true' ? true : false,
-                            'lastwork': String(row.lastwork),
+                            'claimwork': String(row.claimwork),
                             'guildid': String(row.guildid)
                         });
                     };
@@ -877,7 +876,7 @@ class DaftBot {
             'lastroll': String(moment(user.lastroll).tz('Europe/Paris').format()),
             'dailyroll': String(moment(user.dailyroll).tz('Europe/Paris').format()),
             'canwork': Boolean(user.canwork),
-            'lastwork': String(moment(user.lastwork).tz('Europe/Paris').format()),
+            'claimwork': String(moment(user.claimwork).tz('Europe/Paris').format()),
             'guildid': String(user.guildid)
         }];
 
@@ -891,12 +890,12 @@ class DaftBot {
                         'platform': String(row.platform),
                         'pseudo': String(row.pseudo),
                         'rubis': String(row.rubis),
-                        'canroll': row.canroll == 'true' ? true : false,
+                        'canroll': Boolean(row.canroll),
                         'roll': Number(row.roll),
                         'lastroll': String(row.lastroll),
                         'dailyroll': String(row.dailyroll),
                         'canwork': Boolean(user.canwork),
-                        'lastwork': String(row.lastwork),
+                        'claimwork': String(row.claimwork),
                         'guildid': String(row.guildid)
                     });
                 };

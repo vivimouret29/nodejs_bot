@@ -18,7 +18,7 @@ module.exports = {
             let updateDailyRoll = moment().tz('Europe/Paris').add(22, 'hours').format(),
                 winday = randomIntFromInterval(250, 1200),
                 text = `${language.dailyreward} !
-<@${message.author.id}>, ${language.dailywin} : **${winday}** ${client.emojis.cache.find(emoji => emoji.name === 'rubis')} !`;
+<@${message.user.id}>, ${language.dailywin} : **${winday}** ${client.emojis.cache.find(emoji => emoji.name === 'rubis')} !`;
 
             await message.reply({
                 'channel_id': message.channel.channel_id,
@@ -47,7 +47,7 @@ module.exports = {
                         'lastroll': String(moment(row.lastroll).tz('Europe/Paris').format()),
                         'dailyroll': String(updateDailyRoll),
                         'canwork': row.canwork == 'true' ? true : false,
-                        'lastwork': String(row.lastwork),
+                        'claimwork': String(row.claimwork),
                         'guildid': String(row.guildid)
                     });
                 })

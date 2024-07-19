@@ -50,7 +50,7 @@ module.exports = {
                                 'lastroll': String(row.lastroll),
                                 'dailyroll': String(row.dailyroll),
                                 'canwork': row.canwork == 'true' ? true : false,
-                                'lastwork': String(row.lastwork),
+                                'claimwork': String(row.claimwork),
                                 'guildid': String(row.guildid)
                             };
                             i++;

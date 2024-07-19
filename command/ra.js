@@ -135,7 +135,7 @@ module.exports = {
                             'lastroll': String(moment().tz('Europe/Paris').subtract(-14, 'hours').format()),
                             'dailyroll': String(row.dailyroll),
                             'canwork': row.canwork == 'true' ? true : false,
-                            'lastwork': String(row.lastwork),
+                            'claimwork': String(row.claimwork),
                             'guildid': String(row.guildid)
                         });
                     } else {
@@ -150,7 +150,7 @@ module.exports = {
                             'lastroll': String(moment(row.lastroll).tz('Europe/Paris').format()),
                             'dailyroll': String(row.dailyroll),
                             'canwork': row.canwork == 'true' ? true : false,
-                            'lastwork': String(row.lastwork),
+                            'claimwork': String(row.claimwork),
                             'guildid': String(row.guildid)
                         });
                     };
@@ -166,7 +166,7 @@ module.exports = {
                         'lastroll': String(moment(row.lastroll).tz('Europe/Paris').format()),
                         'dailyroll': String(row.dailyroll),
                         'canwork': row.canwork == 'true' ? true : false,
-                        'lastwork': String(row.lastwork),
+                        'claimwork': String(row.claimwork),
                         'guildid': String(row.guildid)
                     });
                 };
