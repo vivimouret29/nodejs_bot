@@ -80,7 +80,14 @@
         "richestError": "Erreur lors de la récupération des données de la banque...",
         "dailyreward": "Tu viens de récupérer ta récompense quotidienne",
         "dailywin": "tu gagnes",
-        "delaydaily": "Tu récupères ta prochaine récompense dans"
+        "delaydaily": "Tu récupères ta prochaine récompense dans",
+        "workDone": "tu viens de récupérer",
+        "workNotStar": "Tu n'as pas encore commencer à travailler",
+        "workNotFinish": "tu dois encore travailler",
+        "workNotFinishYet": "avant de pouvoir récupérer ton salaire",
+        "workStarted": "tu peux récupérer ta paie dans 2 heures",
+        "workStartAgain": "Tu recommences dès maintenant à travailler, reviens dans 2 heures",
+        "workNotOver": "tu n'as pas fini de travailler, reviens dans"
     },
     "en": {
         "hours": "hours",
@@ -162,7 +169,14 @@
         "richestError": "Error recovering data from the bank...",
         "dailyreward": "You've just collected your daily reward",
         "dailywin": "you win",
-        "delaydaily": "You collect your next reward in"
+        "delaydaily": "You collect your next reward in",
+        "workDone": "you've just collected",
+        "workNotStar": "You haven't started work yet",
+        "workNotFinish": "you still have to work",
+        "workNotFinishYet": "before you can collect your pay",
+        "workStarted": "you can collect your pay in 2 hours",
+        "workStartAgain": "You are returning to work now, come back in 2 hours",
+        "workNotOver": "you haven't finished working, come back in"
     },
     "uk": {
         "hours": "годин",
@@ -244,6 +258,13 @@
         "richestError": "Помилка при відновленні даних з банку...",
         "dailyreward": "Ви щойно забрали свою щоденну винагороду",
         "dailywin": "Ви перемогли",
-        "delaydaily": "Наступну нагороду ви отримаєте в"
+        "delaydaily": "Наступну нагороду ви отримаєте в",
+        "workDone": "ви щойно одужали",
+        "workNotStar": "Ви ще не приступили до роботи",
+        "workNotFinish": "вам ще треба попрацювати",
+        "workNotFinishYet": "перш ніж ви зможете отримати свою зарплату",
+        "workStarted": "ви можете забрати свою зарплату через 2 години",
+        "workStartAgain": "Ви знову починаєте працювати, поверніться через 2 години",
+        "workNotOver": "ви ще не закінчили роботу, поверніться"
     }
 }

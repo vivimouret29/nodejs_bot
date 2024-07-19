@@ -62,7 +62,7 @@ module.exports = {
                         'guildid': String(user.guildid)
                     };
                     fsToParse = true;
-                    await messageEmbed(message, `Tu viens de récupérer ${claimWork} ${client.emojis.cache.find(emoji => emoji.name === 'rubis')} en 2 heures !`)
+                    await messageEmbed(message, `<@${message.user.id}>, ${language.workDone} ${claimWork} ${client.emojis.cache.find(emoji => emoji.name === 'rubis')} !`)
                         .catch(err => {
                             message.reply({ 'content': language.error, 'ephemeral': false });
                             console.log(`[${getCurrentDatetime('comm')}] Error sending message SEERROR ${err}`);
@@ -70,7 +70,7 @@ module.exports = {
                     break;
                 } else {
                     if (user.canwork) {
-                        await messageEmbed(message, 'Vous n\'avez pas commencez à travailler')
+                        await messageEmbed(message, `${language.workNotStar} <@${message.user.id}>`)
                             .catch(err => {
                                 message.reply({ 'content': language.error, 'ephemeral': false });
                                 console.log(`[${getCurrentDatetime('comm')}] Error sending message SEERROR ${err}`);
@@ -78,7 +78,7 @@ module.exports = {
                         break;
                     } else if (!user.canwork && moment().tz('Europe/Paris').format() < moment(user.claimwork).tz('Europe/Paris').format()) {
                         let duration = getTimeRemaining(user.claimwork);
-                        await messageEmbed(message, `Vous devez encore travailler **${duration.hours} ${language.hours} ${duration.minutes} ${language.minutes} ${duration.seconds} ${language.seconds}** avant de pouvoir récupérer votre salaire`)
+                        await messageEmbed(message, `<@${message.user.id}>, ${language.workNotFinish} **${duration.hours} ${language.hours} ${duration.minutes} ${language.minutes} ${duration.seconds} ${language.seconds}** ${language.workNotFinishYet}`)
                             .catch(err => {
                                 message.reply({ 'content': language.error, 'ephemeral': false });
                                 console.log(`[${getCurrentDatetime('comm')}] Error sending message SEERROR ${err}`);
@@ -105,7 +105,7 @@ module.exports = {
                         'guildid': String(user.guildid)
                     };
                     fsToParse = true;
-                    await messageEmbed(message, 'Tu peux récupérer ta paie dans 2 heures à partir de maintenant !')
+                    await messageEmbed(message, `<@${message.user.id}>, ${language.workStarted} !`)
                         .catch(err => {
                             message.reply({ 'content': language.error, 'ephemeral': false });
                             console.log(`[${getCurrentDatetime('comm')}] Error sending message SEERROR ${err}`);
@@ -128,8 +128,8 @@ module.exports = {
                         'guildid': String(user.guildid)
                     };
                     fsToParse = true;
-                    await messageEmbed(message, `Tu viens de récupérer ${claimWork} ${client.emojis.cache.find(emoji => emoji.name === 'rubis')} !
-Tu recommences dès maintenant à travailler, reviens dans deux heures encore !`)
+                    await messageEmbed(message, `<@${message.user.id}>, ${language.workDone} ${claimWork} ${client.emojis.cache.find(emoji => emoji.name === 'rubis')} !
+${language.workStartAgain} !`)
                         .catch(err => {
                             message.reply({ 'content': language.error, 'ephemeral': false });
                             console.log(`[${getCurrentDatetime('comm')}] Error sending message SEERROR ${err}`);
@@ -138,7 +138,7 @@ Tu recommences dès maintenant à travailler, reviens dans deux heures encore !`
                 } else if (!user.canwork && moment().tz('Europe/Paris').format() < moment(user.claimwork).tz('Europe/Paris').format()) {
                     let duration = getTimeRemaining(user.claimwork);
                     await messageEmbed(message,
-                        `Tu n'as pas fini de travailler, reviens dans **${duration.hours} ${language.hours} ${duration.minutes} ${language.minutes} ${duration.seconds} ${language.seconds}**`)
+                        `<@${message.user.id}>, ${language.workNotOver} **${duration.hours} ${language.hours} ${duration.minutes} ${language.minutes} ${duration.seconds} ${language.seconds}**`)
                         .catch(err => {
                             message.reply({ 'content': language.error, 'ephemeral': false });
                             console.log(`[${getCurrentDatetime('comm')}] Error sending message SEERROR ${err}`);
@@ -157,7 +157,7 @@ Tu recommences dès maintenant à travailler, reviens dans deux heures encore !`
                     fs.writeFileSync(filePathUser, parse(usersProperty), function (err) {
                         if (err) {
                             message.channel.send(`${language.errorRoll}`);
-                            console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${message.author.username}'s error save ${err}`);
+                            console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${message.user.username}'s error save ${err}`);
                             throw err;
                         };
                     });
