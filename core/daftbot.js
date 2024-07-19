@@ -312,9 +312,7 @@ class DaftBot {
                         .get(interaction.commandName)
                         .execute(interaction, this.dbClient, this.language, this.user, this.date);
                     await threadPause(2, false); // 2 secondes
-                    if (checkCollection == 'rw' || checkCollection == 'rollweapons'
-                        || checkCollection == 'ra' || checkCollection == 'rollarmors'
-                        || checkCollection == 'daily' || checkCollection == 'work') { this.readCsvFile(); };
+                    this.readCsvFile();
                     break;
             };
         });
@@ -457,9 +455,7 @@ class DaftBot {
                                 };
                             });
                         await threadPause(2, false); // 2 secondes
-                        if (checkCollection == 'rw' || checkCollection == 'rollweapons'
-                            || checkCollection == 'ra' || checkCollection == 'rollarmors'
-                            || checkCollection == 'daily' || checkCollection == 'work') { this.readCsvFile(); };
+                        this.readCsvFile();
                         break;
                 };
             };
