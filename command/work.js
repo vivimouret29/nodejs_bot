@@ -38,7 +38,7 @@ module.exports = {
                         'guildid': String(user.guildid)
                     };
                     fsToParse = true;
-                    await sendEmbed(message, `<@${message.author.id}>, ${language.workDone} ${claimWork} ${client.emojis.cache.find(emoji => emoji.name === 'rubis')} !`)
+                    await sendEmbed(message, `<@${message.author.id}>, ${language.workDone} **${claimWork}** ${client.emojis.cache.find(emoji => emoji.name === 'rubis')} !`)
                         .catch(err => {
                             message.reply({ 'content': language.error, 'ephemeral': false });
                             console.log(`[${getCurrentDatetime('comm')}] Error sending message SEERROR ${err}`);
@@ -104,7 +104,7 @@ module.exports = {
                         'guildid': String(user.guildid)
                     };
                     fsToParse = true;
-                    await sendEmbed(message, `<@${message.author.id}>, ${language.workDone} ${claimWork} ${client.emojis.cache.find(emoji => emoji.name === 'rubis')} !
+                    await sendEmbed(message, `<@${message.author.id}>, ${language.workDone} **${claimWork}** ${client.emojis.cache.find(emoji => emoji.name === 'rubis')} !
 ${language.workStartAgain} !`)
                         .catch(err => {
                             message.reply({ 'content': language.error, 'ephemeral': false });
