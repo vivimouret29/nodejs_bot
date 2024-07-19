@@ -84,7 +84,7 @@ class DaftBot {
         this.welcomeMessage = [948894919878123570];
 
         this.onFirstStart = true;
-        this.onStart = 5;
+        this.onStart = 10;
     };
 
     async onConnect() {
@@ -230,7 +230,8 @@ class DaftBot {
         this.dbClient.on(Events.GuildCreate, async (guild) => { console.log(`[${getCurrentDatetime('comm')}] ${this.dbClient.user.username} added in : ${guild.name}`); });
         this.dbClient.on(Events.GuildDelete, async (guild) => { console.log(`[${getCurrentDatetime('comm')}] ${this.dbClient.user.username} removed in : ${guild.name}`); });
 
-        await threadPause(3, false); // 2 secondes
+        if (this.dbClient.user.id == this.avoidBot[1]) { this.onStart = 0; };
+        await threadPause(3, false); // 3 secondes
         console.log(`[${getCurrentDatetime('comm')}] Waiting ${this.onStart}s for proper launch...`);
         for (let i = this.onStart - 1; i > 0; i--) {
             await threadPause(1, false); // 1 seconde
@@ -241,7 +242,7 @@ class DaftBot {
 
     async onListenGuildNewMember() {
         this.dbClient.on(Events.GuildMemberAdd, async (guild) => {
-            if (this.dbClient.user.id == this.avoidBot[1] || !this.welcomeMessage.includes(Number(guild.id))) return;
+            if (this.dbClient.user.id == this.avoidBot[1]) return;
             console.log(`[${getCurrentDatetime('comm')}] New member \'${guild.user.username}\' join server : ${guild.guild.name}`);
 
             this.dbClient.channels.cache
