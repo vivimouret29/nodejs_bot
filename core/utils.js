@@ -21,7 +21,7 @@ async function sendEmbed(message, content) {
 				},
 				'footer': {
 					'text': message.content,
-					'icon_url': 'https://cdn.discordapp.com/avatars/431915542610313217/a_35720bc230cac7b4edfcd5a564623cd3.webp?size=256',
+					'icon_url': 'https://cdn.discordapp.com/app-icons/1101098023259492493/235dfac49e136a686a5d7fd9e66430f3.webp?size=128',
 					'proxy_icon_url': 'https://discord.gg/ucwnMKKxZe'
 				}
 			}],

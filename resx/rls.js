@@ -24,7 +24,7 @@ module.exports = {
                     "color": 0x5c3ddb,
                     "author": {
                         "name": `daftbot`,
-                        "icon_url": `https://cdn.discordapp.com/app-icons/757955750164430980/94a997258883caba5f553f98aea8df59.png?size=256`
+                        "icon_url": `https://cdn.discordapp.com/app-icons/1101098023259492493/235dfac49e136a686a5d7fd9e66430f3.webp?size=128`
                     }
                 }]
             }).then(function (message) {

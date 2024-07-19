@@ -87,7 +87,7 @@ DM ${lang === 'fr' ? 'envoyé' : 'sent'}  ${client.emojis.cache.find(emoji => em
                             'timestamp': `2024-07-16T01:38:12.365Z`, //TODO: don't forget to update dis
                             'author': {
                                 'name': client.user.username,
-                                'icon_url': 'https://cdn.discordapp.com/app-icons/757955750164430980/94a997258883caba5f553f98aea8df59.png?size=256'
+                                'icon_url': 'https://cdn.discordapp.com/app-icons/1101098023259492493/235dfac49e136a686a5d7fd9e66430f3.webp?size=128'
                             },
                             'footer': {
                                 'text': language.helpAuthor,
