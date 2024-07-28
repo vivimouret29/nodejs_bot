@@ -2,7 +2,9 @@
     "fr": {
         "littleLine": "Voici la liste des commandes utilisables à ce jour :\n\n\r",
 
-        "titleZelda": "🎮 **COMMANDES ZELDA**\r",
+        "titleZelda": "🎮 **JEUX JEUX JEUX**\r",
+        "daily": "**!daily** : pour récupérer ta récompense quotidienne de rubis\r",
+        "work": "**!work** : pour récupérer une grosse somme de rubis en travaillant\r",
         "inventoryArmors": "**!inventoryarmors** : pour regarder dans ton inventaire d'armures\r",
         "inventoryWeapons": "**!inventoryweapons** : pour regarder dans ton inventaire d'armes\r",
         "rollWeapons": "**!rollweapons** : permet de lancer une roulette d'armes venant du jeu **Breath Of The Wild**\r",
@@ -17,8 +19,8 @@
         "vote": "**!vote** : fournit un lien pour lâcher un petit vote sur le site de top.gg\n\n\r",
         
         "titleAi": "🪬 **INTELLIGENCES ARTIFICIELLES**\r",
-        "openai": "**@daftbot**  OU  **\"Répondre\"** au message : permet d'entrer dans une discussion avec le bot\r",
-        "pepe": "**!pepe** : permet d'imaginer une image via le bot avec le [**diffuseur pepe**](https://huggingface.co/Dipl0/pepe-diffuser)\n\n\r",
+        "pepe": "**!pepe** : permet d'imaginer une image via le bot avec le [**diffuseur pepe**](https://huggingface.co/Dipl0/pepe-diffuser)\r",
+        "openai": "**@daftbot**  OU  **\"Répondre\"** au message : permet d'entrer dans une discussion avec le bot\n\n\r",
         
         "titleRandom": "〽️ **UTILISATIONS ALÉATOIRES**\r",
         "poll": "**!poll** : renvoie une palette de choix puis la réponse choisie\r(exemple : !poll [question] / [choix] - [choix])\r",
@@ -46,7 +48,9 @@
     "en": {
         "littleLine": "Here is a list of the commands that can be used to date :\n\n\r",
 
-        "titleZelda": "🎮 **ZELDA CONTROLS**\r",
+        "titleZelda": "🎮 **GAMES GAMES GAMES**\r",
+        "daily": "**!daily** : to collect your daily ruby reward\r",
+        "work": "**!work** : to collect a large sum of rubies by working\r",
         "inventoryArmors": "**!inventoryarmors** : to look through your armour inventory\r",
         "inventoryWeapons": "**!inventoryweapons** : to look through your weapons inventory\r",
         "rollWeapons": "**!rollweapons** : allows you to launch a roulette of weapons from the game **Breath Of The Wild**\r",
@@ -61,8 +65,8 @@
         "vote": "**!vote** : provides a link to cast a small vote on the top.gg website\n\n\r",
         
         "titleAi": "🪬 **ARTIFICIAL INTELLIGENCES**\r",
-        "openai": "**@daftbot**  OR  **\"Reply\"** to the message : allows you to enter into a discussion with the bot\r",
-        "pepe": "**!pepe** : allows you to imagine an image via the bot with [**pepe diffuser**](https://huggingface.co/Dipl0/pepe-diffuser)\n\n\r",
+        "pepe": "**!pepe** : allows you to imagine an image via the bot with [**pepe diffuser**](https://huggingface.co/Dipl0/pepe-diffuser)\r",
+        "openai": "**@daftbot**  OR  **\"Reply\"** to the message : allows you to enter into a discussion with the bot\n\n\r",
         
         "titleRandom": "〽️ **RANDOM USES**\r",
         "poll": "**!poll** : returns a palette of choices and then the selected answer\r(exemple : !poll [question] / [choix] - [choix])\r",
@@ -90,7 +94,9 @@
     "uk": {
         "littleLine": "Ось список команд, які можна використовувати на сьогоднішній день :\n\n\r",
 
-        "titleZelda": "🎮 **ZELDA КОНТРОЛЬ**\r",
+        "titleZelda": "🎮 **ІГРИ ІГРИ ІГРИ ІГРИ**\r",
+        "daily": "**!daily** : щоб отримати щоденну рубінову винагороду\r",
+        "work": "**!work** : зібрати велику суму рубінів, працюючи\r",
         "inventoryArmors": "**!inventoryarmors** : переглянути інвентар своєї броні\r",
         "inventoryWeapons": "**!inventoryweapons** : переглянути свій арсенал зброї\r",
         "rollWeapons": "**!rollweapons** : дозволяє запускати колесо зброї з гри **Breath Of The Wild**\r",
@@ -105,8 +111,8 @@
         "vote": "**!vote** : надає посилання для голосування на сайті top.gg\n\n\r",
         
         "titleAi": "🪬 **ШТУЧНИЙ ІНТЕЛЕКТ**\r",
-        "openai": "**@daftbot**  АБО  **\"Відповісти\"** на повідомлення : дозволяє вступити в дискусію з ботом\r",
-        "pepe": "**!pepe** : дозволяє уявити зображення через бота за допомогою [**pepe дифузор**](https://huggingface.co/Dipl0/pepe-diffuser)\n\n\r",
+        "pepe": "**!pepe** : дозволяє уявити зображення через бота за допомогою [**pepe дифузор**](https://huggingface.co/Dipl0/pepe-diffuser)\r",
+        "openai": "**@daftbot**  АБО  **\"Відповісти\"** на повідомлення : дозволяє вступити в дискусію з ботом\n\n\r",
         
         "titleRandom": "〽️ **ВИПАДКОВЕ ВИКОРИСТАННЯ**\r",
         "poll": "**!poll** : повертає палітру варіантів, а потім вибрану відповідь\r(exemple : !poll [питання] / [вибір] - [вибір])\r",
