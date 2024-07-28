@@ -136,8 +136,8 @@ class MobBot {
         for (let file of commandFiles) {
             var filePath = path.join(commandsPath, file),
                 command = require(filePath);
-                commandCount++;
-                commandName.push(command.data.name);
+            commandCount++;
+            commandName.push(command.data.name);
             if ('data' in command && 'execute' in command) { this.mbCommands.set(command.data.name, command); }
             else { console.log(`[ERROR_FILE_COMMAND] The command at ${filePath} is missing a required "data" or "execute" property.`); };
         };
@@ -344,7 +344,10 @@ class MobBot {
             .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error during file send ${err}`); });
     };
 
-    async onLive(message, client_, language, gD, axios) {
+    async onLive(message, client_, language, guiDot, axios) {
+        let gD = await axios.get(`https://twitch.tv/${guiDot}`);
+        if (gD != undefined) { console.log(`[${getCurrentDatetime('comm')}] GUIDOT TWITCH ${gD.statusText}`); };
+
         const { client } = await dynamic('@gradio/client');
         let app = await client('vivsmouret/pepe-diffuser'),
             response = undefined,

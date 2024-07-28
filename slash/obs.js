@@ -46,13 +46,12 @@ module.exports = {
             else {
                 gameMemory = ax.data.data[0].game_name;
                 if (gameMemory != oldGameMemory && ax.data.data.length == 1) {
-                    let guiDot = await axios.get(`https://twitch.tv/${ax.data.data[0].user_login}`);
-                    if (guiDot != undefined) { console.log(`[${getCurrentDatetime('comm')}] GUIDOT TWITCH ${guiDot.statusText}`); };
+                    let guiDot = ax.data.data[0].user_login;
                     if (client.user.id == '758393470024155186') { continue; };
                     await threadPause(2.5, false); // 2.5 secondes
                     client.mobbot
                         .get('livenotif')
-                        .execute(message, client, language, guiDot.data, ax);
+                        .execute(message, client, language, guiDot, ax);
                     await message.editReply({
                         'channel_id': message.channel.channel_id,
                         'content': `Live Notifications are now **OFF** ${client.emojis.cache.find(emoji => emoji.name === 'yeeeeeee')}`,
