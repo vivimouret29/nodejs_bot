@@ -208,14 +208,19 @@ class DaftBot {
                 if (published == undefined) { continue; };
                 console.log(`[${getCurrentDatetime('comm')}] SLICE ${published}`);
 
-                let sliced = published.slice(15, -2);
-                if (new Date(sliced) == 'Invalid Date') { sliced = published.slice(13, -2); };
-
-                let pubDate = new Date(sliced);
+                let sliced = published.slice(13, -2);
+                let pubDate = moment(sliced).tz('Europe/Paris');
+                urIMemory = fetched.split(new RegExp(`(\:[^.]*\<\/)`, 'giu'))[3].split(new RegExp(`(\<[^.]*?\>)`, 'giu'))[10];
                 console.log(`[${getCurrentDatetime('comm')}] DATE PUBLICATION YTB ${pubDate}`);
 
-                urIMemory = fetched.split(new RegExp(`(\:[^.]*\<\/)`, 'giu'))[3].split(new RegExp(`(\<[^.]*?\>)`, 'giu'))[10];
-                if (new Date(new Date().setHours(new Date().getHours() - 2)) < pubDate && urIMemory != oldUrIMemory) {
+                if (moment()
+                    .tz('Europe/Paris')
+                    .subtract(2, 'hours')
+                    .format('YYYY-MM-DDTHH:mm:ssZ')
+                    < moment(pubDate)
+                        .tz('Europe/Paris')
+                        .format('YYYY-MM-DDTHH:mm:ssZ')
+                    && urIMemory != oldUrIMemory) {
                     if (this.dbClient.user.id == this.avoidBot[1]) { continue; };
                     this.dbClient.mobbot
                         .get('videonotif')
