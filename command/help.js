@@ -54,17 +54,28 @@ module.exports = {
             console.log(`[${getCurrentDatetime('comm')}] GUIDOT HELP ${guidDot.statusText}`);
             guid = guidDot.data.split(new RegExp(`(s\/[^.]*-p)`, 'giu'))[1];
             console.log(`[${getCurrentDatetime('comm')}] GUID ${guid}`);
-            if (guid == undefined) return console.log(`[${getCurrentDatetime('comm')}] Error function help() GUID [${guid}]`);
+            if (guid == undefined) {
+                console.log(`[${getCurrentDatetime('comm')}] Error function help() GUID [${guid}]`);
+                return false
+            }
             guid = guid.split('s/')[1].split('-p')[0];
             console.log(`[${getCurrentDatetime('comm')}] GUID ${guid}`);
-            if (guid == undefined) return console.log(`[${getCurrentDatetime('comm')}] Error function help() GUID [${guid}]`);
-
+            if (guid == undefined) {
+                console.log(`[${getCurrentDatetime('comm')}] Error function help() GUID [${guid}]`);
+                return false
+            }
             dot = guidDot.data.split(new RegExp(`(ge-[.]*...........)`, 'giu'))[1];
             console.log(`[${getCurrentDatetime('comm')}] DOT ${dot}`);
-            if (dot == undefined) return console.log(`[${getCurrentDatetime('comm')}] Error function help() DOT [${dot}]`);
+            if (dot == undefined) {
+                console.log(`[${getCurrentDatetime('comm')}] Error function help() DOT [${guid}]`);
+                return false
+            }
             dot = dot.split('.')[1].split(' ')[0];
             console.log(`[${getCurrentDatetime('comm')}] DOT ${dot}`);
-            if (dot == undefined) return console.log(`[${getCurrentDatetime('comm')}] Error function help() DOT [${dot}]`);
+            if (dot == undefined) {
+                console.log(`[${getCurrentDatetime('comm')}] Error function help() DOT [${guid}]`);
+                return false
+            }
         };
 
         await message.channel
@@ -100,7 +111,7 @@ DM ${lang === 'fr' ? 'envoyé' : 'sent'}  ${client.emojis.cache.find(emoji => em
             .catch(err => {
                 message.channel.send(language.helpError);
                 console.log(`[${getCurrentDatetime('comm')}] Error function help() ${err}`);
-                return;
+                return false;
             });
     }
 };
