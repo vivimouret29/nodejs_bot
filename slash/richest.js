@@ -32,6 +32,15 @@ module.exports = {
         var dataUsers = {},
             i = 0;
 
+        if (message.guild == null) {
+            await messageEmbed(message, language.errorGuild, false)
+                .catch(err => {
+                    message.reply({ 'content': language.richestError, 'ephemeral': false });
+                    console.log(`[${getCurrentDatetime('comm')}] Error sending command richest in DMs SEERROR`);
+                });
+            return;
+        };
+        
         fs.exists(filePath, async (e) => {
             if (e) {
                 fs.createReadStream(filePath)
