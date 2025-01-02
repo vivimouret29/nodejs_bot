@@ -21,7 +21,7 @@ module.exports = {
             let duration = getTimeRemaining(user.lastroll);
             return message.reply({
                 'channel_id': message.channel.channel_id,
-                'content': `${message.author.username}: ${language.rollWait} **${duration.hours} ${language.hours} ${duration.minutes} ${language.minutes} ${duration.seconds} ${language.seconds}**`,
+                'content': `${message.user.username}: ${language.rollWait} **${duration.hours} ${language.hours} ${duration.minutes} ${language.minutes} ${duration.seconds} ${language.seconds}**`,
                 'fetchReply': false,
                 'ephemeral': true
             });
