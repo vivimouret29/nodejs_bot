@@ -228,6 +228,13 @@ class DaftBot {
                 };
 
                 oldUrIMemory = urIMemory;
+                this.dbClient.user.setPresence({
+                    activities: [{
+                        name: this.language.activities,
+                        type: ActivityType.Watching
+                    }],
+                    status: 'idle'
+                });
                 await threadPause(60 * 6, true); // 6 heures
             };
         });
@@ -254,7 +261,7 @@ class DaftBot {
                 .get(guild.guild.systemChannelId)
                 .send({
                     'channel_id': guild.guild.systemChannelId,
-                    'content': '',
+                    'content': '_',
                     'tts': false,
                     'embeds': [{
                         'type': 'rich',
