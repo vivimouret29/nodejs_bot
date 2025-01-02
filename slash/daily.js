@@ -56,12 +56,13 @@ module.exports = {
                     fs.writeFileSync(filePathUser, parse(usersProperty), function (err) {
                         if (err) {
                             message.channel.send(`${language.errorRoll}`);
-                            console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${message.user.username}'s error save ${err}`);
+                            console.log(`[${getCurrentDatetime('comm')}] ${message.user.username} / ${message.channel.name} # ${message.user.username}'s error save ${err}`);
                             throw err;
                         };
                     });
                 });
-            console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${message.user.username} got ${Number(winday)} for his daily reward`);
+            if (message.guild == null) { console.log(`[${getCurrentDatetime('comm')}] ${message.user.username}' DM # ${message.user.username} got ${Number(winday)} for his daily reward`); }
+            else { console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${message.user.username} got ${Number(winday)} for his daily reward`); };
         } else if (moment(user.dailyroll).tz('Europe/Paris').format() > moment().tz('Europe/Paris').format()) {
             let duration = getTimeRemaining(user.dailyroll);
             await message.reply({
@@ -75,7 +76,8 @@ module.exports = {
                 'ephemeral': false
             })
                 .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error command daily send ${err}`); });
-            console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${message.user.username} already got his daily`);
+            if (message.guild == null) { console.log(`[${getCurrentDatetime('comm')}] ${message.user.username}'s DM # ${message.user.username} already got his daily`); }
+			else { console.log(`[${getCurrentDatetime('comm')}] ${message.guild.name} / ${message.channel.name} # ${message.user.username} already got his daily`); };
         };
     }
 };
