@@ -9,3 +9,5 @@ node_modules
 /package-lock.json
 /styles/ai/pepe-diffuser.jpg
 /styles/ai/pepe-diffuser-x.jpg
+/config_db.json
+/config_mb.json
