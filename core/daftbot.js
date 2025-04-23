@@ -206,12 +206,12 @@ class DaftBot {
                     published = fetched.split(new RegExp(`(\>[^.]*?\/)`, 'giu'))[37];
 
                 if (published == undefined) { continue; };
-                console.log(`[${getCurrentDatetime('comm')}] SLICE ${published}`);
+                // console.log(`[${getCurrentDatetime('comm')}] SLICE ${published}`);
 
                 let sliced = published.slice(13, -2);
                 let pubDate = moment(sliced).tz('Europe/Paris');
                 urIMemory = fetched.split(new RegExp(`(\:[^.]*\<\/)`, 'giu'))[3].split(new RegExp(`(\<[^.]*?\>)`, 'giu'))[10];
-                console.log(`[${getCurrentDatetime('comm')}] DATE PUBLICATION YTB ${pubDate}`);
+                // console.log(`[${getCurrentDatetime('comm')}] DATE PUBLICATION YTB ${pubDate}`);
 
                 if (moment()
                     .tz('Europe/Paris')
@@ -261,7 +261,7 @@ class DaftBot {
                 .get(guild.guild.systemChannelId)
                 .send({
                     'channel_id': guild.guild.systemChannelId,
-                    'content': '_',
+                    'content': ' ',
                     'tts': false,
                     'embeds': [{
                         'type': 'rich',
