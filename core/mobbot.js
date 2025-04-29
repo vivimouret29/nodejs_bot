@@ -432,7 +432,7 @@ class MobBot {
                 .get(channelSend.id)
                 .send({
                     'channel_id': channelSend.id,
-                    'content': channelTwitch[chan] == '💻incoming' ? 'le daft part en live sur <@&1071048787738497084>, venez le retrouver !' : '',
+                    'content': channelTwitch[chan] == '💻incoming' ? `le ${axios.data.data[0].user_name} part en live sur <@&1071048787738497084>, venez le retrouver !` : '',
                     'tts': false,
                     'embeds': [{
                         'type': 'rich',
@@ -471,7 +471,7 @@ class MobBot {
             activities: [{
                 name: language.stream,
                 type: ActivityType.Streaming,
-                url: 'https://twitch.tv/daftmob'
+                url: `https://twitch.tv/${axios.data.data[0].user_login}`
             }],
             status: 'online'
         });
