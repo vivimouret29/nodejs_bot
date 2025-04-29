@@ -30,6 +30,7 @@ module.exports = {
         })
             .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error command obs send ${err}`); });
         console.log(`[${getCurrentDatetime('comm')}] Live Notifications ON`);
+        console.log(`[${getCurrentDatetime('comm')}] AXIOS WHILEDAFT ${ax.data.data}`);
 
         while (ping) {
             if (channels[0] == undefined) { continue; };
@@ -40,7 +41,6 @@ module.exports = {
                     console.log(`[${getCurrentDatetime('comm')}] Error GET AXIOS ${err}`);
                 });
             if (ax == undefined) { continue; };
-            console.log(`[${getCurrentDatetime('comm')}] AXIOS WHILEDAFT ${ax.data.data}`);
 
             if (!checkLive || ax.data.data.length == 0) { gameMemory = ''; }
             else {
@@ -59,7 +59,7 @@ module.exports = {
                         'ephemeral': true
                     })
                         .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error command obs send ${err}`); });
-                    console.log(`[${getCurrentDatetime('comm')}] Live Notifications OFF`);
+                    console.log(`[${getCurrentDatetime('comm')}] Live Notifications send now OFF`);
                     client.user.setPresence({
                         activities: [{
                             name: language.activities,
