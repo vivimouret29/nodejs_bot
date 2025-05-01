@@ -30,7 +30,7 @@ module.exports = {
         })
             .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error command obs send ${err}`); });
         console.log(`[${getCurrentDatetime('comm')}] Live Notifications ON`);
-        console.log(`[${getCurrentDatetime('comm')}] AXIOS WHILEDAFT ${ax.data.data}`);
+        console.log(`[${getCurrentDatetime('comm')}] AXIOS WHILEDAFT`);
 
         while (ping) {
             if (channels[0] == undefined) { continue; };
