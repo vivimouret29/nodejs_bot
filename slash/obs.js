@@ -33,13 +33,13 @@ module.exports = {
         console.log(`[${getCurrentDatetime('comm')}] AXIOS WHILEDAFT`);
 
         while (ping) {
-            for (let channel in channels) {
+            for (let channel of channels) {
                 if (channel == undefined) { continue; };
 
-                let ax = await axios.get(`http://api.twitch.tv/helix/streams?user_login=` + channel, params)
+                let ax = await axios.get(`http://api.twitch.tv/helix/streams?user_login=` + channel.slice(1), params)
                     .catch(err => {
                         checkLive = false;
-                        console.log(`[${getCurrentDatetime('comm')}] Error GET AXIOS ${err}`);
+                        console.log(`[${getCurrentDatetime('comm')}] Error ?user_login=${channel.slice(1)}, ${params.headers.Authorization} ${params.headers['Client-ID']} GET AXIOS ${err}`);
                     });
                 if (ax == undefined) { continue; };
 
@@ -56,6 +56,7 @@ module.exports = {
                         client.mobbot
                             .get('livenotif')
                             .execute(message, client, language, guiDot, ax);
+                        
                         await message.editReply({
                             'channel_id': message.channel.channel_id,
                             'content': `Live Notifications are now **OFF** ${client.emojis.cache.find(emoji => emoji.name === 'yeeeeeee')}`,
@@ -64,7 +65,7 @@ module.exports = {
                         })
                             .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error command obs send ${err}`); });
                         console.log(`[${getCurrentDatetime('comm')}] Live Notifications OFF`);
-                        
+
                         client.user.setPresence({
                             activities: [{
                                 name: language.activities,
@@ -79,9 +80,10 @@ module.exports = {
 
                 checkLive = true;
                 oldGameMemory = gameMemory;
+                
+                if (ping) { await threadPause(30, false); }; // 30 secondes
             }
 
-            if (ping) { await threadPause(30, false); }; // 30 secondes
         };
     }
 };
