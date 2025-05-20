@@ -64,16 +64,8 @@ module.exports = {
                             'ephemeral': true
                         })
                             .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error command obs send ${err}`); });
+                        
                         console.log(`[${getCurrentDatetime('comm')}] Live Notifications OFF`);
-
-                        client.user.setPresence({
-                            activities: [{
-                                name: language.activities,
-                                type: ActivityType.Watching
-                            }],
-                            status: 'idle'
-                        });
-
                         ping = false;
                     };
                 };

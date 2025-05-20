@@ -344,7 +344,16 @@ class MobBot {
             .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error during file send ${err}`); });
     };
 
-    async onLive(message, client_, language, guiDot, axios) {
+    async onLive(message, client_, language, guiDot, ax) {
+        // const { client } = await dynamic('@gradio/client');  //TODO: update gradio
+        // let app = await client('daftmob/pepe-diffuser'),
+        let response = undefined,
+            toggleMedia = true;
+        
+        if (guiDot != 'daftmob') {
+            toggleMedia = false;
+        }
+        
         let gD = await axios.get(`https://twitch.tv/${guiDot}`)
             .catch(err => {
                 console.log(`[${getCurrentDatetime('comm')}] Error during file send ${err}`);
@@ -352,18 +361,13 @@ class MobBot {
         
         if (gD != undefined) { console.log(`[${getCurrentDatetime('comm')}] GUIDOT TWITCH ${gD.statusText}`); };
 
-        const { client } = await dynamic('@gradio/client');
-        let app = await client('vivsmouret/pepe-diffuser'),
-            response = undefined,
-            toggleMedia = true;
-
-        if (axios == undefined) {
-            return console.log(`[${getCurrentDatetime('comm')}] Error function liveNotif() AXIOS [${axios}]`);
-        } else {
-            console.log(`[${getCurrentDatetime('comm')}] AXIOS PEPE LIVE ${axios.statusText}`);
+        if (ax == undefined) {
+            return console.log(`[${getCurrentDatetime('comm')}] Error function liveNotif() AXIOS [${ax}]`);
+        } else if (toggleMedia) {
+            console.log(`[${getCurrentDatetime('comm')}] AXIOS PEPE LIVE ${ax.statusText}`);
             try {
                 response = await app.predict('/predict', [
-                    'pepe is playing at ' + axios.data.data[0].game_name,
+                    'pepe is playing at ' + ax.data.data[0].game_name,
                 ]);
                 console.log(`[${getCurrentDatetime('comm')}] LIVENOTIF Success predict: `, response.data[0].path);
             } catch (err) {
@@ -380,21 +384,21 @@ class MobBot {
             });
         };
 
-        let channelTwitch = ['💻incoming', '🎦-fox-stream-🎦', 'twitch-support-🎥', 'bots', 'pirate-bots'],
+        let channelTwitch = ['🎭alone', '💻incoming', '🎦-fox-stream-🎦', 'twitch-support-🎥', 'bots', 'pirate-bots'],
             guid = '',
             dot = '';
 
         if (gD == undefined) {
             return console.log(`[${getCurrentDatetime('comm')}] Error function liveNotif() GUID [${gD}]`);
         } else if (gD != undefined) {
-            guid = gD.split(new RegExp(`(s\/[^.]*-p)`, 'giu'))[1];
+            guid = gD.data.split(new RegExp(`(s\/[^.]*-p)`, 'giu'))[1];
             console.log(`[${getCurrentDatetime('comm')}] GUID ${guid}`);
             if (guid == undefined) return console.log(`[${getCurrentDatetime('comm')}] Error function help() GUID [${guid}]`);
             guid = guid.split('s/')[1].split('-p')[0];
             console.log(`[${getCurrentDatetime('comm')}] GUID ${guid}`);
             if (guid == undefined) return console.log(`[${getCurrentDatetime('comm')}] Error function help() GUID [${guid}]`);
 
-            dot = gD.split(new RegExp(`(ge-[.]*...........)`, 'giu'))[1];
+            dot = gD.data.split(new RegExp(`(ge-[.]*...........)`, 'giu'))[1];
             console.log(`[${getCurrentDatetime('comm')}] DOT ${dot}`);
             if (dot == undefined) return console.log(`[${getCurrentDatetime('comm')}] Error function help() DOT [${dot}]`);
             dot = dot.split('.')[1].split(' ')[0];
@@ -408,18 +412,18 @@ class MobBot {
                     xApi.v1.uploadMedia('./styles/ai/pepe-diffuser-x.jpg')
                 ]);
                 await rwClient.v2.tweet({
-                    text: `${axios.data.data[0].title}\
-                        \n#daftmob #${axios.data.data[0].game_name.split(' ').join('')} #twitch #pepe\
-                        \n\nhttps://twitch.tv/${axios.data.data[0].user_name}`,
+                    text: `${ax.data.data[0].title}\
+                        \n#daftmob #${ax.data.data[0].game_name.split(' ').join('')} #twitch #pepe\
+                        \n\nhttps://twitch.tv/${ax.data.data[0].user_name}`,
                     media: { media_ids: mediaIds }
                 });
                 console.log(`[${getCurrentDatetime('comm')}] LIVENOTIF Tweet with media`);
                 break;
             case false:
                 await rwClient.v2.tweet({
-                    text: `${axios.data.data[0].title}\
-                        \n#daftmob #${axios.data.data[0].game_name.split(' ').join('')} #twitch #pepe\
-                        \n\nhttps://twitch.tv/${axios.data.data[0].user_name}`
+                    text: `${ax.data.data[0].title}\
+                        \n#daftmob #${ax.data.data[0].game_name.split(' ').join('')} #twitch #pepe\
+                        \n\nhttps://twitch.tv/${ax.data.data[0].user_name}`
                 });
                 console.log(`[${getCurrentDatetime('comm')}] LIVENOTIF Tweet without media`);
                 toggleMedia = true;
@@ -429,58 +433,65 @@ class MobBot {
         for (let chan in channelTwitch) {
             var channelSend = client_.channels.cache.find(channel => channel.name == channelTwitch[chan]);
             if (channelSend == undefined) break;
-            if (channelTwitch[chan] == 'bots' && axios.data.data[0].game_name != 'Rocket League') break;
-            if (channelTwitch[chan] == 'pirate-bots' && axios.data.data[0].game_name != 'Sea of Thieves') break;
+            if (channelTwitch[chan] == 'bots' && ax.data.data[0].game_name != 'Rocket League') break;
+            if (channelTwitch[chan] == 'pirate-bots' && ax.data.data[0].game_name != 'Sea of Thieves') break;
 
             await client_.channels.cache
                 .get(channelSend.id)
                 .send({
                     'channel_id': channelSend.id,
-                    'content': channelTwitch[chan] == '💻incoming' ? `le ${axios.data.data[0].user_name} part en live sur <@&1071048787738497084>, venez le retrouver !` : '',
+                    'content': channelTwitch[chan] == '💻incoming' ? `le ${ax.data.data[0].user_name} part en live sur <@&1071048787738497084>, venez le retrouver !` : '',
                     'tts': false,
                     'embeds': [{
                         'type': 'rich',
-                        'title': `Live de ${axios.data.data[0].user_name}`,
-                        'description': `${language.descLiveSt} **${axios.data.data[0].user_name}** ${language.descLiveNd}`,
+                        'title': `Live de ${ax.data.data[0].user_name}`,
+                        'description': `${language.descLiveSt} **${ax.data.data[0].user_name}** ${language.descLiveNd}`,
                         'color': randomColor(),
                         'fields': [{
-                            'name': axios.data.data[0].game_name,
-                            'value': axios.data.data[0].title
+                            'name': ax.data.data[0].game_name,
+                            'value': ax.data.data[0].title
                         }],
                         'image': {
-                            'url': `https://static-cdn.jtvnw.net/previews-ttv/live_user_${axios.data.data[0].user_login}-320x180.jpg?r=294998`,
-                            'proxy_url': `https://twitch.tv/${axios.data.data[0].user_login}`
+                            'url': `https://static-cdn.jtvnw.net/previews-ttv/live_user_${ax.data.data[0].user_login}-320x180.jpg?r=294998`,
+                            'proxy_url': `https://twitch.tv/${ax.data.data[0].user_login}`
                         },
                         'thumbnail': {
                             'url': `https://static-cdn.jtvnw.net/jtv_user_pictures/${guid}-profile_image-300x300.${dot}`,
-                            'proxy_url': `https://twitch.tv/${axios.data.data[0].user_login}`
+                            'proxy_url': `https://twitch.tv/${ax.data.data[0].user_login}`
                         },
                         'author': {
                             'name': oauth.identity.username,
-                            'url': `https://twitch.tv/${axios.data.data[0].user_login}`,
+                            'url': `https://twitch.tv/${ax.data.data[0].user_login}`,
                             'icon_url': client_.user.avatarURL({ format: 'png', dynamic: true, size: 1024 })
                         },
                         'footer': {
-                            'text': `Viewers : ${axios.data.data[0].viewer_count}`,
+                            'text': `Viewers : ${ax.data.data[0].viewer_count}`,
                             'icon_url': `https://em-content.zobj.net/thumbs/120/microsoft/319/busts-in-silhouette_1f465.png`,
-                            'proxy_icon_url': `https://twitch.tv/${axios.data.data[0].user_login}`
+                            'proxy_icon_url': `https://twitch.tv/${ax.data.data[0].user_login}`
                         },
-                        'url': `https://twitch.tv/${axios.data.data[0].user_login}`
+                        'url': `https://twitch.tv/${ax.data.data[0].user_login}`
                     }]
                 })
                 .catch(err => { console.log(`[${getCurrentDatetime('comm')}] Error message liveNotif() ${err}`); });
         };
 
+        let activities_name;
+        if (ax.data.data[0].user_login == 'daftmob') {
+            activities_name = language.stream
+        } else {
+            activities_name = ax.data.data[0].user_name
+        }
+
         client_.user.setPresence({
             activities: [{
-                name: language.stream,
+                name: activities_name,
                 type: ActivityType.Streaming,
-                url: `https://twitch.tv/${axios.data.data[0].user_login}`
+                url: `https://twitch.tv/${ax.data.data[0].user_login}`
             }],
             status: 'online'
         });
 
-        console.log(`[${getCurrentDatetime('comm')}] LIVETWT ${axios.data.data[0].game_name} | ${axios.data.data[0].title} / ${channelTwitch}`);
+        console.log(`[${getCurrentDatetime('comm')}] LIVETWT ${ax.data.data[0].game_name} | ${ax.data.data[0].title} / ${channelTwitch}`);
     };
 
     async onVideoPublish(message, client, language) {
