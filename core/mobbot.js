@@ -345,7 +345,11 @@ class MobBot {
     };
 
     async onLive(message, client_, language, guiDot, axios) {
-        let gD = await axios.get(`https://twitch.tv/${guiDot}`);
+        let gD = await axios.get(`https://twitch.tv/${guiDot}`)
+            .catch(err => {
+                console.log(`[${getCurrentDatetime('comm')}] Error during file send ${err}`);
+            });
+        
         if (gD != undefined) { console.log(`[${getCurrentDatetime('comm')}] GUIDOT TWITCH ${gD.statusText}`); };
 
         const { client } = await dynamic('@gradio/client');
