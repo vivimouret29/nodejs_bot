@@ -147,7 +147,7 @@ class MobBot {
 
     async onMessageListen() {
         this.mbClient.on('message', async (channel, userstate, message, self) => {
-            if (self || userstate.username === 'mobbot_') return;
+            if (self || userstate.username === 'mobbot_' || channel != '#daftmob') return;
 
             var _rdm = Math.random();
 
@@ -348,17 +348,19 @@ class MobBot {
         // const { client } = await dynamic('@gradio/client');  //TODO: update gradio
         // let app = await client('daftmob/pepe-diffuser'),
         let response = undefined,
-            toggleMedia = true;
-        
+            toggleMedia = true,
+            toggleTweet = true;
+
         if (guiDot != 'daftmob') {
             toggleMedia = false;
+            toggleTweet = false;
         }
-        
+
         let gD = await axios.get(`https://twitch.tv/${guiDot}`)
             .catch(err => {
                 console.log(`[${getCurrentDatetime('comm')}] Error during file send ${err}`);
             });
-        
+
         if (gD != undefined) { console.log(`[${getCurrentDatetime('comm')}] GUIDOT TWITCH ${gD.statusText}`); };
 
         if (ax == undefined) {
@@ -406,29 +408,32 @@ class MobBot {
             if (dot == undefined) return console.log(`[${getCurrentDatetime('comm')}] Error function help() DOT [${dot}]`);
         };
 
-        switch (toggleMedia) {
-            case true:
-                const mediaIds = await Promise.all([
-                    xApi.v1.uploadMedia('./styles/ai/pepe-diffuser-x.jpg')
-                ]);
-                await rwClient.v2.tweet({
-                    text: `${ax.data.data[0].title}\
-                        \n#daftmob #${ax.data.data[0].game_name.split(' ').join('')} #twitch #pepe\
-                        \n\nhttps://twitch.tv/${ax.data.data[0].user_name}`,
-                    media: { media_ids: mediaIds }
-                });
-                console.log(`[${getCurrentDatetime('comm')}] LIVENOTIF Tweet with media`);
-                break;
-            case false:
-                await rwClient.v2.tweet({
-                    text: `${ax.data.data[0].title}\
-                        \n#daftmob #${ax.data.data[0].game_name.split(' ').join('')} #twitch #pepe\
-                        \n\nhttps://twitch.tv/${ax.data.data[0].user_name}`
-                });
-                console.log(`[${getCurrentDatetime('comm')}] LIVENOTIF Tweet without media`);
-                toggleMedia = true;
-                break;
+        if (toggleTweet) {
+            switch (toggleMedia) {
+                case true:
+                    const mediaIds = await Promise.all([
+                        xApi.v1.uploadMedia('./styles/ai/pepe-diffuser-x.jpg')
+                    ]);
+                    await rwClient.v2.tweet({
+                        text: `${ax.data.data[0].title}\
+                                    \n#daftmob #${ax.data.data[0].game_name.split(' ').join('')} #twitch #pepe\
+                                    \n\nhttps://twitch.tv/${ax.data.data[0].user_name}`,
+                        media: { media_ids: mediaIds }
+                    });
+                    console.log(`[${getCurrentDatetime('comm')}] LIVENOTIF Tweet with media`);
+                    break;
+                case false:
+                    await rwClient.v2.tweet({
+                        text: `${ax.data.data[0].title}\
+                                    \n#daftmob #${ax.data.data[0].game_name.split(' ').join('')} #twitch #pepe\
+                                    \n\nhttps://twitch.tv/${ax.data.data[0].user_name}`
+                    });
+                    console.log(`[${getCurrentDatetime('comm')}] LIVENOTIF Tweet without media`);
+                    toggleMedia = true;
+                    break;
+            };
         };
+
 
         for (let chan in channelTwitch) {
             var channelSend = client_.channels.cache.find(channel => channel.name == channelTwitch[chan]);
